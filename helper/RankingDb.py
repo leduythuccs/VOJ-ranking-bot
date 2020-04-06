@@ -171,7 +171,7 @@ class RankingDbConn:
             self.conn.execute(query, (CF_id, handle))
         self.conn.commit()
     
-    def get_id_solved_problem(self, handle):
+    def get_info_solved_problem(self, handle):
         query = (
             'SELECT CF_id '
             'FROM user_data '
@@ -179,7 +179,7 @@ class RankingDbConn:
         )
         r = self.conn.execute(query, (handle, )).fetchone()
         if r is None:
-            return None
+            return []
         user_id = r[0]
         query = (
             'SELECT problem_id, result, date '
@@ -187,17 +187,22 @@ class RankingDbConn:
             'WHERE user_id = ?'
         )
         r = self.conn.execute(query, (user_id, )).fetchall()
-        if r is None:
-            return None
+        if r is []:
+            return []
         return r
 
-    def get_solved_problem(self, handle):
-        list_id = self.get_id_solved_problem(handle)
-        if list_id is None:
-            return None
+    def get_problem_info(self, problem_id):
         query = (
-            'SELECT '
+            'SELECT problem_name, links, cnt_AC '
+            'FROM problem_info '
+            'WHERE id = ? '
         )
+        return self.conn.execute(query, (problem_id, )).fetchone()
+    
+    # def get_solved_problem(self, handle):
+    #     infos = self.get_info_solved_problem(handle)
+    #     return infos
+
     def handle_new_submission(self, problem_name, problem_links,
                               result, author_id, author_handle, submission_date):
         #

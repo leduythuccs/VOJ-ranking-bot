@@ -30,6 +30,9 @@ class Crawler:
         self.waiting_list = []
         self.login()
 
+    def save_last_submission(self):
+        open('database/last_submission.txt', 'w').write(str(self.last_submission))
+
     def login(self):
         url = 'https://codeforces.com/enter'
         result = self.session.get(url, headers=self.headers)
@@ -131,11 +134,16 @@ class Crawler:
             r = self.get_info_submission(row, force=True)
             if r != None:
                 infos.append(r)
-        for page in range(304, 305):
+        for page in range(1, 304):
+            print("crawling page " + str(page), end=' ')
             new_infos, stop = self.crawl_submissions(page)
+            print("Found {0} new submission".format(len(new_infos)))
             infos += new_infos
             if stop:
                 break
+        for id, *junk in infos:
+            self.last_submission = max(self.last_submission, int(id))
+        self.save_last_submission()
         return infos
     
         

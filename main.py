@@ -13,7 +13,7 @@ print(bot.command_prefix)
 bot.load_extension("cogs.Ranking")
 bot.load_extension("cogs.BotControl")
 bot.load_extension("cogs.GetCodeforcesLink")
-
+bot.load_extension("cogs.CoronaCommand")
 @bot.event
 async def on_ready():
     print(f'{bot.user.name} has connected to Discord!')

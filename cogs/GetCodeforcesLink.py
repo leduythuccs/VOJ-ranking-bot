@@ -6,7 +6,6 @@ import time
 import subprocess
 import textwrap
 import sys
-from helper import helper
 # Adapted from TLE sources.
 # https://github.com/cheran-senthil/TLE/blob/master/tle/cogs/meta.py#L15
 
@@ -69,9 +68,6 @@ class GetCodeforcesLink(commands.Cog):
         links = self.link[name].strip(',').split(',')
         links = list(map(lambda x: '<' + x + '>', links))
         await ctx.send('\n'.join(links))
-
-    
-
 
 def setup(bot):
     bot.add_cog(GetCodeforcesLink(bot))

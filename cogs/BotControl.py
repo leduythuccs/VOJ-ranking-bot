@@ -55,10 +55,10 @@ class BotControl(commands.Cog):
     async def ping(self, ctx):
         """Replies to a ping."""
         start = time.perf_counter()
-        message = await ctx.send(':angry~: Pong!')
+        message = await ctx.send(':angry~1: Angry!')
         end = time.perf_counter()
         duration = (end - start) * 1000
-        await message.edit(content=f'REST API latency: {int(duration)}ms\n'
+        await message.edit(content=f':angry~1: Angry!\nREST API latency: {int(duration)}ms\n'
                                     f'Gateway API latency: {int(self.bot.latency * 1000)}ms')
 
     @commands.command(brief="Kill bot. ")

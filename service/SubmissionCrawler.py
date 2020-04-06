@@ -98,7 +98,7 @@ class Crawler:
         verdict = elems[5].span['submissionverdict']
         if verdict == 'OK':
             verdict = 'AC'
-        if verdict == 'PARTICAL':
+        if verdict == 'PARTIAL':
             verdict = elems[5].span.span.text.strip()
         elif verdict != 'AC':
             verdict = '0'
@@ -126,7 +126,7 @@ class Crawler:
 
         return (infos, stop)
     
-    def get_new_submissions(self):
+    def get_new_submissions(self, l, r):
         pre_wait_list = self.waiting_list
         self.waiting_list = []
         infos = []
@@ -134,7 +134,7 @@ class Crawler:
             r = self.get_info_submission(row, force=True)
             if r != None:
                 infos.append(r)
-        for page in range(1, 304):
+        for page in range(l, r + 1):
             print("crawling page " + str(page), end=' ')
             new_infos, stop = self.crawl_submissions(page)
             print("Found {0} new submission".format(len(new_infos)))

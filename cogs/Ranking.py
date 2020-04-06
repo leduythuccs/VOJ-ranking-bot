@@ -78,12 +78,19 @@ class RankingCommand(commands.Cog):
     #     await ctx.send("Successfully set log channel to " + ctx.channel.name)
     @commands.command(brief="Test crawler")
     @commands.is_owner()
-    async def crawl(self, ctx):
-        problems = self.crawler.get_new_submissions()
+    async def crawl(self, ctx, l, r):
+        l = int(l)
+        r = int(r)
+        problems = self.crawler.get_new_submissions(l, r)
         await ctx.send('Found {0} submissions.'.format(len(problems)))
+        cnt = 0
         for p_info in problems:
+            cnt += 1
+            if cnt % 10 == 0:
+                print(cnt)
             id, problem_name, short_link, handle, user_id, verdict, date = p_info
             self.rankingDb.handle_new_submission(problem_name, short_link, verdict, user_id, handle, date)
+        self.rankingDb.conn.commit()
 
 def setup(bot):
     bot.add_cog(RankingCommand(bot))

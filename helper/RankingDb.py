@@ -70,14 +70,14 @@ class RankingDbConn:
             if (res[0].find(problem_links) != -1):
                 return res[1]
             query = (
-                'REPLACE INTO problem_info (id, problem_name, links) '
+                'REPLACE INTO problem_info (id, problem_name, links, cnt_AC) '
                 'VALUES (?, ?, ?, ?)'
             )
             problem_links = res[0] + ',' + problem_links
             cur.execute(query, (res[1], problem_name, problem_links, res[2]))
         else:
             cur.execute(query, (problem_name, problem_links))
-        self.conn.commit()
+        # self.conn.commit()
         return cur.lastrowid
     
     def add_AC(self, problem_id):
@@ -87,7 +87,7 @@ class RankingDbConn:
             'WHERE id = ?'
         )
         self.conn.execute(query, (problem_id, ))
-        self.conn.commit()
+        # self.conn.commit()
     # clear result of problem_id
     def remove_result(self, problem_id):
         # first, clear in table solved_info
@@ -104,7 +104,7 @@ class RankingDbConn:
             'WHERE id = ?'
         )
         self.conn.execute(query, (problem_id, ))
-        self.conn.commit()
+        # self.conn.commit()
     
     def get_problem_id(self, problem_name):
         query = (
@@ -145,7 +145,7 @@ class RankingDbConn:
             self.conn.execute(query, (user_id, problem_id, result, date))
         if result == 'AC':
             self.add_AC(problem_id)
-        self.conn.commit()
+        # self.conn.commit()
         return
 
     def add_user(self, CF_id, handle):
@@ -169,7 +169,7 @@ class RankingDbConn:
                 'VALUES (?, ?)'
             )
             self.conn.execute(query, (CF_id, handle))
-        self.conn.commit()
+        # self.conn.commit()
     
     def get_info_solved_problem(self, handle):
         query = (
@@ -234,7 +234,7 @@ class RankingDbConn:
                 'VALUES (?, ?)'
             )
         self.conn.execute(query, (discord_id, handle))
-        self.conn.commit()
+        # self.conn.commit()
         return True
     
     def get_handle(self, discord_id):

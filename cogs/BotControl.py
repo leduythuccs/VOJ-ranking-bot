@@ -49,11 +49,17 @@ class BotControl(commands.Cog):
     # @commands.Cog.listener()
     # async def on_ready(self):
     #     pass
-
-    @commands.command(brief="Check if bot is still alive. Also prints bot uptime.")
+    
+    # from TLE bot.
+    @commands.command(brief="Check if bot is still alive.")
     async def ping(self, ctx):
-        await ctx.send("I have been running for " +
-                       helper.pretty_time_format(time.time() - self.start_time))
+        """Replies to a ping."""
+        start = time.perf_counter()
+        message = await ctx.send(':angry~: Pong!')
+        end = time.perf_counter()
+        duration = (end - start) * 1000
+        await message.edit(content=f'REST API latency: {int(duration)}ms\n'
+                                    f'Gateway API latency: {int(self.bot.latency * 1000)}ms')
 
     @commands.command(brief="Kill bot. ")
     @commands.is_owner()

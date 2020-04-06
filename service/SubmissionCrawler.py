@@ -83,7 +83,7 @@ class Crawler:
         date = get_date(elems[1].text.strip())
         handle = elems[2].text.strip()
         #team
-        if elems[2].find('/team/') == -1:
+        if str(elems[2]).find('/team/') != -1:
             return None
         
         problem_name = elems[3].text.strip()

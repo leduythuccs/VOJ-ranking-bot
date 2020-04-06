@@ -14,7 +14,6 @@ class CoronaCommand(commands.Cog):
         self.bot = bot
         self.log_channel = None
         self.cur = None
-        self.looper.start()
         self.index = 0
 
     def get_data(self):

@@ -1,2 +1,4 @@
 __pycache__
 .env
+database/ranking.db
+database/last_submission.txt

@@ -143,6 +143,8 @@ class RankingDbConn:
                 'VALUES (?, ?, ?, ?) '
             )
             self.conn.execute(query, (user_id, problem_id, result, date))
+        if result == 'AC':
+            self.add_AC(problem_id)
         self.conn.commit()
         return
 

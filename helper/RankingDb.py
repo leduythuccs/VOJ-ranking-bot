@@ -149,6 +149,7 @@ class RankingDbConn:
         return
 
     def add_user(self, CF_id, handle):
+        handle = handle.lower()
         if self.check_exists('user_data', 'CF_id', CF_id):
             query = (
                 'UPDATE user_data '
@@ -172,6 +173,7 @@ class RankingDbConn:
         # self.conn.commit()
     
     def get_info_solved_problem(self, handle):
+        handle = handle.lower()
         query = (
             'SELECT CF_id '
             'FROM user_data '
@@ -205,6 +207,7 @@ class RankingDbConn:
 
     def handle_new_submission(self, problem_name, problem_links,
                               result, author_id, author_handle, submission_date):
+        author_handle = author_handle.lower()
         #
         problem_id = self.add_problem(problem_name, problem_links)
         # 
@@ -213,6 +216,7 @@ class RankingDbConn:
         self.add_user(author_id, author_handle)
     
     def set_handle(self, discord_id, handle):
+        handle = handle.lower()
         discord_id = str(discord_id)
         query = (
             'SELECT discord_id '

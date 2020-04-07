@@ -19,25 +19,17 @@ from typing import List
 BASE_PROBLEM_URL = 'https://codeforces.com/group/FLVn1Sc504/contest/{0}/problem/{1}'
 Rank = namedtuple('Rank', 'low high title title_abbr color_graph color_embed')
 # % max_score 
-"""
-<0.5% - newbie
-0.5 - 2% - beginner
-2 - 7% - specialist
-7 - 15% - expert
-15% - 30% - candidate master
-30% - 45% - master
-45% - 75% - grandmaster
->75% - legendary grandmaster
-"""
 RATED_RANKS = (
-    Rank(-10 ** 9, 0.5, 'Newbie', 'N', '#CCCCCC', 0x808080),
-    Rank(0.5, 2, 'Pupil', 'P', '#77FF77', 0x008000),
-    Rank(2, 7, 'Specialist', 'S', '#77DDBB', 0x03a89e),
-    Rank(7, 15, 'Expert', 'E', '#AAAAFF', 0x0000ff),
-    Rank(15, 30, 'Candidate Master', 'CM', '#FF88FF', 0xaa00aa),
-    Rank(30, 45, 'Master', 'M', '#FFCC88', 0xff8c00),
-    Rank(45, 75, 'Grandmaster', 'GM', '#FF7777', 0xff3030),
-    Rank(75, 10 ** 9, 'Legendary Grandmaster', 'LGM', '#AA0000', 0xcc0000)
+    Rank(-10 ** 9, 0.25, 'Newbie', 'N', '#CCCCCC', 0x808080),
+    Rank(0.25, 0.5, 'Pupil', 'P', '#77FF77', 0x008000),
+    Rank(0.5, 2, 'Specialist', 'S', '#77DDBB', 0x03a89e),
+    Rank(2, 5, 'Expert', 'E', '#AAAAFF', 0x0000ff),
+    Rank(5, 10, 'Candidate Master', 'CM', '#FF88FF', 0xaa00aa),
+    Rank(10, 15, 'Master', 'M', '#FFCC88', 0xff8c00),
+    Rank(15, 30, 'International Master', 'IM', '#FFBB55', 0xf57500),
+    Rank(30, 45, 'Grandmaster', 'GM', '#FF7777', 0xff3030),
+    Rank(45, 60, 'International Grandmaster', 'IGM', '#FF3333', 0xff0000),
+    Rank(60, 10 ** 9, 'Legendary Grandmaster', 'LGM', '#AA0000', 0xcc0000)
 )
 UNRATED_RANK = Rank(None, None, 'Unrated', None, None, None)
 

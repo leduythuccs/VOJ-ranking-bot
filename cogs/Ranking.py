@@ -20,23 +20,23 @@ BASE_PROBLEM_URL = 'https://codeforces.com/group/FLVn1Sc504/contest/{0}/problem/
 Rank = namedtuple('Rank', 'low high title title_abbr color_graph color_embed')
 # % max_score 
 """
-<2% - newbie
-2 - 5% - beginner
-5 - 10% - specialist
-10 - 25% - expert
-25% - 40% - candidate master
-40% - 55% - master
-55% - 75% - grandmaster
+<0.5% - newbie
+0.5 - 2% - beginner
+2 - 7% - specialist
+7 - 15% - expert
+15% - 30% - candidate master
+30% - 45% - master
+45% - 75% - grandmaster
 >75% - legendary grandmaster
 """
 RATED_RANKS = (
-    Rank(-10 ** 9, 2, 'Newbie', 'N', '#CCCCCC', 0x808080),
-    Rank(2, 5, 'Pupil', 'P', '#77FF77', 0x008000),
-    Rank(5, 10, 'Specialist', 'S', '#77DDBB', 0x03a89e),
-    Rank(10, 25, 'Expert', 'E', '#AAAAFF', 0x0000ff),
-    Rank(25, 40, 'Candidate Master', 'CM', '#FF88FF', 0xaa00aa),
-    Rank(40, 55, 'Master', 'M', '#FFCC88', 0xff8c00),
-    Rank(55, 75, 'Grandmaster', 'GM', '#FF7777', 0xff3030),
+    Rank(-10 ** 9, 0.5, 'Newbie', 'N', '#CCCCCC', 0x808080),
+    Rank(0.5, 2, 'Pupil', 'P', '#77FF77', 0x008000),
+    Rank(2, 7, 'Specialist', 'S', '#77DDBB', 0x03a89e),
+    Rank(7, 15, 'Expert', 'E', '#AAAAFF', 0x0000ff),
+    Rank(15, 30, 'Candidate Master', 'CM', '#FF88FF', 0xaa00aa),
+    Rank(30, 45, 'Master', 'M', '#FFCC88', 0xff8c00),
+    Rank(45, 75, 'Grandmaster', 'GM', '#FF7777', 0xff3030),
     Rank(75, 10 ** 9, 'Legendary Grandmaster', 'LGM', '#AA0000', 0xcc0000)
 )
 UNRATED_RANK = Rank(None, None, 'Unrated', None, None, None)
@@ -221,8 +221,8 @@ class RankingCommand(commands.Cog):
         discord_common.set_author_footer(embed, ctx.author)
         await ctx.send(embed=embed, file=discord_file)
     @commands.command(brief="Plot VOJ rating graph")
-    async def rating(self, ctx, handle):
-        """Plots VOJ rating graph for the handle provided."""
+    async def exp(self, ctx, handle):
+        """Plots VOJ experience graph for the handle provided."""
         if len(self.rank_cache) == 0:
             await self.calculate_rank(ctx)
         resp = self.get_rating_change(handle)
@@ -246,7 +246,7 @@ class RankingCommand(commands.Cog):
             min_rating = 0
         
         discord_file = gc.get_current_figure_as_file()
-        embed = discord_common.cf_color_embed(title='Rating graph in VNOI group')
+        embed = discord_common.cf_color_embed(title='Experience graph in VNOI group')
         discord_common.attach_image(embed, discord_file)
         discord_common.set_author_footer(embed, ctx.author)
         await ctx.send(embed=embed, file=discord_file)

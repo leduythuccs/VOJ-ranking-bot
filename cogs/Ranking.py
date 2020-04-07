@@ -227,7 +227,7 @@ class RankingCommand(commands.Cog):
             await self.calculate_rank(ctx)
         resp = self.get_rating_change(handle)
         if len(resp) == 0:
-            ctx.send(f'User {handle} is not rated')
+            await ctx.send(f'User {handle} is not rated. No accpected submission found.')
             return
         plt.clf()
         _plot_rating([resp], MAX_SCORE=self.MAX_SCORE)

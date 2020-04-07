@@ -28,7 +28,6 @@ class Crawler:
             'accept-language': 'zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7,zh-CN;q=0.6',
         }
         self.waiting_list = []
-        self.login()
 
     def save_last_submission(self):
         open('database/last_submission.txt', 'w').write(str(self.last_submission))

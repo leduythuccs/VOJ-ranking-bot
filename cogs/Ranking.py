@@ -178,6 +178,9 @@ class RankingCommand(commands.Cog):
     @commands.command(brief="Test crawler")
     @commands.is_owner()
     async def crawl(self, ctx, l, r):
+        if self.crawler.login() == False:
+            await ctx.send('Failed when log in to codeforces, please try later.')
+            return
         l = int(l)
         r = int(r)
         problems = self.crawler.get_new_submissions(l, r)

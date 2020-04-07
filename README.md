@@ -13,7 +13,7 @@
 ## Installation
 Clone this repository 
 - `python pip install -r requirements`
-- Base on file `.env-example`, create file `.env` and fill all the data: bot token, account account codeforces (for crawling submission), ...
+- Base on file `.env-example`, create file `.env` and fill all the data: bot token, account codeforces (for crawling submission), codeforces group id.
 
 ## How to use
 - Create a discord bot, add it to your discord server.

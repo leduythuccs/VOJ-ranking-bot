@@ -251,9 +251,10 @@ class RankingDbConn:
     def get_data(self, table, limit = 10):
         query = (
             'SELECT * '
-            'FROM {0} '.format(table) +
-            'LIMIT {0}'.format(limit)
+            'FROM {0} '.format(table)
         )
+        if limit is not None:
+            query +=  'LIMIT {0}'.format(limit)
         x = self.conn.execute(query).fetchall()
         return x
 

@@ -8,6 +8,8 @@ import json
 from datetime import datetime
 import requests
 import time
+from helper import table
+from helper import paginator
 BASE_PROBLEM_URL = 'https://codeforces.com/group/FLVn1Sc504/contest/{0}/problem/{1}'
 def days_between(d1, d2 = None):
     if d2 is None:
@@ -44,6 +46,7 @@ class RankingCommand(commands.Cog):
         group_id = os.getenv('CODEFORCES_GROUP_ID')
         self.rankingDb = RankingDb.RankingDbConn('database/ranking.db')
         self.crawler = SubmissionCrawler.Crawler(username, password, group_id)
+        self.rank_cache = []
 
     # @commands.Cog.listener()
     # async def on_ready(self):
@@ -76,6 +79,62 @@ class RankingCommand(commands.Cog):
     #     """Change bot's log channel to this channel"""
     #     self.log_channel = ctx.channel
     #     await ctx.send("Successfully set log channel to " + ctx.channel.name)
+    #from TLE bot: https://github.com/cheran-senthil/TLE/blob/97c9bff9800b3bbaefb72ec00faa57a4911d3a4b/tle/cogs/duel.py#L410
+
+    @commands.command(brief="Show ranking")
+    async def ranklist(self, ctx):
+        """Show VOJ ranking"""
+
+        _PER_PAGE = 10
+        def make_page(chunk, page_num):
+            style = table.Style('{:>}  {:<}  {:<}')
+            t = table.Table(style)
+            t += table.Header('#', 'Handle', 'Point')
+            t += table.Line()
+            for index, (point, handle) in enumerate(chunk):
+                point_str = '{:.3f}'.format(point)
+                t += table.Data(_PER_PAGE * page_num + index, handle, point_str)
+
+            table_str = f'```\n{t}\n```'
+            embed = discord.Embed(description=table_str)
+            return 'VOJ ranking', embed
+
+        pages = [make_page(chunk, k) for k, chunk in enumerate(paginator.chunkify(self.rank_cache, _PER_PAGE))]
+        paginator.paginate(self.bot, ctx.channel, pages)
+
+    @commands.command(brief="Calculate ranking and cache it.")
+    @commands.is_owner()
+    async def calculate_rank(self, ctx):
+        start = time.perf_counter()
+        message = await ctx.send('<:pingreee:665243570655199246> Calculating ...')
+        #calculating
+        problem_info = self.rankingDb.get_data('problem_info', limit=None)
+        problem_points = {}
+        for id, problem_name, links, cnt_AC in problem_info:
+            point = 80 / (40 + int(cnt_AC))
+            problem_points[int(id)] = point
+        user_data = self.rankingDb.get_data('user_data', limit=None)
+        user_handles = {}
+        for cf_id, handle, discord_id in user_data:
+            user_handles[int(cf_id)] = handle
+
+        user_points = {}
+        solved_info = self.rankingDb.get_data('solved_info', limit=None)
+        for user_id, problem_id, result, date in solved_info:
+            handle = user_handles[int(user_id)]
+            if handle not in user_points:
+                user_points[handle] = 0
+            if result == 'AC':
+                result = 100
+            result = float(result)
+            user_points[handle] += result * problem_points[int(problem_id)] / 100
+        self.rank_cache = []
+        for handle, point in user_points.items():
+            self.rank_cache.append((point, handle))
+        self.rank_cache.sort(reverse=True)
+        end = time.perf_counter()
+        duration = (end - start) * 1000
+        await message.edit(content=f'Done. Calculation time: {int(duration)}ms.')
     @commands.command(brief="Test crawler")
     @commands.is_owner()
     async def crawl(self, ctx, l, r):

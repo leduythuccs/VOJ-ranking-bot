@@ -215,7 +215,31 @@ class RankingDbConn:
         #
         self.add_user(author_id, author_handle)
     
-    def set_handle(self, discord_id, handle):
+    def change_handle(self, old_handle, new_handle):
+        old_handle = old_handle.lower()
+        new_handle = new_handle.lower()
+        query = (
+            'SELECT CF_id, discord_id '
+            'FROM user_data '
+            'WHERE handle = ?'
+        )
+        r = self.conn.execute(query, (old_handle, )).fetchone()
+        if r is not None:
+            query = (
+                'UPDATE user_data '
+                'SET CF_id = ?, discord_id = ?, handle = ?, '
+                'WHERE handle = ?'
+            )
+            self.conn.execute(query, (r[0], r[1], new_handle, old_handle))
+        else:
+            query = (
+                'INSERT INTO user_data (handle) '
+                'VALUES (?)'
+            )
+            self.conn.execute(query, (new_handle, ))
+        # self.conn.commit()
+        
+    def set_handle(self, discord_id, handle, force = False):
         handle = handle.lower()
         discord_id = str(discord_id)
         query = (
@@ -224,8 +248,8 @@ class RankingDbConn:
             'WHERE handle = ?'
         )
         r = self.conn.execute(query, (handle, )).fetchone()
-        if r is not None and r[0] is not None and r[0] != discord_id:
-            return False
+        if r is not None and r[0] is not None and r[0] != discord_id and not force2:
+            return r[0]
         if r is not None:
             query = (
                 'UPDATE user_data '
@@ -249,6 +273,7 @@ class RankingDbConn:
         )
         res = self.conn.execute(query, (discord_id, )).fetchone()
         return res[0] if res else None
+    
     
     
     #for local debug

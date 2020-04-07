@@ -15,7 +15,7 @@ from helper import graph_common as gc
 from matplotlib import pyplot as plt
 from collections import namedtuple
 from typing import List
-
+from helper import codeforces_api
 BASE_PROBLEM_URL = 'https://codeforces.com/group/FLVn1Sc504/contest/{0}/problem/{1}'
 Rank = namedtuple('Rank', 'low high title title_abbr color_graph color_embed')
 # % max_score 
@@ -33,6 +33,7 @@ RATED_RANKS = (
 )
 UNRATED_RANK = Rank(None, None, 'Unrated', None, None, None)
 
+SET_HANDLE_SUCCESS = 'Handle for <@{0}> currently set to <https://codeforces.com/profile/{1}>'
 
 def point2rank(point, MAX_SCORE = 100):
     if point is None:
@@ -66,6 +67,7 @@ def days_between(d1, d2 = None):
         d2 = datetime.today()
     d1 = datetime.strptime(d1, "%Y/%m/%d")
     return (d2 - d1).days
+
 def to_message(p):
     #p[0][0] -> name
     #p[0][1] -> links
@@ -98,7 +100,7 @@ class RankingCommand(commands.Cog):
         self.crawler = SubmissionCrawler.Crawler(username, password, group_id)
         self.rank_cache = []
         self.MAX_SCORE = 0
-        self.looper.start()
+        # self.looper.start()
         self.index = 0
 
     
@@ -121,18 +123,83 @@ class RankingCommand(commands.Cog):
     #     message = ""
     #     if self.rankingDb.set_handle(member.id, handle):
     #         await ctx.send("Error: The handle {} is already associated with another user.".format(handle))
+    @commands.command(brief="Identify yourself.")
+    async def identify(self, ctx, handle):
+        discord_id = ctx.author.id 
+        await ctx.send(f'`{str(ctx.author)}`, submit a compile error to <https://codeforces.com/problemset/problem/696/A> within 60 seconds')
+        await asyncio.sleep(60)
+        subs = await codeforces_api.get_user_status(handle)
+
+        if any(sub['problem_name'] == 'Lorenzo Von Matterhorn' and sub['verdict'] == 'COMPILATION_ERROR' for sub in subs):
+            x = self.rankingDb.set_handle(discord_id, handle)
+            if x != True:
+                await ctx.send('Error, handle {0} is currently set to user <@{1}>'.format(handle, x))
+            else:
+                await ctx.send(SET_HANDLE_SUCCESS.format(discord_id, handle))
+                self.rankingDb.conn.commit()
+        else:
+            await ctx.send(f'Sorry `{str(ctx.author)}`, can you try again?')
+        
+    @commands.command(brief='Set Codeforces handle of a user')
+    @commands.check_any(commands.is_owner(), commands.has_role('Admin'))
+    async def set(self, ctx, member: discord.Member, handle):
+        if self.rankingDb.set_handle(member.id, handle, force=True) == True:
+            await ctx.send(SET_HANDLE_SUCCESS.format(member.id, handle))
+            self.rankingDb.conn.commit()
+        else:
+            await ctx.send("Failed ?? :D ??")
+    @commands.command(brief='Get handle by Discord username')
+    async def get(self, ctx, member: discord.Member):
+        """Show Codeforces handle of a user."""
+        handle = self.rankingDb.get_handle(member.id)
+        if handle is None:
+            if ctx is None:
+                return None
+            await ctx.send(f'Handle for {member.mention} not found in database')
+            return
+        if ctx is None:
+            return handle
+        await ctx.send(SET_HANDLE_SUCCESS.format(member.id, handle))
+
+    async def get_handle(self, ctx, handle):
+        if handle is None:
+            handle = await self.get(None, ctx.author)
+            if handle is None:
+                await ctx.send(f'Handle for {ctx.author.mention} not found in database')
+                return None
+            return handle
+        else:
+            if handle[0] == '<' and handle[-1] == '>':
+                if len(handle) <= 4 or not handle[3:-1].isdigit():
+                    await ctx.send(f'Handle {handle} is invalid.')
+                    return None
+                discord_id = handle[3:-1]
+                handle = self.rankingDb.get_handle(discord_id)
+                if handle is None:
+                    await ctx.send(f'Handle for <@{discord_id}> not found in database')
+                    return None
+        return handle
+    
     @commands.command(brief="List recent AC problems",
         usage='[handle]')
-    async def stalk(self, ctx, handle):
+    async def stalk(self, ctx, handle = None):
+        handle = await self.get_handle(ctx, handle)
+        if handle is None:
+            return None
         problem_list = self.rankingDb.get_info_solved_problem(handle)
         problem_list = list(filter(lambda x: x[1] == 'AC', problem_list))
         problem_list = sorted(problem_list, key=lambda x: x[2], reverse=True)
         problem_list = problem_list[:10]
         problem_list = list(map(lambda x: (self.rankingDb.get_problem_info(x[0]), x[1], x[2]), problem_list))
+        if len(problem_list) == 0:
+            await ctx.send(f'User `{handle}`` is not rated. No accpected submission found.')
+            return
+        
         msg = ''
         for p in problem_list:
             msg += to_message(p) + '\n'
         title = "Recently solved problems by " + handle
+
         embed = discord.Embed(title=title, description=msg)
         await ctx.send(embed=embed)
     
@@ -190,8 +257,11 @@ class RankingCommand(commands.Cog):
         paginator.paginate(self.bot, ctx.channel, pages)
 
     @commands.command(brief="Show histogram of solved problems on CF.")
-    async def hist(self, ctx, handle):
+    async def hist(self, ctx, handle = None):
         """Shows the histogram of problems solved over time on Codeforces for the handles provided."""
+        handle = await self.get_handle(ctx, handle)
+        if handle is None:
+            return 
         raw_subs = self.rankingDb.get_info_solved_problem(handle)
         if len(raw_subs) == 0:
             await ctx.send('There are no problems within the specified parameters.')
@@ -212,7 +282,7 @@ class RankingCommand(commands.Cog):
             solved_by_type[t].append(date)
         
         all_times = [[datetime.strptime(date, '%Y/%m/%d') for date in solved_by_type[t]] for t in types]
-        labels = ['Accepted', 'Incorrect', 'Pactial Result']
+        labels = ['Accepted', 'Incorrect', 'Partial Result']
         colors = ['g','r','y']
         plt.hist(all_times, stacked=True, label=labels, bins=34, color=colors)
         total = sum(map(len, all_times))
@@ -224,14 +294,18 @@ class RankingCommand(commands.Cog):
         discord_common.attach_image(embed, discord_file)
         discord_common.set_author_footer(embed, ctx.author)
         await ctx.send(embed=embed, file=discord_file)
+    
     @commands.command(brief="Plot VOJ rating graph")
-    async def exp(self, ctx, handle):
+    async def exp(self, ctx, handle = None):
         """Plots VOJ experience graph for the handle provided."""
+        handle = await self.get_handle(ctx, handle)
+        if handle is None:
+            return 
         if len(self.rank_cache) == 0:
             await self.calculate_rank(ctx)
         resp = self.get_rating_change(handle)
         if len(resp) == 0:
-            await ctx.send(f'User {handle} is not rated. No accpected submission found.')
+            await ctx.send(f'User `{handle}` is not rated. No accpected submission found.')
             return
         plt.clf()
         _plot_rating([resp], MAX_SCORE=self.MAX_SCORE)

@@ -27,7 +27,7 @@ class Crawler:
             'accept-encoding': 'gzip, deflate, br',
             'accept-language': 'zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7,zh-CN;q=0.6',
         }
-        self.waiting_list = []
+        self.first_un_crawl_submission = 0
 
     def save_last_submission(self):
         open('database/last_submission.txt', 'w').write(str(self.last_submission))
@@ -92,6 +92,7 @@ class Crawler:
 
         if elems[5].has_attr('waiting') and elems[5]['waiting'] != 'false':
             self.waiting_list.append(row)
+            self.first_un_crawl_submission = min(self.first_un_crawl_submission, submission_id)
             return None
         
         verdict = elems[5].span['submissionverdict']
@@ -126,13 +127,8 @@ class Crawler:
         return (infos, stop)
     
     def get_new_submissions(self, l, r):
-        pre_wait_list = self.waiting_list
-        self.waiting_list = []
         infos = []
-        for row in pre_wait_list:
-            r = self.get_info_submission(row, force=True)
-            if r != None:
-                infos.append(r)
+        self.first_un_crawl_submission = 347598374985739845
         for page in range(l, r + 1):
             print("crawling page " + str(page), end=' ')
             new_infos, stop = self.crawl_submissions(page)
@@ -142,6 +138,8 @@ class Crawler:
                 break
         for id, *junk in infos:
             self.last_submission = max(self.last_submission, int(id))
+        if self.last_submission > self.first_un_crawl_submission:
+            self.last_submission = self.first_un_crawl_submission - 1
         self.save_last_submission()
         return infos
     

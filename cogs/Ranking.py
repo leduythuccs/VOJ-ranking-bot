@@ -1,4 +1,4 @@
-from discord.ext import commands
+from discord.ext import commands, tasks
 import discord
 import asyncio
 import os
@@ -98,7 +98,19 @@ class RankingCommand(commands.Cog):
         self.crawler = SubmissionCrawler.Crawler(username, password, group_id)
         self.rank_cache = []
         self.MAX_SCORE = 0
+        self.looper.start()
+        self.index = 0
 
+    
+    @tasks.loop(minutes=10.0)
+    async def looper(self):
+        self.index += 1
+        print("looping " + str(self.index))
+        try:
+            await self.crawl(None, 1, 100)
+        except Exception as e:
+            print(e)
+        
     # @commands.Cog.listener()
     # async def on_ready(self):
     #     pass
@@ -278,16 +290,23 @@ class RankingCommand(commands.Cog):
         end = time.perf_counter()
         duration = (end - start) * 1000
         await message.edit(content=f'Done. Calculation time: {int(duration)}ms.')
+    
     @commands.command(brief="Test crawler")
     @commands.is_owner()
     async def crawl(self, ctx, l, r):
         if self.crawler.login() == False:
-            await ctx.send('Failed when log in to codeforces, please try later.')
+            if ctx is not None:
+                await ctx.send('Failed when log in to codeforces, please try later.')
+            else:
+                print('Failed when log in to codeforces, please try later.')
             return
         l = int(l)
         r = int(r)
         problems = self.crawler.get_new_submissions(l, r)
-        await ctx.send('Found {0} submissions.'.format(len(problems)))
+        if ctx is not None:
+            await ctx.send('Found {0} submissions.'.format(len(problems)))
+        else:
+            print('Found {0} submissions.'.format(len(problems)))
         cnt = 0
         for p_info in problems:
             cnt += 1

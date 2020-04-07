@@ -46,6 +46,7 @@ Clone this repository
 
 ## Q&A
 - Question: How rank is calculated? Answer: Each problem has a point, equal to `80 / (40 + x)` with `x` is number of users got accepted in that problem (`cnt_AC` in table `problem_info`). If a user submit to a problem and receive a accepted verdict, they will earn all the problem's point. If they receive a partial score, they will earn `partial_score` * `problem_point` / 100 points.
+
 ## Note
 - There is some commands required `Admin` role. If you're not bot's owner, you will need `Admin` role to use those commands.
-- You can update the bot (get new commit from this repository) by using `;rebuild git_pull` command. Then you can use `;rebuild restart` to restart the bot (you don't need to run it again, it's very useful since I'm running the bot in a VPS).
+- You can update the bot (get new commit from this repository) by using `;voj git_pull` command. Then you can use `;voj restart` to restart the bot (you don't need to run it again, it's very useful since I'm running the bot in a VPS).

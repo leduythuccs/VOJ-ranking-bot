@@ -88,7 +88,7 @@ class RankingCommand(commands.Cog):
     async def ranklist(self, ctx):
         """Show VOJ ranking"""
         if len(self.rank_cache) == 0:
-            self.calculate_rank(ctx)
+            await self.calculate_rank(ctx)
         _PER_PAGE = 10
         def make_page(chunk, page_num):
             style = table.Style('{:>}  {:<}  {:<}')

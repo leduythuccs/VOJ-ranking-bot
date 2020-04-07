@@ -1,12 +1,29 @@
 import os
 from dotenv import load_dotenv
 from discord.ext import commands
+import seaborn as sns
+from matplotlib import pyplot as plt
+def setup():
+    # Make required directories.
+    os.makedirs('temp_dir', exist_ok=True)
+
+    # matplotlib and seaborn
+    plt.rcParams['figure.figsize'] = 7.0, 3.5
+    sns.set()
+    options = {
+        'axes.edgecolor': '#A0A0C5',
+        'axes.spines.top': False,
+        'axes.spines.right': False,
+    }
+    sns.set_style('darkgrid', options)
+
 current_path = os.path.dirname(os.path.abspath(__file__))
 os.chdir(current_path)
 load_dotenv()
 
-token = os.getenv('DISCORD_TOKEN')
+setup()
 
+token = os.getenv('DISCORD_TOKEN')
 # bot
 bot = commands.Bot(command_prefix=';voj ')
 print(bot.command_prefix)

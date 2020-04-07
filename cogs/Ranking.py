@@ -10,6 +10,9 @@ import requests
 import time
 from helper import table
 from helper import paginator
+from helper import discord_common
+from helper import graph_common as gc
+from matplotlib import pyplot as plt
 BASE_PROBLEM_URL = 'https://codeforces.com/group/FLVn1Sc504/contest/{0}/problem/{1}'
 def days_between(d1, d2 = None):
     if d2 is None:
@@ -84,7 +87,8 @@ class RankingCommand(commands.Cog):
     @commands.command(brief="Show ranking")
     async def ranklist(self, ctx):
         """Show VOJ ranking"""
-
+        if len(self.rank_cache) == 0:
+            self.calculate_rank(ctx)
         _PER_PAGE = 10
         def make_page(chunk, page_num):
             style = table.Style('{:>}  {:<}  {:<}')
@@ -102,6 +106,42 @@ class RankingCommand(commands.Cog):
         pages = [make_page(chunk, k) for k, chunk in enumerate(paginator.chunkify(self.rank_cache, _PER_PAGE))]
         paginator.paginate(self.bot, ctx.channel, pages)
 
+    @commands.command(brief="Show histogram of solved problems on CF.")
+    async def hist(self, ctx, handle):
+        """Shows the histogram of problems solved over time on Codeforces for the handles provided."""
+        raw_subs = self.rankingDb.get_info_solved_problem(handle)
+        if len(raw_subs) == 0:
+            await ctx.send('There are no problems within the specified parameters.')
+            return
+        subs = []
+        types = ['AC', 'IC', 'PC']
+        solved_by_type = {'AC' : [], 'IC' : [], 'PC' : []}
+        cnt = 0
+        plt.clf()
+        plt.xlabel('Time')
+        plt.ylabel('Number solved')
+        for problem_id, result, date in raw_subs:
+            t = result
+            if t != 'AC' and float(t) <= 0 + 0.01:
+                t = 'IC'
+            elif t != 'AC':
+                t = 'PC'
+            solved_by_type[t].append(date)
+        
+        all_times = [[datetime.strptime(date, '%Y/%m/%d') for date in solved_by_type[t]] for t in types]
+        labels = ['Accepted', 'Incorrect', 'Pactial Result']
+        colors = ['g','r','y']
+        plt.hist(all_times, stacked=True, label=labels, bins=34, color=colors)
+        total = sum(map(len, all_times))
+        plt.legend(title=f'{handle}: {total}', title_fontsize=plt.rcParams['legend.fontsize'])
+
+        plt.gcf().autofmt_xdate()
+        discord_file = gc.get_current_figure_as_file()
+        embed = discord_common.cf_color_embed(title='Histogram of number of solved problems over time')
+        discord_common.attach_image(embed, discord_file)
+        discord_common.set_author_footer(embed, ctx.author)
+        await ctx.send(embed=embed, file=discord_file)
+    
     @commands.command(brief="Calculate ranking and cache it.")
     @commands.is_owner()
     async def calculate_rank(self, ctx):

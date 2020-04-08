@@ -169,11 +169,12 @@ class RankingCommand(commands.Cog):
                 return None
             return handle
         else:
+            handle = handle.replace('!', '')
             if handle[0] == '<' and handle[-1] == '>':
-                if len(handle) <= 4 or not handle[3:-1].isdigit():
+                if len(handle) <= 3 or not handle[2:-1].isdigit():
                     await ctx.send(f'Handle {handle} is invalid.')
                     return None
-                discord_id = handle[3:-1]
+                discord_id = handle[2:-1]
                 handle = self.rankingDb.get_handle(discord_id)
                 if handle is None:
                     await ctx.send(f'Handle for <@{discord_id}> not found in database')

@@ -29,7 +29,8 @@ RATED_RANKS = (
     Rank(15, 30, 'International Master', 'IM', '#FFBB55', 0xf57500),
     Rank(30, 45, 'Grandmaster', 'GM', '#FF7777', 0xff3030),
     Rank(45, 60, 'International Grandmaster', 'IGM', '#FF3333', 0xff0000),
-    Rank(60, 10 ** 9, 'Legendary Grandmaster', 'LGM', '#AA0000', 0xcc0000)
+    Rank(60, 90, 'Legendary Grandmaster', 'LGM', '#AA0000', 0xcc0000),
+    Rank(90, 10 ** 9, 'Cá nóc', 'CNCC', '#854442', 0xcc0000)
 )
 UNRATED_RANK = Rank(None, None, 'Unrated', None, None, None)
 
@@ -141,7 +142,29 @@ class RankingCommand(commands.Cog):
                     self.rankingDb.conn.commit()
                 return
         await ctx.send(f'Sorry `{str(ctx.author)}`, can you try again?')
-        
+    @commands.command(brief="Get badge info.")
+    async def badge(self, ctx):
+        """
+            Show required score to get badge.
+        """
+        style = table.Style('{:<}  {:<}  {:<}')
+        t = table.Table(style)
+        t += table.Header('Badge title', 'Lowerbound %', 'Upperbound %')
+        t += table.Line()
+        for rank in RATED_RANKS:
+            title = rank.title
+            low = max(0, rank.low)
+            hi = min(100, rank.high)
+            low = "{:.2f}%".format(low)
+            hi = "{:.2f}%".format(hi)
+            t += table.Data(title, low, hi)
+        table_str = f'```\n{t}\n```'
+        embed = discord_common.cf_color_embed(
+            title="Required % score to get badge. "
+            "Current MAX_SCORE={:.2f}".format(self.MAX_SCORE),
+            description=table_str)
+        await ctx.send(embed=embed)
+    
     @commands.command(brief='Set Codeforces handle of a user')
     @commands.check_any(commands.is_owner(), commands.has_role('Admin'))
     async def set(self, ctx, member: discord.Member, handle):

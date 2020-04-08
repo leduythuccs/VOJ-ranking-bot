@@ -165,7 +165,7 @@ class RankingCommand(commands.Cog):
             description=table_str)
         await ctx.send(embed=embed)
     @commands.command(brief="Update badge info.")
-    @commands.is_owner()
+    @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))
     async def update_badge(self, ctx, name, low, hi):
         try:
             for i in range(len(RATED_RANKS)):
@@ -181,7 +181,7 @@ class RankingCommand(commands.Cog):
             print(e)
             await ctx.send(str(e))
     @commands.command(brief='Set Codeforces handle of a user')
-    @commands.check_any(commands.is_owner(), commands.has_role('Admin'))
+    @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))
     async def set(self, ctx, member: discord.Member, handle):
         if self.rankingDb.set_handle(member.id, handle, force=True) == True:
             await ctx.send(SET_HANDLE_SUCCESS.format(member.id, handle))
@@ -371,7 +371,7 @@ class RankingCommand(commands.Cog):
         await ctx.send(embed=embed, file=discord_file)
     
     @commands.command(brief="Calculate ranking and cache it.")
-    @commands.is_owner()
+    @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))
     async def calculate_rank(self, ctx):
         start = time.perf_counter()
         message = ""
@@ -412,7 +412,7 @@ class RankingCommand(commands.Cog):
             await message.edit(content=f'Done. Calculation time: {int(duration)}ms.')
     
     @commands.command(brief="Test crawler")
-    @commands.is_owner()
+    @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))
     async def crawl(self, ctx, l, r):
         if self.crawler.login() == False:
             if ctx is not None:

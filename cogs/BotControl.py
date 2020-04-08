@@ -62,20 +62,20 @@ class BotControl(commands.Cog):
                                     f'Gateway API latency: {int(self.bot.latency * 1000)}ms')
 
     @commands.command(brief="Kill bot. ")
-    @commands.is_owner()
+    @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))
     async def kill(self, ctx):
         """Kill bot"""
         await ctx.send("Dying")
         exit(0)
 
     @commands.command(brief='Restart bot')
-    @commands.is_owner()
+    @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))
     async def restart(self, ctx):
         await ctx.send('Restarting...')
         os.execv(sys.executable, [sys.executable] + sys.argv)
 
     @commands.command(brief="Update bot & restart")
-    @commands.is_owner()
+    @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))
     async def update_restart(self, ctx):
         await self.git_pull(ctx)
         await self.restart(ctx)
@@ -86,7 +86,7 @@ class BotControl(commands.Cog):
         await ctx.send('```yaml\n' + git_history() + '```')
 
     @commands.command(brief='Incorporates changes from the remote repository')
-    @commands.is_owner()
+    @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))
     async def git_pull(self, ctx):
         mess = await ctx.send('Getting changes from the remote repository...')
         result = subprocess.run(

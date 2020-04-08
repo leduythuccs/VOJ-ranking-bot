@@ -388,6 +388,8 @@ class RankingCommand(commands.Cog):
         user_data = self.rankingDb.get_data('user_data', limit=None)
         user_handles = {}
         for cf_id, handle, discord_id in user_data:
+            if cf_id is None:
+                continue
             user_handles[int(cf_id)] = handle
 
         user_points = {}

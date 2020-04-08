@@ -100,7 +100,7 @@ class RankingCommand(commands.Cog):
         self.crawler = SubmissionCrawler.Crawler(username, password, group_id)
         self.rank_cache = []
         self.MAX_SCORE = 0
-        # self.looper.start()
+        self.looper.start()
         self.index = 0
 
     
@@ -110,6 +110,7 @@ class RankingCommand(commands.Cog):
         print("looping " + str(self.index))
         try:
             await self.crawl(None, 1, 100)
+            await self.calculate_rank(None)
         except Exception as e:
             print(e)
         
@@ -335,7 +336,9 @@ class RankingCommand(commands.Cog):
     @commands.is_owner()
     async def calculate_rank(self, ctx):
         start = time.perf_counter()
-        message = await ctx.send('<:pingreee:665243570655199246> Calculating ...')
+        message = ""
+        if ctx != None:
+            message = await ctx.send('<:pingreee:665243570655199246> Calculating ...')
         #calculating
         problem_info = self.rankingDb.get_data('problem_info', limit=None)
         problem_points = {}
@@ -365,7 +368,8 @@ class RankingCommand(commands.Cog):
         self.rank_cache.sort(reverse=True)
         end = time.perf_counter()
         duration = (end - start) * 1000
-        await message.edit(content=f'Done. Calculation time: {int(duration)}ms.')
+        if ctx != None:
+            await message.edit(content=f'Done. Calculation time: {int(duration)}ms.')
     
     @commands.command(brief="Test crawler")
     @commands.is_owner()

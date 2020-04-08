@@ -127,18 +127,19 @@ class RankingCommand(commands.Cog):
     async def identify(self, ctx, handle):
         discord_id = ctx.author.id 
         await ctx.send(f'`{str(ctx.author)}`, submit a compile error to <https://codeforces.com/problemset/problem/696/A> within 60 seconds')
-        await asyncio.sleep(60)
-        subs = await codeforces_api.get_user_status(handle)
+        for i in range(6):
+            await asyncio.sleep(10)
+            subs = await codeforces_api.get_user_status(handle)
 
-        if any(sub['problem_name'] == 'Lorenzo Von Matterhorn' and sub['verdict'] == 'COMPILATION_ERROR' for sub in subs):
-            x = self.rankingDb.set_handle(discord_id, handle)
-            if x != True:
-                await ctx.send('Error, handle {0} is currently set to user <@{1}>'.format(handle, x))
-            else:
-                await ctx.send(SET_HANDLE_SUCCESS.format(discord_id, handle))
-                self.rankingDb.conn.commit()
-        else:
-            await ctx.send(f'Sorry `{str(ctx.author)}`, can you try again?')
+            if any(sub['problem_name'] == 'Lorenzo Von Matterhorn' and sub['verdict'] == 'COMPILATION_ERROR' for sub in subs):
+                x = self.rankingDb.set_handle(discord_id, handle)
+                if x != True:
+                    await ctx.send('Error, handle {0} is currently set to user <@{1}>'.format(handle, x))
+                else:
+                    await ctx.send(SET_HANDLE_SUCCESS.format(discord_id, handle))
+                    self.rankingDb.conn.commit()
+                return
+        await ctx.send(f'Sorry `{str(ctx.author)}`, can you try again?')
         
     @commands.command(brief='Set Codeforces handle of a user')
     @commands.check_any(commands.is_owner(), commands.has_role('Admin'))

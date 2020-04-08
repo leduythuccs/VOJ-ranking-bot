@@ -91,7 +91,6 @@ class Crawler:
         short_link = '/'.join(re.findall('contest/(\d+)/problem/(\w)', elems[3].a['href'])[0])
 
         if elems[5].has_attr('waiting') and elems[5]['waiting'] != 'false':
-            self.waiting_list.append(row)
             self.first_un_crawl_submission = min(self.first_un_crawl_submission, submission_id)
             return None
         

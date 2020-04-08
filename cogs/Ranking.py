@@ -19,7 +19,7 @@ from helper import codeforces_api
 BASE_PROBLEM_URL = 'https://codeforces.com/group/FLVn1Sc504/contest/{0}/problem/{1}'
 Rank = namedtuple('Rank', 'low high title title_abbr color_graph color_embed')
 # % max_score 
-RATED_RANKS = (
+RATED_RANKS = [
     Rank(-10 ** 9, 0.25, 'Newbie', 'N', '#CCCCCC', 0x808080),
     Rank(0.25, 0.5, 'Pupil', 'P', '#77FF77', 0x008000),
     Rank(0.5, 2, 'Specialist', 'S', '#77DDBB', 0x03a89e),
@@ -31,7 +31,7 @@ RATED_RANKS = (
     Rank(45, 60, 'International Grandmaster', 'IGM', '#FF3333', 0xff0000),
     Rank(60, 90, 'Legendary Grandmaster', 'LGM', '#AA0000', 0xcc0000),
     Rank(90, 10 ** 9, 'Cá nóc', 'CNCC', '#854442', 0xcc0000)
-)
+]
 UNRATED_RANK = Rank(None, None, 'Unrated', None, None, None)
 
 SET_HANDLE_SUCCESS = 'Handle for <@{0}> currently set to <https://codeforces.com/profile/{1}>'
@@ -164,7 +164,22 @@ class RankingCommand(commands.Cog):
             "Current MAX_SCORE={:.2f}".format(self.MAX_SCORE),
             description=table_str)
         await ctx.send(embed=embed)
-    
+    @commands.command(brief="Update badge info.")
+    @commands.is_owner()
+    async def update_badge(self, ctx, name, low, hi):
+        try:
+            for i in range(len(RATED_RANKS)):
+                if RATED_RANKS[i].title == name:
+                    rank = RATED_RANKS[i]
+                    #Rank = namedtuple('Rank', 'low high title title_abbr color_graph color_embed')
+                    RATED_RANKS[i] = Rank(float(low), float(hi), name, rank.title_abbr, rank.color_graph, rank.color_embed)
+                    await ctx.send('Ok')
+                    return
+            else:
+                await ctx.send('Badge {0} not found'.format(name))
+        except Exception as e:
+            print(e)
+            await ctx.send(str(e))
     @commands.command(brief='Set Codeforces handle of a user')
     @commands.check_any(commands.is_owner(), commands.has_role('Admin'))
     async def set(self, ctx, member: discord.Member, handle):

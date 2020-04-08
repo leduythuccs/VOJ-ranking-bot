@@ -21,8 +21,8 @@ Rank = namedtuple('Rank', 'low high title title_abbr color_graph color_embed')
 # % max_score 
 RATED_RANKS = [
     Rank(-10 ** 9, 0.25, 'Newbie', 'N', '#CCCCCC', 0x808080),
-    Rank(0.25, 0.5, 'Pupil', 'P', '#77FF77', 0x008000),
-    Rank(0.5, 2, 'Specialist', 'S', '#77DDBB', 0x03a89e),
+    Rank(0.25, 1, 'Pupil', 'P', '#77FF77', 0x008000),
+    Rank(1, 2, 'Specialist', 'S', '#77DDBB', 0x03a89e),
     Rank(2, 5, 'Expert', 'E', '#AAAAFF', 0x0000ff),
     Rank(5, 10, 'Candidate Master', 'CM', '#FF88FF', 0xaa00aa),
     Rank(10, 15, 'Master', 'M', '#FFCC88', 0xff8c00),

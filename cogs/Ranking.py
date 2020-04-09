@@ -225,20 +225,26 @@ class RankingCommand(commands.Cog):
         return handle
     
     @commands.command(brief="List recent AC problems",
-        usage='[handle]')
-    async def stalk(self, ctx, handle = None):
+        usage='[handle] [d>=[[dd]mm]yyyy] [d<[[dd]mm]yyyy]')
+    async def stalk(self, ctx, *args):
+        """
+        Top 10 recent AC problems
+        e.g. ;voj stalk CKQ d<16022020 d>=05062019
+        """
+        filt = DayFilter()
+        handle = filt.parse(args)
         handle = await self.get_handle(ctx, handle)
         if handle is None:
-            return None
+            return 
         problem_list = self.rankingDb.get_info_solved_problem(handle)
-        problem_list = list(filter(lambda x: x[1] == 'AC', problem_list))
-        problem_list = sorted(problem_list, key=lambda x: x[2], reverse=True)
-        problem_list = problem_list[:10]
-        problem_list = list(map(lambda x: (self.rankingDb.get_problem_info(x[0]), x[1], x[2]), problem_list))
+        problem_list = list(filter(lambda x: x[1] == 'AC' or (float(x[1]) >= 100 - 0.1), problem_list))
+        problem_list = list(filter(lambda x: filt.filter(datetime.strptime(x[2], '%Y/%m/%d')), problem_list))
         if len(problem_list) == 0:
-            await ctx.send(f'User `{handle}`` is not rated. No accpected submission found.')
+            await ctx.send('There are no submissions of user `{0}` within the specified parameters.'.format(handle))
             return
-        
+        problem_list = sorted(problem_list, key=lambda x: x[2], reverse=True)[:10]
+        problem_list = list(map(lambda x: (self.rankingDb.get_problem_info(x[0]), x[1], x[2]), problem_list))
+    
         msg = ''
         for p in problem_list:
             msg += to_message(p) + '\n'

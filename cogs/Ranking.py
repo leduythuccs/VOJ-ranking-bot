@@ -12,10 +12,12 @@ from helper import table
 from helper import paginator
 from helper import discord_common
 from helper import graph_common as gc
+from helper.helper import DayFilter
 from matplotlib import pyplot as plt
 from collections import namedtuple
 from typing import List
 from helper import codeforces_api
+
 BASE_PROBLEM_URL = 'https://codeforces.com/group/FLVn1Sc504/contest/{0}/problem/{1}'
 Rank = namedtuple('Rank', 'low high title title_abbr color_graph color_embed')
 # % max_score 
@@ -35,6 +37,7 @@ RATED_RANKS = [
 UNRATED_RANK = Rank(None, None, 'Unrated', None, None, None)
 
 SET_HANDLE_SUCCESS = 'Handle for <@{0}> currently set to <https://codeforces.com/profile/{1}>'
+WHILELIST_USER_IDs = ['328391']
 
 def point2rank(point, MAX_SCORE = 100):
     if point is None:
@@ -297,15 +300,21 @@ class RankingCommand(commands.Cog):
         pages = [make_page(chunk, k) for k, chunk in enumerate(paginator.chunkify(self.rank_cache, _PER_PAGE))]
         paginator.paginate(self.bot, ctx.channel, pages)
 
-    @commands.command(brief="Show histogram of solved problems on CF.")
-    async def hist(self, ctx, handle = None):
-        """Shows the histogram of problems solved over time on Codeforces for the handles provided."""
+    @commands.command(brief="Show histogram of solved problems on CF.",
+                      usage='[handle] [d>=[[dd]mm]yyyy] [d<[[dd]mm]yyyy]')
+    async def hist(self, ctx, *args):
+        """Shows the histogram of problems solved over time on Codeforces for the handles provided.
+        e.g. ;voj hist CKQ d<16022020 d>=05062019
+        """
+        filt = DayFilter()
+        handle = filt.parse(args)
         handle = await self.get_handle(ctx, handle)
         if handle is None:
             return 
         raw_subs = self.rankingDb.get_info_solved_problem(handle)
+        raw_subs = list(filter(lambda x: filt.filter(datetime.strptime(x[2], '%Y/%m/%d')), raw_subs))
         if len(raw_subs) == 0:
-            await ctx.send('There are no problems within the specified parameters.')
+            await ctx.send('There are no submissions within the specified parameters.')
             return
         subs = []
         types = ['AC', 'IC', 'PC']
@@ -328,6 +337,54 @@ class RankingCommand(commands.Cog):
         plt.hist(all_times, stacked=True, label=labels, bins=34, color=colors)
         total = sum(map(len, all_times))
         plt.legend(title=f'{handle}: {total}', title_fontsize=plt.rcParams['legend.fontsize'])
+
+        plt.gcf().autofmt_xdate()
+        discord_file = gc.get_current_figure_as_file()
+        embed = discord_common.cf_color_embed(title='Histogram of number of solved problems over time')
+        discord_common.attach_image(embed, discord_file)
+        discord_common.set_author_footer(embed, ctx.author)
+        await ctx.send(embed=embed, file=discord_file)
+    
+    @commands.command(brief="Show histogram of group's submissions.",
+                      usage='[d>=[[dd]mm]yyyy] [d<[[dd]mm]yyyy]')
+    async def group_hist(self, ctx, *args):
+        """Shows the histogram of group's submissions.
+        e.g. ;voj group_hist  d<16022020 d>=05062019
+        """
+        filt = DayFilter()
+        handle = filt.parse(args)
+
+        solved_info = self.rankingDb.get_data('solved_info', limit=None)
+        raw_subs = []
+        for user_id, problem_id, result, date in solved_info:
+            if str(user_id) not in WHILELIST_USER_IDs:
+                raw_subs.append((problem_id, result, date))
+        
+        raw_subs = list(filter(lambda x: filt.filter(datetime.strptime(x[2], '%Y/%m/%d')), raw_subs))
+        if len(raw_subs) == 0:
+            await ctx.send('There are no submissions within the specified parameters.')
+            return
+        subs = []
+        types = ['AC', 'IC', 'PC']
+        solved_by_type = {'AC' : [], 'IC' : [], 'PC' : []}
+        cnt = 0
+        plt.clf()
+        plt.xlabel('Time')
+        plt.ylabel('Number solved')
+        for problem_id, result, date in raw_subs:
+            t = result
+            if t != 'AC' and float(t) <= 0 + 0.01:
+                t = 'IC'
+            elif t != 'AC':
+                t = 'PC'
+            solved_by_type[t].append(date)
+        
+        all_times = [[datetime.strptime(date, '%Y/%m/%d') for date in solved_by_type[t]] for t in types]
+        labels = ['Accepted', 'Incorrect', 'Partial Result']
+        colors = ['g','r','y']
+        plt.hist(all_times, stacked=True, label=labels, bins=34, color=colors)
+        total = sum(map(len, all_times))
+        plt.legend(title=f'VNOI Group: {total}', title_fontsize=plt.rcParams['legend.fontsize'])
 
         plt.gcf().autofmt_xdate()
         discord_file = gc.get_current_figure_as_file()

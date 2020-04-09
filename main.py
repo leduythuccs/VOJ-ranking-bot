@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from discord.ext import commands
 import seaborn as sns
 from matplotlib import pyplot as plt
+from helper import discord_common
 def setup():
     # Make required directories.
     os.makedirs('temp_dir', exist_ok=True)
@@ -31,14 +32,24 @@ bot.load_extension("cogs.Ranking")
 bot.load_extension("cogs.BotControl")
 bot.load_extension("cogs.GetCodeforcesLink")
 bot.load_extension("cogs.CoronaCommand")
+def no_dm_check(ctx):
+    if ctx.guild is None:
+        raise commands.NoPrivateMessage('Private messages not permitted.')
+    return True
+
+# Restrict bot usage to inside guild channels only.
+bot.add_check(no_dm_check)
+
 @bot.event
 async def on_ready():
     print(f'{bot.user.name} has connected to Discord!')
 
 
+
 @bot.event
 async def on_command_error(ctx, error):
     print(error)
-    await ctx.send('Error: ' + str(error))
+    
+    await ctx.send(embed=discord_common.embed_alert(error))
 
 bot.run(token)

@@ -20,7 +20,7 @@ from helper import codeforces_api
 
 BASE_PROBLEM_URL = 'https://codeforces.com/group/FLVn1Sc504/contest/{0}/problem/{1}'
 Rank = namedtuple('Rank', 'low high title title_abbr color_graph color_embed')
-# % max_score 
+# % max_score
 RATED_RANKS = [
     Rank(-10 ** 9, 0.25, 'Newbie', 'N', '#CCCCCC', 0x808080),
     Rank(0.25, 1, 'Pupil', 'P', '#77FF77', 0x008000),
@@ -39,14 +39,16 @@ UNRATED_RANK = Rank(None, None, 'Unrated', None, None, None)
 SET_HANDLE_SUCCESS = 'Handle for <@{0}> currently set to <https://codeforces.com/profile/{1}>'
 WHILELIST_USER_IDs = ['328391']
 
-def point2rank(point, MAX_SCORE = 100):
+
+def point2rank(point, MAX_SCORE=100):
     if point is None:
         return UNRATED_RANK
     for rank in RATED_RANKS:
         if rank.low * MAX_SCORE / 100 <= point < rank.high * MAX_SCORE / 100:
             return rank
 
-def _plot_rating(resp, mark='o', labels: List[str] = None, MAX_SCORE = 100):
+
+def _plot_rating(resp, mark='o', labels: List[str] = None, MAX_SCORE=100):
     labels = [''] * len(resp) if labels is None else labels
 
     for user, label in zip(resp, labels):
@@ -66,18 +68,20 @@ def _plot_rating(resp, mark='o', labels: List[str] = None, MAX_SCORE = 100):
     gc.plot_rating_bg(RATED_RANKS, MAX_SCORE)
     plt.gcf().autofmt_xdate()
 
-def days_between(d1, d2 = None):
+
+def days_between(d1, d2=None):
     if d2 is None:
         d2 = datetime.today()
     d1 = datetime.strptime(d1, "%Y/%m/%d")
     return (d2 - d1).days
 
+
 def to_message(p):
-    #p[0][0] -> name
-    #p[0][1] -> links
-    #p[0][2] -> cnt_AC
-    #p[1] -> result
-    #p[2] -> DATE
+    # p[0][0] -> name
+    # p[0][1] -> links
+    # p[0][2] -> cnt_AC
+    # p[1] -> result
+    # p[2] -> DATE
     links = p[0][1].strip(',').split(',')
     links = list(map(lambda x: BASE_PROBLEM_URL.format(x.split('/')[0], x.split('/')[1]), links))
     msg = ""
@@ -94,6 +98,7 @@ def to_message(p):
         msg += "({0} days ago)".format(diff)
     return msg
 
+
 class RankingCommand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -107,7 +112,6 @@ class RankingCommand(commands.Cog):
         self.looper.start()
         self.index = 0
 
-    
     @tasks.loop(minutes=10.0)
     async def looper(self):
         self.index += 1
@@ -117,11 +121,11 @@ class RankingCommand(commands.Cog):
             await self.calculate_rank(None)
         except Exception as e:
             print(e)
-        
+
     # @commands.Cog.listener()
     # async def on_ready(self):
     #     pass
-    
+
     # @commands.command(brief="Set handle for a user")
     # @commands.check_any(commands.is_owner(), commands.has_role('Admin'))
     # async def set(self, ctx, member: discord.Member, handle: str):
@@ -130,7 +134,7 @@ class RankingCommand(commands.Cog):
     #         await ctx.send("Error: The handle {} is already associated with another user.".format(handle))
     @commands.command(brief="Identify yourself.")
     async def identify(self, ctx, handle):
-        discord_id = ctx.author.id 
+        discord_id = ctx.author.id
         await ctx.send(f'`{str(ctx.author)}`, submit a compile error to <https://codeforces.com/problemset/problem/696/A> within 60 seconds')
         for i in range(6):
             await asyncio.sleep(10)
@@ -145,6 +149,7 @@ class RankingCommand(commands.Cog):
                     self.rankingDb.conn.commit()
                 return
         await ctx.send(f'Sorry `{str(ctx.author)}`, can you try again?')
+
     @commands.command(brief="Get badge info.")
     async def badge(self, ctx):
         """
@@ -167,6 +172,7 @@ class RankingCommand(commands.Cog):
             "Current MAX_SCORE={:.2f}".format(self.MAX_SCORE),
             description=table_str)
         await ctx.send(embed=embed)
+
     @commands.command(brief="Update badge info.")
     @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))
     async def update_badge(self, ctx, name, low, hi):
@@ -183,6 +189,7 @@ class RankingCommand(commands.Cog):
         except Exception as e:
             print(e)
             await ctx.send(str(e))
+
     @commands.command(brief='Set Codeforces handle of a user')
     @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))
     async def set(self, ctx, member: discord.Member, handle):
@@ -191,6 +198,7 @@ class RankingCommand(commands.Cog):
             self.rankingDb.conn.commit()
         else:
             await ctx.send("Failed ?? :D ??")
+
     @commands.command(brief='Get handle by Discord username')
     async def get(self, ctx, member: discord.Member):
         """Show Codeforces handle of a user."""
@@ -223,9 +231,9 @@ class RankingCommand(commands.Cog):
                     await ctx.send(f'Handle for <@{discord_id}> not found in database')
                     return None
         return handle
-    
+
     @commands.command(brief="List recent AC problems",
-        usage='[handle] [d>=[[dd]mm]yyyy] [d<[[dd]mm]yyyy]')
+                      usage='[handle] [d>=[[dd]mm]yyyy] [d<[[dd]mm]yyyy]')
     async def stalk(self, ctx, *args):
         """
         Top 10 recent AC problems
@@ -235,7 +243,7 @@ class RankingCommand(commands.Cog):
         handle = filt.parse(args)
         handle = await self.get_handle(ctx, handle)
         if handle is None:
-            return 
+            return
         problem_list = self.rankingDb.get_info_solved_problem(handle)
         problem_list = list(filter(lambda x: x[1] == 'AC' or (float(x[1]) >= 100 - 0.1), problem_list))
         problem_list = list(filter(lambda x: filt.filter(datetime.strptime(x[2], '%Y/%m/%d')), problem_list))
@@ -244,7 +252,7 @@ class RankingCommand(commands.Cog):
             return
         problem_list = sorted(problem_list, key=lambda x: x[2], reverse=True)[:10]
         problem_list = list(map(lambda x: (self.rankingDb.get_problem_info(x[0]), x[1], x[2]), problem_list))
-    
+
         msg = ''
         for p in problem_list:
             msg += to_message(p) + '\n'
@@ -252,9 +260,9 @@ class RankingCommand(commands.Cog):
 
         embed = discord.Embed(title=title, description=msg)
         await ctx.send(embed=embed)
-    
+
     def get_rating_change(self, handle):
-        #problem id, result, date
+        # problem id, result, date
         raw_subs = self.rankingDb.get_info_solved_problem(handle)
         raw_subs = list(filter(lambda x: (x[1] == 'AC') or (float(x[1]) <= 0.1), raw_subs))
         raw_subs = sorted(raw_subs, key=lambda x: x[2])
@@ -272,9 +280,9 @@ class RankingCommand(commands.Cog):
             if result == 'AC':
                 result = 100
             rating += problem_points[int(problem_id)] * float(result) / 100
-            rating_changes[-1] = (rating, date) 
+            rating_changes[-1] = (rating, date)
         return rating_changes[1:]
-    
+
     # @commands.command(brief="Change log channel.")
     # @commands.is_owner()
     # async def change_log(self, ctx):
@@ -282,7 +290,7 @@ class RankingCommand(commands.Cog):
     #     self.log_channel = ctx.channel
     #     await ctx.send("Successfully set log channel to " + ctx.channel.name)
 
-    #from TLE bot: https://github.com/cheran-senthil/TLE/blob/97c9bff9800b3bbaefb72ec00faa57a4911d3a4b/tle/cogs/duel.py#L410
+    # from TLE bot: https://github.com/cheran-senthil/TLE/blob/97c9bff9800b3bbaefb72ec00faa57a4911d3a4b/tle/cogs/duel.py#L410
 
     @commands.command(brief="Show ranking")
     async def ranklist(self, ctx):
@@ -290,6 +298,7 @@ class RankingCommand(commands.Cog):
         if len(self.rank_cache) == 0:
             await self.calculate_rank(ctx)
         _PER_PAGE = 10
+
         def make_page(chunk, page_num):
             style = table.Style('{:>}  {:<}  {:<}')
             t = table.Table(style)
@@ -303,7 +312,8 @@ class RankingCommand(commands.Cog):
             embed = discord.Embed(description=table_str)
             return 'VOJ ranking', embed
 
-        pages = [make_page(chunk, k) for k, chunk in enumerate(paginator.chunkify(self.rank_cache, _PER_PAGE))]
+        pages = [make_page(chunk, k) for k, chunk in enumerate(
+            paginator.chunkify(self.rank_cache, _PER_PAGE))]
         paginator.paginate(self.bot, ctx.channel, pages)
 
     @commands.command(brief="Show histogram of solved problems on CF.",
@@ -316,15 +326,16 @@ class RankingCommand(commands.Cog):
         handle = filt.parse(args)
         handle = await self.get_handle(ctx, handle)
         if handle is None:
-            return 
+            return
         raw_subs = self.rankingDb.get_info_solved_problem(handle)
-        raw_subs = list(filter(lambda x: filt.filter(datetime.strptime(x[2], '%Y/%m/%d')), raw_subs))
+        raw_subs = list(filter(lambda x: filt.filter(
+            datetime.strptime(x[2], '%Y/%m/%d')), raw_subs))
         if len(raw_subs) == 0:
-            await ctx.send('There are no submissions within the specified parameters.')
+            await ctx.send('There are no submissions of user `{0}` within the specified parameters.'.format(handle))
             return
         subs = []
         types = ['AC', 'IC', 'PC']
-        solved_by_type = {'AC' : [], 'IC' : [], 'PC' : []}
+        solved_by_type = {'AC': [], 'IC': [], 'PC': []}
         cnt = 0
         plt.clf()
         plt.xlabel('Time')
@@ -336,21 +347,24 @@ class RankingCommand(commands.Cog):
             elif t != 'AC':
                 t = 'PC'
             solved_by_type[t].append(date)
-        
-        all_times = [[datetime.strptime(date, '%Y/%m/%d') for date in solved_by_type[t]] for t in types]
+
+        all_times = [[datetime.strptime(date, '%Y/%m/%d')
+                      for date in solved_by_type[t]] for t in types]
         labels = ['Accepted', 'Incorrect', 'Partial Result']
-        colors = ['g','r','y']
+        colors = ['g', 'r', 'y']
         plt.hist(all_times, stacked=True, label=labels, bins=34, color=colors)
         total = sum(map(len, all_times))
-        plt.legend(title=f'{handle}: {total}', title_fontsize=plt.rcParams['legend.fontsize'])
+        plt.legend(title=f'{handle}: {total}',
+                   title_fontsize=plt.rcParams['legend.fontsize'])
 
         plt.gcf().autofmt_xdate()
         discord_file = gc.get_current_figure_as_file()
-        embed = discord_common.cf_color_embed(title='Histogram of number of solved problems over time')
+        embed = discord_common.cf_color_embed(
+            title='Histogram of number of solved problems over time')
         discord_common.attach_image(embed, discord_file)
         discord_common.set_author_footer(embed, ctx.author)
         await ctx.send(embed=embed, file=discord_file)
-    
+
     @commands.command(brief="Show histogram of group's submissions.",
                       usage='[d>=[[dd]mm]yyyy] [d<[[dd]mm]yyyy]')
     async def group_hist(self, ctx, *args):
@@ -365,14 +379,14 @@ class RankingCommand(commands.Cog):
         for user_id, problem_id, result, date in solved_info:
             if str(user_id) not in WHILELIST_USER_IDs:
                 raw_subs.append((problem_id, result, date))
-        
+
         raw_subs = list(filter(lambda x: filt.filter(datetime.strptime(x[2], '%Y/%m/%d')), raw_subs))
         if len(raw_subs) == 0:
             await ctx.send('There are no submissions within the specified parameters.')
             return
         subs = []
         types = ['AC', 'IC', 'PC']
-        solved_by_type = {'AC' : [], 'IC' : [], 'PC' : []}
+        solved_by_type = {'AC': [], 'IC': [], 'PC': []}
         cnt = 0
         plt.clf()
         plt.xlabel('Time')
@@ -384,37 +398,49 @@ class RankingCommand(commands.Cog):
             elif t != 'AC':
                 t = 'PC'
             solved_by_type[t].append(date)
-        
-        all_times = [[datetime.strptime(date, '%Y/%m/%d') for date in solved_by_type[t]] for t in types]
+
+        all_times = [[datetime.strptime(date, '%Y/%m/%d')
+                      for date in solved_by_type[t]] for t in types]
         labels = ['Accepted', 'Incorrect', 'Partial Result']
-        colors = ['g','r','y']
+        colors = ['g', 'r', 'y']
         plt.hist(all_times, stacked=True, label=labels, bins=34, color=colors)
         total = sum(map(len, all_times))
-        plt.legend(title=f'VNOI Group: {total}', title_fontsize=plt.rcParams['legend.fontsize'])
+        plt.legend(
+            title=f'VNOI Group: {total}', title_fontsize=plt.rcParams['legend.fontsize'])
 
         plt.gcf().autofmt_xdate()
         discord_file = gc.get_current_figure_as_file()
-        embed = discord_common.cf_color_embed(title='Histogram of number of solved problems over time')
+        embed = discord_common.cf_color_embed(
+            title='Histogram of number of solved problems over time')
         discord_common.attach_image(embed, discord_file)
         discord_common.set_author_footer(embed, ctx.author)
         await ctx.send(embed=embed, file=discord_file)
-    
-    @commands.command(brief="Plot VOJ rating graph")
-    async def exp(self, ctx, handle = None):
-        """Plots VOJ experience graph for the handle provided."""
+
+    @commands.command(brief="Plot VOJ rating graph.",
+                      usage='[handle] [d>=[[dd]mm]yyyy] [d<[[dd]mm]yyyy]')
+    async def exp(self, ctx, *args):
+        """
+        Plots VOJ experience graph for the handle provided.
+        e.g. ;voj exp CKQ d<16022020 d>=05062019
+        """
+        filt = DayFilter()
+        handle = filt.parse(args)
         handle = await self.get_handle(ctx, handle)
         if handle is None:
-            return 
+            return
         if len(self.rank_cache) == 0:
             await self.calculate_rank(ctx)
         resp = self.get_rating_change(handle)
+        resp = list(filter(lambda x: filt.filter(
+            datetime.strptime(x[1], '%Y/%m/%d')), resp))
         if len(resp) == 0:
-            await ctx.send(f'User `{handle}` is not rated. No accpected submission found.')
+            await ctx.send('There are no submissions of user `{0}` within the specified parameters.'.format(handle))
             return
         plt.clf()
         _plot_rating([resp], MAX_SCORE=self.MAX_SCORE)
         current_rating = resp[-1][0]
-        rank_title = point2rank(current_rating, self.MAX_SCORE).title + " {:.3f}".format(current_rating)
+        rank_title = point2rank(
+            current_rating, self.MAX_SCORE).title + " {:.3f}".format(current_rating)
         labels = [f'\N{ZERO WIDTH SPACE}{handle} ({rank_title})']
         plt.legend(labels, loc='upper left')
         min_rating = current_rating
@@ -424,15 +450,16 @@ class RankingCommand(commands.Cog):
             max_rating = max(max_rating, rating)
         min_rating -= 5 * self.MAX_SCORE / 100
         max_rating += 5 * self.MAX_SCORE / 100
-        if min_rating < 0: 
+        if min_rating < 0:
             min_rating = 0
-        
+
         discord_file = gc.get_current_figure_as_file()
-        embed = discord_common.cf_color_embed(title='Experience graph in VNOI group')
+        embed = discord_common.cf_color_embed(
+            title='Experience graph in VNOI group')
         discord_common.attach_image(embed, discord_file)
         discord_common.set_author_footer(embed, ctx.author)
         await ctx.send(embed=embed, file=discord_file)
-    
+
     @commands.command(brief="Calculate ranking and cache it.")
     @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))
     async def calculate_rank(self, ctx):
@@ -440,7 +467,7 @@ class RankingCommand(commands.Cog):
         message = ""
         if ctx != None:
             message = await ctx.send('<:pingreee:665243570655199246> Calculating ...')
-        #calculating
+        # calculating
         problem_info = self.rankingDb.get_data('problem_info', limit=None)
         problem_points = {}
         self.MAX_SCORE = 0
@@ -473,7 +500,7 @@ class RankingCommand(commands.Cog):
         duration = (end - start) * 1000
         if ctx != None:
             await message.edit(content=f'Done. Calculation time: {int(duration)}ms.')
-    
+
     @commands.command(brief="Test crawler")
     @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))
     async def crawl(self, ctx, l, r):
@@ -496,8 +523,10 @@ class RankingCommand(commands.Cog):
             if cnt % 10 == 0:
                 print(cnt)
             id, problem_name, short_link, handle, user_id, verdict, date = p_info
-            self.rankingDb.handle_new_submission(problem_name, short_link, verdict, user_id, handle, date)
+            self.rankingDb.handle_new_submission(
+                problem_name, short_link, verdict, user_id, handle, date)
         self.rankingDb.conn.commit()
+
 
 def setup(bot):
     bot.add_cog(RankingCommand(bot))

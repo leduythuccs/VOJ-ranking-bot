@@ -258,9 +258,23 @@ class RankingDbConn:
             )
         else:
             query = (
-                'INSERT INTO user_data (discord_id, handle) '
-                'VALUES (?, ?)'
+                'SELECT handle '
+                'FROM user_data '
+                'WHERE discord_id = ?'
             )
+            r = self.conn.execute(query, (discord_id, )).fetchone()
+            if r is None:
+                query = (
+                    'INSERT INTO user_data (discord_id, handle) '
+                    'VALUES (?, ?)'
+                )
+            else:
+                query = (
+                    'UPDATE user_data '
+                    'SET handle = ? '
+                    'WHERE discord_id = ?'
+                )
+                discord_id, handle = handle, discord_id # swap
         self.conn.execute(query, (discord_id, handle))
         # self.conn.commit()
         return True

@@ -301,3 +301,5 @@ class RankingDbConn:
         x = self.conn.execute(query).fetchall()
         return x
 
+
+RankingDb = RankingDbConn('database/ranking.db')

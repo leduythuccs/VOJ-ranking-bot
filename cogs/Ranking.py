@@ -20,7 +20,7 @@ class RankingCommand(commands.Cog):
         group_id = os.getenv('CODEFORCES_GROUP_ID')
         self.crawler = SubmissionCrawler.Crawler(username, password, group_id)
         self.rank_cache = []
-        # self.looper.start()
+        self.looper.start()
         self.index = 0
 
     @tasks.loop(minutes=10.0)

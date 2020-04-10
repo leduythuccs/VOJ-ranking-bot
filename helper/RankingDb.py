@@ -248,7 +248,7 @@ class RankingDbConn:
             'WHERE handle = ?'
         )
         r = self.conn.execute(query, (handle, )).fetchone()
-        if r is not None and r[0] is not None and r[0] != discord_id and not force2:
+        if r is not None and r[0] is not None and r[0] != discord_id and not force:
             return r[0]
         if r is not None:
             query = (

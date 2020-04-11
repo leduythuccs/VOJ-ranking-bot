@@ -10,6 +10,7 @@ from helper import RankingDb
 from helper import discord_common
 from helper import common
 import random
+import json
 # Adapted from TLE sources.
 # https://github.com/cheran-senthil/TLE/blob/master/tle/cogs/meta.py#L15
 
@@ -34,7 +35,8 @@ class GetCodeforcesLink(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.link = {}
-    
+        self.solution_links = {}
+        self.tag = {}
     
     @commands.Cog.listener()
     async def on_ready(self):
@@ -49,7 +51,13 @@ class GetCodeforcesLink(commands.Cog):
             if name not in self.link:
                 self.link[name] = ""
             self.link[name] += link + ','
-    
+        data = json.load(open('database/vietcodes_solution.json'))
+        for x in data:
+            self.solution_links[x['problem'].upper()] = x['link']
+        data = json.load(open('database/tag.json'))
+        for x in data:
+            self.tag[x] = data[x]
+
     @commands.command(brief="Get codeforces link of VOJ problem")
     async def getlink(self, ctx, name):
         name = name.upper()
@@ -82,6 +90,26 @@ class GetCodeforcesLink(commands.Cog):
         embed=discord.Embed(title=title,description=msg.strip(), color=discord_common._SUCCESS_BLUE_)
         discord_common.set_author_footer(embed, ctx.author)
         await ctx.send(embed=embed)
-        
+    @commands.command(brief="Get solution of a problem.")
+    async def solution(self, ctx, name):
+        name = name.upper()
+        if name not in self.solution_links:
+            await ctx.send('Tự mà nghĩ đi chứ tôi lấy đâu ra solution cho ông.')
+            return
+        embed=discord.Embed(description='[{0}]({1})'.format(name, self.solution_links[name]), color=discord_common._SUCCESS_BLUE_)
+        if ctx.author.id != 554842563170009089:
+            await ctx.send('Đọc solution ít thôi.', embed=embed)
+        else:
+            await ctx.send(embed=embed)
+    @commands.command(brief="Get tag of a problem.")
+    async def tag(self, ctx, name):
+        name = name.upper()
+        if name not in self.tag:
+            await ctx.send('Hong tìm thấy tag của bài {0} :<'.format(name))
+            return
+        msg = '\n'.join(self.tag[name])
+        embed = discord.Embed(description=msg, color=discord_common._SUCCESS_BLUE_)
+        await ctx.send(embed=embed)
+    
 def setup(bot):
     bot.add_cog(GetCodeforcesLink(bot))

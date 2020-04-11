@@ -66,7 +66,7 @@ class GetCodeforcesLink(commands.Cog):
         if handle is None:
             return
         problem_list = RankingDb.RankingDb.get_info_solved_problem(handle)
-        problem_list = list(filter(lambda x: not (x[1] == 'AC' or (float(x[1]) > 100 - 0.1)), problem_list))
+        problem_list = list(filter(lambda x: (x[1] == 'AC' or (float(x[1]) > 100 - 0.1)), problem_list))
         #id, result, data
         problem_list = set(map(lambda x: int(x[0]), problem_list))
         #id, name, link, cnt_AC

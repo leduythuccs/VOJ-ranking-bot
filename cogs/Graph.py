@@ -131,7 +131,12 @@ class Graph(commands.Cog):
         plt.bar(x_pos, [cnt[x] for x in TAGS], color=colors)
         plt.xticks(x_pos, TAGS)
         for index, value in enumerate(TAGS):
-            plt.text(index - 0.2, cnt[value], str(cnt[value]))
+            if cnt[value] < 10:
+                plt.text(index - 0.1, cnt[value], str(cnt[value]))
+            elif cnt[value] < 100:
+                plt.text(index - 0.15, cnt[value], str(cnt[value]))
+            else:
+                plt.text(index - 0.25, cnt[value], str(cnt[value]))
         
         total = len(problem_list)
         plt.legend(title=f'{handle}: {total}',

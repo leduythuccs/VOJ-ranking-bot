@@ -18,7 +18,7 @@ from helper import badge
 BASE_PROBLEM_URL = 'https://codeforces.com/group/FLVn1Sc504/contest/{0}/problem/{1}'
 
 WHILELIST_USER_IDs = ['328391']
-
+TAGS = ['Dynamic programming', 'Data structure', 'Geometry', 'Graph', 'Math', 'String', 'Ad-hoc', 'Other', 'No tag']
 
 
 def _plot_rating(resp, mark='o', labels: List[str] = None, MAX_SCORE=100):
@@ -74,8 +74,75 @@ def to_message(p):
 class Graph(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.tag = {}
+        data = json.load(open('database/tag.json'))
+        for x in data:
+            self.tag[x] = data[x]
 
-
+    @commands.command(brief="Plot solved category.",
+                      usage='[handle] [d>=[[dd]mm]yyyy] [d<[[dd]mm]yyyy]')
+    async def tagbar(self, ctx, *args):
+        """
+        Shows the plot of solved tags on Codeforces for the handles provided.
+        e.g. ;voj solved_tag CKQ d<16022020 d>=05062019
+        """
+        filt = DayFilter()
+        handle = filt.parse(args)
+        handle = await common.get_handle(ctx, handle)
+        if handle is None:
+            return
+        #id result date
+        problem_list = RankingDb.RankingDb.get_info_solved_problem(handle)
+        problem_list = list(filter(lambda x: x[1] == 'AC' or (float(x[1]) >= 100 - 0.1), problem_list))
+        problem_list = list(filter(lambda x: filt.filter(datetime.strptime(x[2], '%Y/%m/%d')), problem_list))
+        if len(problem_list) == 0:
+            await ctx.send('There are no submissions of user `{0}` within the specified parameters.'.format(handle))
+            return
+        problem_info = RankingDb.RankingDb.get_data('problem_info', limit=None)
+        id_to_name = {}
+        #id, name, link, cntAC
+        for id, name, link, cnt_AC in problem_info:
+            name = name[:name.find('-')].strip()
+            id_to_name[int(id)] = name
+        cnt = {}
+        for tag in TAGS:
+            cnt[tag] = 0
+        for id, *junks in problem_list:
+            id = int(id)
+            tags = []
+            if id not in id_to_name:
+                tags = ['No tag']
+            else:
+                name = id_to_name[id]
+                if name not in self.tag:
+                    tags = ['No tag']
+                else:
+                    tags = self.tag[name]
+            for tag in tags:
+                if tag not in cnt:
+                    cnt[tag] = 0
+                cnt[tag] += 1
+        #///
+        plt.clf()
+        plt.xlabel('Tag')
+        plt.ylabel('Number solved')
+        x_pos = list(range(len(TAGS)))
+        colors = ['tab:blue', 'tab:orange', 'tab:green', 'tab:red', 'tab:purple', 'tab:pink', 'tab:gray', 'tab:olive', 'tab:cyan']
+        plt.bar(x_pos, [cnt[x] for x in TAGS], color=colors)
+        plt.xticks(x_pos, TAGS)
+        for index, value in enumerate(TAGS):
+            plt.text(index - 0.2, cnt[value], str(cnt[value]))
+        
+        total = len(problem_list)
+        plt.legend(title=f'{handle}: {total}',
+                   title_fontsize=plt.rcParams['legend.fontsize'])
+        plt.gcf().autofmt_xdate()
+        discord_file = gc.get_current_figure_as_file()
+        embed = discord_common.cf_color_embed(
+            title='Number of submissions in each category')
+        discord_common.attach_image(embed, discord_file)
+        discord_common.set_author_footer(embed, ctx.author)
+        await ctx.send(embed=embed, file=discord_file)
     @commands.command(brief="List recent AC problems",
                       usage='[handle] [d>=[[dd]mm]yyyy] [d<[[dd]mm]yyyy]')
     async def stalk(self, ctx, *args):
@@ -227,7 +294,7 @@ class Graph(commands.Cog):
         discord_common.set_author_footer(embed, ctx.author)
         await ctx.send(embed=embed, file=discord_file)
 
-    @commands.command(brief="Plot VOJ rating graph.",
+    @commands.command(brief="Plot VOJ experience graph.",
                       usage='[handle] [d>=[[dd]mm]yyyy] [d<[[dd]mm]yyyy]')
     async def exp(self, ctx, *args):
         """

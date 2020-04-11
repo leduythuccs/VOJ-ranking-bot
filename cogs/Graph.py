@@ -236,7 +236,7 @@ class Graph(commands.Cog):
         """
         filt = DayFilter()
         handle = filt.parse(args)
-        handle = common.get_handle(ctx, handle)
+        handle = await common.get_handle(ctx, handle)
         if handle is None:
             return
         if badge.MAX_SCORE == None:

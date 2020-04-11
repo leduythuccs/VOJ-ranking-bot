@@ -8,10 +8,13 @@ from datetime import datetime
 import time
 from helper import discord_common
 from helper import graph_common as gc
-from helper.helper import DayFilter
+from helper.common import DayFilter
+from helper import common
 from matplotlib import pyplot as plt
 from typing import List
 from helper import badge
+
+
 BASE_PROBLEM_URL = 'https://codeforces.com/group/FLVn1Sc504/contest/{0}/problem/{1}'
 
 WHILELIST_USER_IDs = ['328391']
@@ -57,9 +60,9 @@ def to_message(p):
     if len(links) == 1:
         msg = "[{0}]({1}) ".format(p[0][0], links[0])
     else:
-        msg = p[0][0] + " "
-        for i, link in enumerate(links):
-            msg += "[link{0}]({1}) ".format(i + 1, link)
+        msg = "[{0}]({1}) ".format(p[0][0], links[0])
+        for i, link in enumerate(links[1:]):
+            msg += "[link{0}]({1}) ".format(i + 2, link)
     diff = days_between(p[2])
     if diff == 1:
         msg += "(1 day ago)"
@@ -72,25 +75,6 @@ class Graph(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    async def get_handle(self, ctx, handle):
-        if handle is None:
-            handle = RankingDb.RankingDb.get_handle(ctx.author.id)
-            if handle is None:
-                await ctx.send(f'Handle for {ctx.author.mention} not found in database')
-                return None
-            return handle
-        else:
-            handle = handle.replace('!', '')
-            if handle[0] == '<' and handle[-1] == '>':
-                if len(handle) <= 3 or not handle[2:-1].isdigit():
-                    await ctx.send(f'Handle {handle} is invalid.')
-                    return None
-                discord_id = handle[2:-1]
-                handle = RankingDb.RankingDb.get_handle(discord_id)
-                if handle is None:
-                    await ctx.send(f'Handle for <@{discord_id}> not found in database')
-                    return None
-        return handle
 
     @commands.command(brief="List recent AC problems",
                       usage='[handle] [d>=[[dd]mm]yyyy] [d<[[dd]mm]yyyy]')
@@ -101,7 +85,7 @@ class Graph(commands.Cog):
         """
         filt = DayFilter()
         handle = filt.parse(args)
-        handle = await self.get_handle(ctx, handle)
+        handle = await common.get_handle(ctx, handle)
         if handle is None:
             return
         problem_list = RankingDb.RankingDb.get_info_solved_problem(handle)
@@ -151,7 +135,7 @@ class Graph(commands.Cog):
         """
         filt = DayFilter()
         handle = filt.parse(args)
-        handle = await self.get_handle(ctx, handle)
+        handle = await common.get_handle(ctx, handle)
         if handle is None:
             return
         raw_subs = RankingDb.RankingDb.get_info_solved_problem(handle)
@@ -252,7 +236,7 @@ class Graph(commands.Cog):
         """
         filt = DayFilter()
         handle = filt.parse(args)
-        handle = await self.get_handle(ctx, handle)
+        handle = common.get_handle(ctx, handle)
         if handle is None:
             return
         if badge.MAX_SCORE == None:

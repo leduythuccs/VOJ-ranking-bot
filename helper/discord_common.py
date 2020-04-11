@@ -10,6 +10,7 @@ from discord.ext import commands
 _CF_COLORS = (0xFFCA1F, 0x198BCC, 0xFF2020)
 _SUCCESS_GREEN = 0x28A745
 _ALERT_AMBER = 0xFFBF00
+_SUCCESS_BLUE_ = 0x198BCC
 
 
 def embed_neutral(desc, color=discord.Embed.Empty):
@@ -18,7 +19,6 @@ def embed_neutral(desc, color=discord.Embed.Empty):
 
 def embed_success(desc):
     return discord.Embed(description=str(desc), color=_SUCCESS_GREEN)
-
 
 def embed_alert(desc):
     return discord.Embed(description=str(desc), color=_ALERT_AMBER)

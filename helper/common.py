@@ -1,5 +1,6 @@
 from datetime import datetime
 from discord.ext import commands
+from helper import RankingDb
 class FilterError(commands.CommandError):
     pass
 class ParamParseError(FilterError):
@@ -61,3 +62,23 @@ class DayFilter():
             else:
                 handle = arg
         return handle
+
+async def get_handle(ctx, handle):
+    if handle is None:
+        handle = RankingDb.RankingDb.get_handle(ctx.author.id)
+        if handle is None:
+            await ctx.send(f'Handle for {ctx.author.mention} not found in database')
+            return None
+        return handle
+    else:
+        handle = handle.replace('!', '')
+        if handle[0] == '<' and handle[-1] == '>':
+            if len(handle) <= 3 or not handle[2:-1].isdigit():
+                await ctx.send(f'Handle {handle} is invalid.')
+                return None
+            discord_id = handle[2:-1]
+            handle = RankingDb.RankingDb.get_handle(discord_id)
+            if handle is None:
+                await ctx.send(f'Handle for <@{discord_id}> not found in database')
+                return None
+    return handle

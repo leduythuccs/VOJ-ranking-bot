@@ -6,39 +6,29 @@ import time
 import subprocess
 import textwrap
 import sys
+from helper import RankingDb
+from helper import discord_common
+from helper import common
+import random
 # Adapted from TLE sources.
 # https://github.com/cheran-senthil/TLE/blob/master/tle/cogs/meta.py#L15
 
-
-def git_history():
-    def _minimal_ext_cmd(cmd):
-        # construct minimal environment
-        env = {}
-        for k in ['SYSTEMROOT', 'PATH']:
-            v = os.environ.get(k)
-            if v is not None:
-                env[k] = v
-        # LANGUAGE is used on win32
-        env['LANGUAGE'] = 'C'
-        env['LANG'] = 'C'
-        env['LC_ALL'] = 'C'
-        out = subprocess.Popen(
-            cmd, stdout=subprocess.PIPE, env=env).communicate()[0]
-        return out
-    try:
-        out = _minimal_ext_cmd(['git', 'rev-parse', '--abbrev-ref', 'HEAD'])
-        branch = out.strip().decode('ascii')
-        out = _minimal_ext_cmd(['git', 'log', '--oneline', '-5'])
-        history = out.strip().decode('ascii')
-        return (
-            'Branch:\n' +
-            textwrap.indent(branch, '  ') +
-            '\nCommits:\n' +
-            textwrap.indent(history, '  ')
-        )
-    except OSError:
-        return "Fetching git info failed"
-
+def to_message(p):
+    # p[0] -> id
+    # p[1] -> name
+    # p[2] -> link
+    # p[3] -> cnt_AC
+    links = p[2].strip(',').split(',')
+    links = list(map(lambda x: "https://codeforces.com/group/FLVn1Sc504/contest/{0}/problem/{1}".format(x.split('/')[0], x.split('/')[1]), links))
+    msg = ""
+    if len(links) == 1:
+        msg = "[{0}]({1}) ".format(p[1], links[0])
+    else:
+        msg = "[{0}]({1}) ".format(p[1], links[0])
+        for i, link in enumerate(links[1:]):
+            msg += "[link{0}]({1}) ".format(i + 2, link)
+    msg += "({0} AC)".format(p[3])
+    return msg
 
 class GetCodeforcesLink(commands.Cog):
     def __init__(self, bot):
@@ -49,7 +39,8 @@ class GetCodeforcesLink(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         self.update_link()
-        pass
+        
+        self.problems_cache = RankingDb.RankingDb.get_data('problem_info', limit=None)
 
     def update_link(self):
         data = open('database/codeforces_link.txt').read().strip().split('\n')
@@ -69,5 +60,28 @@ class GetCodeforcesLink(commands.Cog):
         links = list(map(lambda x: '<' + x + '>', links))
         await ctx.send('\n'.join(links))
 
+    @commands.command(brief="Get a random VOJ problem.")
+    async def random(self, ctx):
+        handle = await common.get_handle(ctx, None)
+        if handle is None:
+            return
+        problem_list = RankingDb.RankingDb.get_info_solved_problem(handle)
+        problem_list = list(filter(lambda x: not (x[1] == 'AC' or (float(x[1]) > 100 - 0.1)), problem_list))
+        #id, result, data
+        problem_list = set(map(lambda x: int(x[0]), problem_list))
+        #id, name, link, cnt_AC
+        un_solved_problem = list(filter(lambda x: int(x[0]) not in problem_list, self.problems_cache))
+        if len(un_solved_problem) == 0:
+            await ctx.send('There are no problems within the specified parameters.')
+            return
+        problems = random.choices(un_solved_problem, k = min(10, len(un_solved_problem)))
+        title = "{0} random problems".format(len(problems), handle)
+        msg = ""
+        for p in problems:
+            msg += to_message(p) + "\n"
+        embed=discord.Embed(title=title,description=msg.strip(), color=discord_common._SUCCESS_BLUE_)
+        discord_common.set_author_footer(embed, ctx.author)
+        await ctx.send(embed=embed)
+        
 def setup(bot):
     bot.add_cog(GetCodeforcesLink(bot))

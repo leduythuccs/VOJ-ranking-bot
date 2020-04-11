@@ -54,7 +54,7 @@ class GetCodeforcesLink(commands.Cog):
         data = json.load(open('database/vietcodes_solution.json'))
         for x in data:
             self.solution_links[x['problem'].upper()] = x['link']
-        data = json.load(open('database/tag.json'))
+        data = json.load(open('database/full_tag.json'))
         for x in data:
             self.tag[x] = data[x]
 

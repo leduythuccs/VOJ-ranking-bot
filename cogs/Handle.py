@@ -53,10 +53,14 @@ class Handle(commands.Cog):
 
     @commands.command(brief='Lấy nick của user tương ứng')
     async def get(self, ctx, member: discord.Member):
-        """Lấy codeforces nick của user discord tương ứng."""
+        """
+        Lấy codeforces nick của user discord tương ứng.
+        Nếu mình muốn lấy nick codeforces của Cá Nóc Cắn Cáp, thì dùng:
+        ;voj get @cá nóc cắn cáp (tag vào)
+        """
         handle = RankingDb.RankingDb.get_handle(member.id)
         if handle is None:
-            await ctx.send(f'Không tìm thấy nick của {member.mention} trong dữ liệu. Xin hãy dùng command ;voj identify nick_cf')
+            await ctx.send(f'Không tìm thấy nick của {member.mention} trong dữ liệu.')
             return
         await ctx.send(SET_HANDLE_SUCCESS.format(member.id, handle))
 

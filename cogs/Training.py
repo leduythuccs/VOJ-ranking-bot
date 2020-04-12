@@ -77,6 +77,10 @@ class Training(commands.Cog):
 
     @commands.command(brief="Lấy link bài tập trên codeforces.")
     async def getlink(self, ctx, name):
+        """
+        Lấy link của bài tập trên codeforces, ví dụ nếu mình muốn lấy link bài AZNET thì dùng:
+        ;voj getlink AZNET
+        """
         name = name.upper()
         if name not in self.link:
             await ctx.send('Không tìm thấy bài {0}.'.format(name))
@@ -136,6 +140,11 @@ class Training(commands.Cog):
         
     @commands.command(brief="Lấy lời giải của bài tập.")
     async def solution(self, ctx, name):
+        """
+        Lấy lời giải của bài tập, nếu mình muốn lấy giải bài AZNET thì dùng:
+        ;voj solution AZNET
+        Lưu ý là có rất ít bài có giải.
+        """
         name = name.upper()
         if name not in self.solution_links:
             await ctx.send('Tự mà nghĩ đi chứ tôi lấy đâu ra giải cho ông.')
@@ -147,6 +156,10 @@ class Training(commands.Cog):
             await ctx.send(embed=embed)
     @commands.command(brief="Lấy tag của một bài tập")
     async def tag(self, ctx, name):
+        """
+        Lấy tag của một bài tập, nếu mình muốn lấy tag của bài C11FBR thì dùng:
+        ;voj tag C11FBR
+        """
         name = name.upper()
         if name not in self.tag:
             await ctx.send('Hong tìm thấy tag của bài {0} :<'.format(name))

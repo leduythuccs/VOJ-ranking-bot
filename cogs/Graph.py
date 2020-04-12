@@ -197,6 +197,9 @@ class Graph(commands.Cog):
 
     @commands.command(brief="Hiện phân phối điểm")
     async def distrib(self, ctx):
+        """
+        Hiện phân phối điểm của các bài tập.
+        """
         bin_size = 0.2
         bins = 10
 

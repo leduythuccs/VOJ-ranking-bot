@@ -37,7 +37,7 @@ class RankingCommand(commands.Cog):
     @commands.command(brief="Lấy thông tin các huy hiệu")
     async def badge(self, ctx):
         """
-            Hiện phần trăm điểm yêu cầu để đạt được huy hiệu tương ứng.
+        Hiện phần trăm điểm yêu cầu để đạt được huy hiệu tương ứng.
         """
         style = table.Style('{:<}  {:<}  {:<}')
         t = table.Table(style)
@@ -78,6 +78,9 @@ class RankingCommand(commands.Cog):
 
     @commands.command(brief="Hiện bảng xếp hạng")
     async def ranklist(self, ctx):
+        """
+        Hiện bảng xếp hạng.
+        """
         if len(self.rank_cache) == 0:
             await self.calculate_rank(ctx)
         _PER_PAGE = 10

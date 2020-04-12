@@ -91,6 +91,6 @@ def get_problem_points(problem_info):
         spoj_cnt = 0
         if name in SPOJ_CNT_AC:
             spoj_cnt = SPOJ_CNT_AC[name]
-        point = 80 / (40 + int(cnt_AC) + spoj_cnt)
+        point = 200 / (100 + int(cnt_AC) + spoj_cnt)
         problem_points[int(id)] = point
     return problem_points

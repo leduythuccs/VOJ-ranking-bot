@@ -33,7 +33,7 @@ bot.load_extension("cogs.BotControl")
 bot.load_extension("cogs.Handle")
 bot.load_extension("cogs.Graph")
 bot.load_extension("cogs.GetCodeforcesLink")
-bot.load_extension("cogs.CoronaCommand")
+# bot.load_extension("cogs.CoronaCommand")
 def no_dm_check(ctx):
     if ctx.guild is None:
         raise commands.NoPrivateMessage('Private messages not permitted.')

@@ -51,6 +51,7 @@ class BotControl(commands.Cog):
     
     # from TLE bot.
     @commands.command(brief="Check if bot is still alive.")
+    @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))
     async def ping(self, ctx):
         """Replies to a ping."""
         start = time.perf_counter()
@@ -85,6 +86,7 @@ class BotControl(commands.Cog):
         await self.restart(ctx)
 
     @commands.command(brief='Get git information')
+    @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))
     async def git(self, ctx):
         """Replies with git information."""
         await ctx.send('```yaml\n' + git_history() + '```')

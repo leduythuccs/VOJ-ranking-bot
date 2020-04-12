@@ -90,7 +90,7 @@ class Training(commands.Cog):
     async def gimme(self, ctx, *args):
         """
         Đề xuất một số bài tập theo dạng.
-        e.g. ;voj gimme DP 0.2 0.5 
+        Ví dụ ;voj gimme DP 0.2 0.5 
         """
         low = 0 - 0.1
         hi = 2 + 0.1
@@ -124,7 +124,7 @@ class Training(commands.Cog):
             return
         problems = random.sample(un_solved_problem, k = min(10, len(un_solved_problem)))
         if tag == "":
-            tag = "random"
+            tag = "ngẫu nhiên"
         title = "{0} bài {1}".format(len(problems), tag)
         msg = ""
         for p in problems:
@@ -133,15 +133,15 @@ class Training(commands.Cog):
         discord_common.set_author_footer(embed, ctx.author)
         await ctx.send(embed=embed)
         
-    @commands.command(brief="Lấy solution của bài tập.")
+    @commands.command(brief="Lấy lời giải của bài tập.")
     async def solution(self, ctx, name):
         name = name.upper()
         if name not in self.solution_links:
-            await ctx.send('Tự mà nghĩ đi chứ tôi lấy đâu ra solution cho ông.')
+            await ctx.send('Tự mà nghĩ đi chứ tôi lấy đâu ra giải cho ông.')
             return
         embed=discord.Embed(description='[{0}]({1})'.format(name, self.solution_links[name]), color=discord_common._SUCCESS_BLUE_)
         if ctx.author.id != 554842563170009089:
-            await ctx.send('Đọc solution ít thôi.', embed=embed)
+            await ctx.send('Đọc giải ít thôi.', embed=embed)
         else:
             await ctx.send(embed=embed)
     @commands.command(brief="Lấy tag của một bài tập")

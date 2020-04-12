@@ -7,13 +7,13 @@ import requests
 import time
 from helper import codeforces_api
 import random
-SET_HANDLE_SUCCESS = 'Handle cho <@{0}> đã được set thành <https://codeforces.com/profile/{1}>'
+SET_HANDLE_SUCCESS = 'Nick cho <@{0}> đã được set thành <https://codeforces.com/profile/{1}>'
 
 class Handle(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(brief="Set handle để dùng bot")
+    @commands.command(brief="Set nick codeforces để dùng bot")
     async def identify(self, ctx, handle): 
         discord_id = ctx.author.id
         problem = random.choice(codeforces_api.problems)
@@ -25,7 +25,7 @@ class Handle(commands.Cog):
             if any(sub['problem_name'] == problem[2] and sub['verdict'] == 'COMPILATION_ERROR' for sub in subs):
                 x = RankingDb.RankingDb.set_handle(discord_id, handle)
                 if x != True:
-                    await ctx.send('Lỗi, handle {0} đã được set tới user <@{1}>'.format(handle, x))
+                    await ctx.send('Lỗi, nick {0} đã được set cho user <@{1}>'.format(handle, x))
                 else:
                     await ctx.send(SET_HANDLE_SUCCESS.format(discord_id, handle))
                     RankingDb.RankingDb.conn.commit()
@@ -41,12 +41,12 @@ class Handle(commands.Cog):
         else:
             await ctx.send("Failed ?? :D ??")
 
-    @commands.command(brief='Lấy handle của user tương ứng')
+    @commands.command(brief='Lấy nick của user tương ứng')
     async def get(self, ctx, member: discord.Member):
-        """Lấy codeforces handle của user discord tương ứng."""
+        """Lấy codeforces nick của user discord tương ứng."""
         handle = RankingDb.RankingDb.get_handle(member.id)
         if handle is None:
-            await ctx.send(f'Không tìm thấy handle của {member.mention} trong dữ liệu.')
+            await ctx.send(f'Không tìm thấy nick của {member.mention} trong dữ liệu.')
             return
         await ctx.send(SET_HANDLE_SUCCESS.format(member.id, handle))
 

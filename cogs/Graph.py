@@ -83,8 +83,8 @@ class Graph(commands.Cog):
                       usage='[handle] [d>=[[dd]mm]yyyy] [d<[[dd]mm]yyyy]')
     async def tagbar(self, ctx, *args):
         """
-        Shows the plot of solved tags on Codeforces for the handles provided.
-        e.g. ;voj solved_tag CKQ d<16022020 d>=05062019
+        Hiện biểu đồ các bài đã giải theo tag của nick codeforces tương ứng.
+        Ví dụ ;voj tagbar CKQ
         """
         filt = DayFilter()
         handle = filt.parse(args)
@@ -153,7 +153,7 @@ class Graph(commands.Cog):
     async def stalk(self, ctx, *args):
         """
         Top 10 bài vừa làm gần nhất.
-        e.g. ;voj stalk CKQ d<16022020 d>=05062019
+        Ví dụ ;voj stalk CKQ
         """
         filt = DayFilter()
         handle = filt.parse(args)
@@ -229,7 +229,7 @@ class Graph(commands.Cog):
                       usage='[handle] [d>=[[dd]mm]yyyy] [d<[[dd]mm]yyyy]')
     async def hist(self, ctx, *args):
         """Hiện histogram về thời gian làm bài của handle cho trước.
-        e.g. ;voj hist CKQ d<16022020 d>=05062019
+        Ví dụ ;voj hist CKQ d<16022020 d>=05062019
         """
         filt = DayFilter()
         handle = filt.parse(args)
@@ -278,7 +278,7 @@ class Graph(commands.Cog):
                       usage='[d>=[[dd]mm]yyyy] [d<[[dd]mm]yyyy]')
     async def group_hist(self, ctx, *args):
         """Hiện histogram của toàn group.
-        e.g. ;voj group_hist  d<16022020 d>=05062019
+        Ví dụ ;voj group_hist  d<16022020 d>=05062019
         """
         filt = DayFilter()
         handle = filt.parse(args)
@@ -330,7 +330,7 @@ class Graph(commands.Cog):
     async def exp(self, ctx, *args):
         """
         Hiện biểu đồ kinh nghiệm của handle cho trước.
-        e.g. ;voj exp CKQ d<16022020 d>=05062019
+        Ví dụ ;voj exp CKQ d<16022020 d>=05062019
         """
         filt = DayFilter()
         handle = filt.parse(args)

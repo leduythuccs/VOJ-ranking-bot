@@ -34,14 +34,14 @@ class RankingCommand(commands.Cog):
         except Exception as e:
             print(e)
 
-    @commands.command(brief="Get badge info.")
+    @commands.command(brief="Lấy thông tin các huy hiệu")
     async def badge(self, ctx):
         """
-            Show required score to get badge.
+            Hiện phần trăm điểm yêu cầu để đạt được huy hiệu tương ứng.
         """
         style = table.Style('{:<}  {:<}  {:<}')
         t = table.Table(style)
-        t += table.Header('Badge title', 'Lowerbound %', 'Upperbound %')
+        t += table.Header('Tên huy hiệu', '% yêu cầu', '% giới hạn')
         t += table.Line()
         for rank in badge.RATED_RANKS:
             title = rank.title
@@ -52,8 +52,8 @@ class RankingCommand(commands.Cog):
             t += table.Data(title, low, hi)
         table_str = f'```\n{t}\n```'
         embed = discord_common.cf_color_embed(
-            title="Required % score to get badge. "
-            "Current MAX_SCORE={:.2f}".format(badge.MAX_SCORE),
+            title="% điểm yêu cầu."
+            "Tổng điểm hiện tại SUM_SCORE={:.2f}".format(badge.MAX_SCORE),
             description=table_str)
         await ctx.send(embed=embed)
 
@@ -76,9 +76,8 @@ class RankingCommand(commands.Cog):
 
     # from TLE bot: https://github.com/cheran-senthil/TLE/blob/97c9bff9800b3bbaefb72ec00faa57a4911d3a4b/tle/cogs/duel.py#L410
 
-    @commands.command(brief="Show ranking")
+    @commands.command(brief="Hiện bảng xếp hạng")
     async def ranklist(self, ctx):
-        """Show VOJ ranking"""
         if len(self.rank_cache) == 0:
             await self.calculate_rank(ctx)
         _PER_PAGE = 10
@@ -94,7 +93,7 @@ class RankingCommand(commands.Cog):
 
             table_str = f'```\n{t}\n```'
             embed = discord.Embed(description=table_str)
-            return 'VOJ ranking', embed
+            return 'Bảng xếp hạng VOJ', embed
 
         pages = [make_page(chunk, k) for k, chunk in enumerate(
             paginator.chunkify(self.rank_cache, _PER_PAGE))]

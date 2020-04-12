@@ -68,7 +68,7 @@ async def get_handle(ctx, handle):
     if handle is None:
         handle = RankingDb.RankingDb.get_handle(ctx.author.id)
         if handle is None:
-            await ctx.send(f'Handle for {ctx.author.mention} not found in database')
+            await ctx.send(f'Không tìm thấy nick của {ctx.author.mention} trong dữ liệu.')
             return None
         return handle
     else:
@@ -80,7 +80,7 @@ async def get_handle(ctx, handle):
             discord_id = handle[2:-1]
             handle = RankingDb.RankingDb.get_handle(discord_id)
             if handle is None:
-                await ctx.send(f'Handle for <@{discord_id}> not found in database')
+                await ctx.send(f'Không tìm thấy nick của <@{discord_id}> trong dữ liệu.')
                 return None
     return handle
 SPOJ_CNT_AC = json.load(open('database/spoj_cnt_ac.json'))

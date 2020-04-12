@@ -9,6 +9,7 @@ import time
 from helper import table
 from helper import paginator
 from helper import discord_common
+from helper import common
 from typing import List
 from helper import badge
 badge.MAX_SCORE
@@ -108,11 +109,9 @@ class RankingCommand(commands.Cog):
             message = await ctx.send('<:pingreee:665243570655199246> Calculating ...')
         # calculating
         problem_info = RankingDb.RankingDb.get_data('problem_info', limit=None)
-        problem_points = {}
+        problem_points = common.get_problem_points(problem_info)
         badge.MAX_SCORE = 0
-        for id, problem_name, links, cnt_AC in problem_info:
-            point = 80 / (40 + int(cnt_AC))
-            problem_points[int(id)] = point
+        for p, point in problem_points.items():
             badge.MAX_SCORE += point
         user_data = RankingDb.RankingDb.get_data('user_data', limit=None)
         user_handles = {}

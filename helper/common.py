@@ -1,6 +1,7 @@
 from datetime import datetime
 from discord.ext import commands
 from helper import RankingDb
+import json
 class FilterError(commands.CommandError):
     pass
 class ParamParseError(FilterError):
@@ -82,3 +83,14 @@ async def get_handle(ctx, handle):
                 await ctx.send(f'Handle for <@{discord_id}> not found in database')
                 return None
     return handle
+SPOJ_CNT_AC = json.load(open('database/spoj_cnt_ac.json'))
+def get_problem_points(problem_info):
+    problem_points = {}
+    for id, problem_name, links, cnt_AC in problem_info:
+        name = problem_name[:problem_name.find('-')].strip()
+        spoj_cnt = 0
+        if name in SPOJ_CNT_AC:
+            spoj_cnt = SPOJ_CNT_AC[name]
+        point = 80 / (40 + int(cnt_AC) + spoj_cnt)
+        problem_points[int(id)] = point
+    return problem_points

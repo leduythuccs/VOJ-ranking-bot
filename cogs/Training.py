@@ -85,24 +85,6 @@ class Training(commands.Cog):
         links = list(map(lambda x: '<' + x + '>', links))
         await ctx.send('\n'.join(links))
 
-    @commands.command(brief="Get a random VOJ problem.")
-    async def random(self, ctx):
-        handle = await common.get_handle(ctx, None)
-        if handle is None:
-            return
-        un_solved_problem = self.get_un_solved_problem(handle)
-        if len(un_solved_problem) == 0:
-            await ctx.send('There are no problems within the specified parameters.')
-            return
-        problems = random.choices(un_solved_problem, k = min(10, len(un_solved_problem)))
-        title = "{0} random problems".format(len(problems), handle)
-        msg = ""
-        for p in problems:
-            msg += to_message(p, problem_point) + "\n"
-        embed=discord.Embed(title=title,description=msg.strip(), color=discord_common._SUCCESS_BLUE_)
-        discord_common.set_author_footer(embed, ctx.author)
-        await ctx.send(embed=embed)
-
     @commands.command(brief="Recommend some problems.",
                       usage="[tag] [lower_point] [upper_point]")
     async def gimme(self, ctx, *args):
@@ -140,7 +122,7 @@ class Training(commands.Cog):
         if len(un_solved_problem) == 0:
             await ctx.send('There are no problems within the specified parameters.')
             return
-        problems = random.choices(un_solved_problem, k = min(10, len(un_solved_problem)))
+        problems = random.sample(un_solved_problem, k = min(10, len(un_solved_problem)))
         title = "{0} {1} problems".format(len(problems), tag)
         msg = ""
         for p in problems:

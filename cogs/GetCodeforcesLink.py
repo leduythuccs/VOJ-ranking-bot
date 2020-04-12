@@ -37,7 +37,8 @@ class GetCodeforcesLink(commands.Cog):
         self.link = {}
         self.solution_links = {}
         self.tag = {}
-    
+        self.un_solved_problem_cache = {}
+        self.category = {}
     @commands.Cog.listener()
     async def on_ready(self):
         self.update_link()
@@ -54,9 +55,19 @@ class GetCodeforcesLink(commands.Cog):
         data = json.load(open('database/vietcodes_solution.json'))
         for x in data:
             self.solution_links[x['problem'].upper()] = x['link']
-        data = json.load(open('database/full_tag.json'))
-        for x in data:
-            self.tag[x] = data[x]
+        self.tag = json.load(open('database/full_tag.json'))
+        self.category = json.load(open('database/category.json'))
+
+    def get_un_solved_problem(self, handle):
+        if handle not in self.un_solved_problem_cache:
+            problem_list = RankingDb.RankingDb.get_info_solved_problem(handle)
+            problem_list = list(filter(lambda x: (x[1] == 'AC' or (float(x[1]) > 100 - 0.1)), problem_list))
+            #id, result, data
+            problem_list = set(map(lambda x: int(x[0]), problem_list))
+            #id, name, link, cnt_AC
+            un_solved_problem = list(filter(lambda x: int(x[0]) not in problem_list, self.problems_cache))
+            self.un_solved_problem_cache[handle] = un_solved_problem
+        return self.un_solved_problem_cache[handle]
 
     @commands.command(brief="Get codeforces link of VOJ problem")
     async def getlink(self, ctx, name):
@@ -73,12 +84,7 @@ class GetCodeforcesLink(commands.Cog):
         handle = await common.get_handle(ctx, None)
         if handle is None:
             return
-        problem_list = RankingDb.RankingDb.get_info_solved_problem(handle)
-        problem_list = list(filter(lambda x: (x[1] == 'AC' or (float(x[1]) > 100 - 0.1)), problem_list))
-        #id, result, data
-        problem_list = set(map(lambda x: int(x[0]), problem_list))
-        #id, name, link, cnt_AC
-        un_solved_problem = list(filter(lambda x: int(x[0]) not in problem_list, self.problems_cache))
+        un_solved_problem = self.get_un_solved_problem(handle)
         if len(un_solved_problem) == 0:
             await ctx.send('There are no problems within the specified parameters.')
             return
@@ -90,6 +96,36 @@ class GetCodeforcesLink(commands.Cog):
         embed=discord.Embed(title=title,description=msg.strip(), color=discord_common._SUCCESS_BLUE_)
         discord_common.set_author_footer(embed, ctx.author)
         await ctx.send(embed=embed)
+    @commands.command(brief="Get some problems has the given tag.",
+                      usage="tag")
+    async def gimme(self, ctx, tag):
+        """
+        Get problems has the given tag
+        e.g. ;voj gimme DP
+        'tag' can be: DP, DS, geometry, graph, math, string, ad-hoc, other
+        """
+        category = tag.upper()
+        if category not in self.category:
+            await ctx.send('Not found category `{0}`. '.format(tag) +
+                           'Please use tag in this list `[DP, DS, geometry, graph, math, string, ad-hoc, other]`')
+            return
+        handle = await common.get_handle(ctx, None)
+        if handle is None:
+            return
+        un_solved_problem = self.get_un_solved_problem(handle)
+        un_solved_problem = list(filter(lambda x: x[1][:x[1].find('-')].strip() in self.category[category], un_solved_problem))
+        if len(un_solved_problem) == 0:
+            await ctx.send('There are no problems within the specified parameters.')
+            return
+        problems = random.choices(un_solved_problem, k = min(10, len(un_solved_problem)))
+        title = "{0} {1} problems".format(len(problems), tag)
+        msg = ""
+        for p in problems:
+            msg += to_message(p) + "\n"
+        embed=discord.Embed(title=title,description=msg.strip(), color=discord_common._SUCCESS_BLUE_)
+        discord_common.set_author_footer(embed, ctx.author)
+        await ctx.send(embed=embed)
+        
     @commands.command(brief="Get solution of a problem.")
     async def solution(self, ctx, name):
         name = name.upper()

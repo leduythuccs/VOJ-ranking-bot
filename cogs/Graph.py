@@ -75,7 +75,7 @@ class Graph(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.tag = {}
-        data = json.load(open('database/tag.json'))
+        data = json.load(open('database/problem_tag.json'))
         for x in data:
             self.tag[x] = data[x]
 

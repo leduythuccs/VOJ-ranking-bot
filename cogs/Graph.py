@@ -180,7 +180,7 @@ class Graph(commands.Cog):
     def get_rating_change(self, handle):
         # problem id, result, date
         raw_subs = RankingDb.RankingDb.get_info_solved_problem(handle)
-        raw_subs = list(filter(lambda x: (x[1] == 'AC') or (float(x[1]) <= 0.1), raw_subs))
+        raw_subs = list(filter(lambda x: (x[1] == 'AC') or (float(x[1]) > 0.01), raw_subs))
         raw_subs = sorted(raw_subs, key=lambda x: x[2])
 
         problem_info = RankingDb.RankingDb.get_data('problem_info', limit=None)

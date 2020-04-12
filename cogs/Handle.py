@@ -23,16 +23,15 @@ class Handle(commands.Cog):
         ;voj identify leduykhongngu
         """
         discord_id = ctx.author.id
-        handle = RankingDb.RankingDb.get_handle(discord_id)
-        if handle is not None:
-            await ctx.send('Ông identify lần 2 làm cái gì. Có nick {0} chưa đủ à'.format(handle))
+        tmp = RankingDb.RankingDb.get_handle(discord_id)
+        if tmp is not None:
+            await ctx.send('Ông identify lần 2 làm cái gì. Có nick {0} chưa đủ à'.format(tmp))
             return
         problem = random.choice(codeforces_api.problems)
         await ctx.send(f'<@{str(ctx.author.id)}>, Hãy nộp một submission bị dịch lỗi tới bài <https://codeforces.com/problemset/problem/{problem[0]}/{problem[1]}> trong 60 giây')
         for i in range(6):
             await asyncio.sleep(10)
             subs = await codeforces_api.get_user_status(handle)
-
             if any(sub['problem_name'] == problem[2] and sub['verdict'] == 'COMPILATION_ERROR' for sub in subs):
                 x = RankingDb.RankingDb.set_handle(discord_id, handle)
                 if x != True:

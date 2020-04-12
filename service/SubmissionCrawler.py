@@ -88,7 +88,11 @@ class Crawler:
         problem_name = elems[3].text.strip()
         problem_name = problem_name[problem_name.find('-')+1:].strip()
 
-        short_link = '/'.join(re.findall('contest/(\d+)/problem/(\w)', elems[3].a['href'])[0])
+        short_link = '/'.join(re.findall('contest/(\d+)/problem/(\w+)', elems[3].a['href'])[0])
+        contest_id, junk = short_link.split('/')
+        if str(contest_id) in open('database/contest_id_whitelist.txt').read().strip().split('\n'):
+            print("found white list submission")
+            return None
 
         if elems[5].has_attr('waiting') and elems[5]['waiting'] != 'false':
             self.first_un_crawl_submission = min(self.first_un_crawl_submission, submission_id)

@@ -142,6 +142,11 @@ class RankingCommand(commands.Cog):
 
     @commands.command(brief="Test crawler")
     @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))
+    async def exclude(self, ctx, contest_id):
+        open('database/contest_id_whitelist.txt', 'a').write(str(contest_id) + '\n')
+        await ctx.send('ok')
+    @commands.command(brief="Test crawler")
+    @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))
     async def crawl(self, ctx, l, r):
         if self.crawler.login() == False:
             if ctx is not None:

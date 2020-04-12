@@ -18,7 +18,7 @@ from helper import badge
 BASE_PROBLEM_URL = 'https://codeforces.com/group/FLVn1Sc504/contest/{0}/problem/{1}'
 
 WHILELIST_USER_IDs = ['328391']
-TAGS = ['Dynamic programming', 'Data structure', 'Geometry', 'Graph', 'Math', 'String', 'Ad-hoc', 'Other', 'No tag']
+TAGS = ['Dynamic programming', 'Data structure', 'Geometry', 'Graph', 'Math', 'String', 'Ad-hoc', 'Other']
 
 
 def _plot_rating(resp, mark='o', labels: List[str] = None, MAX_SCORE=100):
@@ -104,7 +104,7 @@ class Graph(commands.Cog):
         for id, name, link, cnt_AC in problem_info:
             name = name[:name.find('-')].strip()
             id_to_name[int(id)] = name
-        cnt = {}
+        cnt = {'No tag' : 0}
         for tag in TAGS:
             cnt[tag] = 0
         for id, *junks in problem_list:
@@ -127,7 +127,7 @@ class Graph(commands.Cog):
         plt.xlabel('Tag')
         plt.ylabel('Number solved')
         x_pos = list(range(len(TAGS)))
-        colors = ['tab:blue', 'tab:orange', 'tab:green', 'tab:red', 'tab:purple', 'tab:pink', 'tab:gray', 'tab:olive', 'tab:cyan']
+        colors = ['tab:blue', 'tab:orange', 'tab:green', 'tab:red', 'tab:purple', 'tab:pink', 'tab:olive', 'tab:cyan']
         plt.bar(x_pos, [cnt[x] for x in TAGS], color=colors)
         plt.xticks(x_pos, TAGS)
         for index, value in enumerate(TAGS):
@@ -139,7 +139,7 @@ class Graph(commands.Cog):
                 plt.text(index - 0.25, cnt[value], str(cnt[value]))
         
         total = len(problem_list)
-        plt.legend(title=f'{handle}: {total}',
+        plt.legend(title=f'{handle}: {total} ({cnt['No tag']} no tag problems)',
                    title_fontsize=plt.rcParams['legend.fontsize'])
         plt.gcf().autofmt_xdate()
         discord_file = gc.get_current_figure_as_file()

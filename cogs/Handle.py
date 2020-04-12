@@ -46,7 +46,7 @@ class Handle(commands.Cog):
         """Lấy codeforces nick của user discord tương ứng."""
         handle = RankingDb.RankingDb.get_handle(member.id)
         if handle is None:
-            await ctx.send(f'Không tìm thấy nick của {member.mention} trong dữ liệu.')
+            await ctx.send(f'Không tìm thấy nick của {member.mention} trong dữ liệu. Xin hãy dùng command ;voj identify nick_cf')
             return
         await ctx.send(SET_HANDLE_SUCCESS.format(member.id, handle))
 

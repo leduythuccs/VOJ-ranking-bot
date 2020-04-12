@@ -68,7 +68,7 @@ async def get_handle(ctx, handle):
     if handle is None:
         handle = RankingDb.RankingDb.get_handle(ctx.author.id)
         if handle is None:
-            await ctx.send(f'Không tìm thấy nick của {ctx.author.mention} trong dữ liệu.')
+            await ctx.send(f'Không tìm thấy nick của {ctx.author.mention} trong dữ liệu. Xin hãy dùng command ;voj identify nick_cf')
             return None
         return handle
     else:

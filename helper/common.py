@@ -84,7 +84,12 @@ async def get_handle(ctx, handle):
                 return None
     return handle
 SPOJ_CNT_AC = json.load(open('database/spoj_cnt_ac.json'))
-def get_problem_points(problem_info):
+problem_points = None
+def get_problem_points(force=False):
+    global problem_points
+    if problem_points != None and not force:
+        return problem_points
+    problem_info = RankingDb.RankingDb.get_data('problem_info', limit=None)
     problem_points = {}
     for id, problem_name, links, cnt_AC in problem_info:
         name = problem_name[:problem_name.find('-')].strip()

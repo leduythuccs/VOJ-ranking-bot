@@ -14,7 +14,7 @@ import json
 # Adapted from TLE sources.
 # https://github.com/cheran-senthil/TLE/blob/master/tle/cogs/meta.py#L15
 
-def to_message(p):
+def to_message(p, problem_point):
     # p[0] -> id
     # p[1] -> name
     # p[2] -> link
@@ -28,10 +28,16 @@ def to_message(p):
         msg = "[{0}]({1}) ".format(p[1], links[0])
         for i, link in enumerate(links[1:]):
             msg += "[link{0}]({1}) ".format(i + 2, link)
-    msg += "({0} AC)".format(p[3])
+    msg += "({:.2f} exp)".format(problem_point[int(p[0])])
     return msg
+def is_float(value):
+    try:
+        float(value)
+        return True
+    except ValueError:  
+        return False
 
-class GetCodeforcesLink(commands.Cog):
+class Training(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.link = {}
@@ -92,28 +98,45 @@ class GetCodeforcesLink(commands.Cog):
         title = "{0} random problems".format(len(problems), handle)
         msg = ""
         for p in problems:
-            msg += to_message(p) + "\n"
+            msg += to_message(p, problem_point) + "\n"
         embed=discord.Embed(title=title,description=msg.strip(), color=discord_common._SUCCESS_BLUE_)
         discord_common.set_author_footer(embed, ctx.author)
         await ctx.send(embed=embed)
-    @commands.command(brief="Get some problems has the given tag.",
-                      usage="tag")
-    async def gimme(self, ctx, tag):
+
+    @commands.command(brief="Recommend some problems.",
+                      usage="[tag] [lower_point] [upper_point]")
+    async def gimme(self, ctx, *args):
         """
-        Get problems has the given tag
-        e.g. ;voj gimme DP
-        'tag' can be: DP, DS, geometry, graph, math, string, ad-hoc, other
+        Recommend some problems within the specified parameters
+        e.g. ;voj gimme DP 0.2 0.5 
         """
+        low = 0 - 0.1
+        hi = 2 + 0.1
+        bound = []
+        tag = ""
+        for arg in args:
+            if is_float(arg):
+                bound.append(float(arg))
+            else:
+                tag = arg
+        if len(bound) == 1:
+            low = max(low, bound[0])
+        elif len(bound) == 2:
+            low = max(low, bound[0])
+            hi = min(hi, bound[1])
         category = tag.upper()
-        if category not in self.category:
+        if category != "" and category not in self.category:
             await ctx.send('Not found category `{0}`. '.format(tag) +
                            'Please use tag in this list `[DP, DS, geometry, graph, math, string, ad-hoc, other]`')
             return
         handle = await common.get_handle(ctx, None)
         if handle is None:
             return
+        problem_point = common.get_problem_points()
         un_solved_problem = self.get_un_solved_problem(handle)
-        un_solved_problem = list(filter(lambda x: x[1][:x[1].find('-')].strip() in self.category[category], un_solved_problem))
+        if category != "":
+            un_solved_problem = list(filter(lambda x: x[1][:x[1].find('-')].strip() in self.category[category], un_solved_problem))
+        un_solved_problem = list(filter(lambda p: low <= problem_point[int(p[0])] and problem_point[int(p[0])] <= hi, un_solved_problem))
         if len(un_solved_problem) == 0:
             await ctx.send('There are no problems within the specified parameters.')
             return
@@ -121,7 +144,7 @@ class GetCodeforcesLink(commands.Cog):
         title = "{0} {1} problems".format(len(problems), tag)
         msg = ""
         for p in problems:
-            msg += to_message(p) + "\n"
+            msg += to_message(p, problem_point) + "\n"
         embed=discord.Embed(title=title,description=msg.strip(), color=discord_common._SUCCESS_BLUE_)
         discord_common.set_author_footer(embed, ctx.author)
         await ctx.send(embed=embed)
@@ -148,4 +171,4 @@ class GetCodeforcesLink(commands.Cog):
         await ctx.send(embed=embed)
     
 def setup(bot):
-    bot.add_cog(GetCodeforcesLink(bot))
+    bot.add_cog(Training(bot))

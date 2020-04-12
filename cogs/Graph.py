@@ -182,9 +182,7 @@ class Graph(commands.Cog):
         raw_subs = RankingDb.RankingDb.get_info_solved_problem(handle)
         raw_subs = list(filter(lambda x: (x[1] == 'AC') or (float(x[1]) > 0.01), raw_subs))
         raw_subs = sorted(raw_subs, key=lambda x: x[2])
-
-        problem_info = RankingDb.RankingDb.get_data('problem_info', limit=None)
-        problem_points = common.get_problem_points(problem_info)
+        problem_points = common.get_problem_points()
         rating_changes = [(-1, -1)]
         rating = 0
         for problem_id, result, date in raw_subs:
@@ -196,6 +194,36 @@ class Graph(commands.Cog):
             rating_changes[-1] = (rating, date)
         return rating_changes[1:]
 
+    @commands.command(brief="Show VOJ problem's point distribution.")
+    async def distrib(self, ctx):
+        bin_size = 0.2
+        bins = 10
+
+        height = [0] * bins
+        problem_points = common.get_problem_points()
+        for p, point in problem_points.items():
+            height[min(bins - 1, int(point // bin_size))] += 1
+        x = [k * bin_size for k in range(bins)]
+        label = ['{:.2f} ({})'.format(r, c) for r,c in zip(x, height)]
+        colors = []
+        for rank in badge.RATED_RANKS:
+            colors.append('#' + '%06x' % rank.color_embed)
+        colors = colors[:bins]
+        assert len(colors) > 0, 'Expected colors len is greater than 0'
+        while len(colors) < bins:
+            colors.append(colors[-1])
+        
+        plt.clf()
+        plt.xlabel('Point')
+        plt.ylabel('Number of problems')
+        plt.xticks(rotation=45)
+        plt.bar(x, height, bin_size*0.9, color=colors, tick_label=label)
+        discord_file = gc.get_current_figure_as_file()
+        embed = discord_common.cf_color_embed(
+            title="Point distribution of VOJ problems.")
+        discord_common.attach_image(embed, discord_file)
+        # discord_common.set_author_footer(embed, ctx.author)
+        await ctx.send(embed=embed, file=discord_file)
     @commands.command(brief="Show histogram of solved problems on CF.",
                       usage='[handle] [d>=[[dd]mm]yyyy] [d<[[dd]mm]yyyy]')
     async def hist(self, ctx, *args):

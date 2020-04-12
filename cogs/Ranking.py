@@ -108,8 +108,7 @@ class RankingCommand(commands.Cog):
         if ctx != None:
             message = await ctx.send('<:pingreee:665243570655199246> Calculating ...')
         # calculating
-        problem_info = RankingDb.RankingDb.get_data('problem_info', limit=None)
-        problem_points = common.get_problem_points(problem_info)
+        problem_points = common.get_problem_points(force=True)
         badge.MAX_SCORE = 0
         for p, point in problem_points.items():
             badge.MAX_SCORE += point

@@ -23,8 +23,12 @@ class Handle(commands.Cog):
         ;voj identify leduykhongngu
         """
         discord_id = ctx.author.id
+        handle = RankingDb.RankingDb.get_handle(discord_id)
+        if handle is not None:
+            await ctx.send('Ông identify lần 2 làm cái gì. Có nick {0} chưa đủ à'.format(handle))
+            return
         problem = random.choice(codeforces_api.problems)
-        await ctx.send(f'`{str(ctx.author)}`, Hãy nộp một submission bị dịch lỗi tới bài <https://codeforces.com/problemset/problem/{problem[0]}/{problem[1]}> trong 60 giây')
+        await ctx.send(f'<@{str(ctx.author.id)}>, Hãy nộp một submission bị dịch lỗi tới bài <https://codeforces.com/problemset/problem/{problem[0]}/{problem[1]}> trong 60 giây')
         for i in range(6):
             await asyncio.sleep(10)
             subs = await codeforces_api.get_user_status(handle)
@@ -37,7 +41,7 @@ class Handle(commands.Cog):
                     await ctx.send(SET_HANDLE_SUCCESS.format(discord_id, handle))
                     RankingDb.RankingDb.conn.commit()
                 return
-        await ctx.send(f'`{str(ctx.author)}`, thử lại pls.')
+        await ctx.send(f'<@{str(ctx.author.id)}>, thử lại pls. Dùng `;voj help identify` nếu cần giúp đỡ.')
 
     @commands.command(brief='Set Codeforces handle of a user')
     @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))

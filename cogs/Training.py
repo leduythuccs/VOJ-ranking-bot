@@ -75,21 +75,21 @@ class Training(commands.Cog):
             self.un_solved_problem_cache[handle] = un_solved_problem
         return self.un_solved_problem_cache[handle]
 
-    @commands.command(brief="Get codeforces link of VOJ problem")
+    @commands.command(brief="Lấy link bài tập trên codeforces.")
     async def getlink(self, ctx, name):
         name = name.upper()
         if name not in self.link:
-            await ctx.send('Problem {0} not found.'.format(name))
+            await ctx.send('Không tìm thấy bài {0}.'.format(name))
             return
         links = self.link[name].strip(',').split(',')
         links = list(map(lambda x: '<' + x + '>', links))
         await ctx.send('\n'.join(links))
 
-    @commands.command(brief="Recommend some problems.",
+    @commands.command(brief="Đề xuất bài tập.",
                       usage="[tag] [lower_point] [upper_point]")
     async def gimme(self, ctx, *args):
         """
-        Recommend some problems within the specified parameters
+        Đề xuất một số bài tập theo dạng.
         e.g. ;voj gimme DP 0.2 0.5 
         """
         low = 0 - 0.1
@@ -108,8 +108,8 @@ class Training(commands.Cog):
             hi = min(hi, bound[1])
         category = tag.upper()
         if category != "" and category not in self.category:
-            await ctx.send('Not found category `{0}`. '.format(tag) +
-                           'Please use tag in this list `[DP, DS, geometry, graph, math, string, ad-hoc, other]`')
+            await ctx.send('không tìm thấy category `{0}`. '.format(tag) +
+                           'Chỉ dùng các tag sau đây `[DP, DS, geometry, graph, math, string, ad-hoc, other]`')
             return
         handle = await common.get_handle(ctx, None)
         if handle is None:
@@ -120,10 +120,12 @@ class Training(commands.Cog):
             un_solved_problem = list(filter(lambda x: x[1][:x[1].find('-')].strip() in self.category[category], un_solved_problem))
         un_solved_problem = list(filter(lambda p: low <= problem_point[int(p[0])] and problem_point[int(p[0])] <= hi, un_solved_problem))
         if len(un_solved_problem) == 0:
-            await ctx.send('There are no problems within the specified parameters.')
+            await ctx.send('Không tìm được bài tập nào với các tham số hiện tại.')
             return
         problems = random.sample(un_solved_problem, k = min(10, len(un_solved_problem)))
-        title = "{0} {1} problems".format(len(problems), tag)
+        if tag == "":
+            tag = "random"
+        title = "{0} bài {1}".format(len(problems), tag)
         msg = ""
         for p in problems:
             msg += to_message(p, problem_point) + "\n"
@@ -131,7 +133,7 @@ class Training(commands.Cog):
         discord_common.set_author_footer(embed, ctx.author)
         await ctx.send(embed=embed)
         
-    @commands.command(brief="Get solution of a problem.")
+    @commands.command(brief="Lấy solution của bài tập.")
     async def solution(self, ctx, name):
         name = name.upper()
         if name not in self.solution_links:
@@ -142,7 +144,7 @@ class Training(commands.Cog):
             await ctx.send('Đọc solution ít thôi.', embed=embed)
         else:
             await ctx.send(embed=embed)
-    @commands.command(brief="Get tag of a problem.")
+    @commands.command(brief="Lấy tag của một bài tập")
     async def tag(self, ctx, name):
         name = name.upper()
         if name not in self.tag:

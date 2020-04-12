@@ -111,7 +111,9 @@ class RankingCommand(commands.Cog):
         problem_points = common.get_problem_points(force=True)
         badge.MAX_SCORE = 0
         for p, point in problem_points.items():
-            badge.MAX_SCORE += point
+            #remove scale
+            # badge.MAX_SCORE += point
+            badge.MAX_SCORE += 2
         user_data = RankingDb.RankingDb.get_data('user_data', limit=None)
         user_handles = {}
         for cf_id, handle, discord_id in user_data:
@@ -128,7 +130,9 @@ class RankingCommand(commands.Cog):
             if result == 'AC':
                 result = 100
             result = float(result)
-            user_points[handle] += result * problem_points[int(problem_id)] / 100
+            #remove scale
+            # user_points[handle] += result * problem_points[int(problem_id)] / 100
+            user_points[handle] += result * 2 / 100
         self.rank_cache = []
         for handle, point in user_points.items():
             self.rank_cache.append((point, handle))

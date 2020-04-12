@@ -79,7 +79,7 @@ class Graph(commands.Cog):
         for x in data:
             self.tag[x] = data[x]
 
-    @commands.command(brief="Plot solved category.",
+    @commands.command(brief="Biểu đồ các bài đã giải theo tag.",
                       usage='[handle] [d>=[[dd]mm]yyyy] [d<[[dd]mm]yyyy]')
     async def tagbar(self, ctx, *args):
         """
@@ -96,7 +96,7 @@ class Graph(commands.Cog):
         problem_list = list(filter(lambda x: x[1] == 'AC' or (float(x[1]) >= 100 - 0.1), problem_list))
         problem_list = list(filter(lambda x: filt.filter(datetime.strptime(x[2], '%Y/%m/%d')), problem_list))
         if len(problem_list) == 0:
-            await ctx.send('There are no submissions of user `{0}` within the specified parameters.'.format(handle))
+            await ctx.send('Không tìm thấy submission của `{0}` với các tham số hiện tại.'.format(handle))
             return
         problem_info = RankingDb.RankingDb.get_data('problem_info', limit=None)
         id_to_name = {}
@@ -144,15 +144,15 @@ class Graph(commands.Cog):
         plt.gcf().autofmt_xdate()
         discord_file = gc.get_current_figure_as_file()
         embed = discord_common.cf_color_embed(
-            title='Number of submissions in each category')
+            title='Số lượng bài giải được trong từng category')
         discord_common.attach_image(embed, discord_file)
         discord_common.set_author_footer(embed, ctx.author)
         await ctx.send(embed=embed, file=discord_file)
-    @commands.command(brief="List recent AC problems",
+    @commands.command(brief="Lấy danh sách các bài vừa làm",
                       usage='[handle] [d>=[[dd]mm]yyyy] [d<[[dd]mm]yyyy]')
     async def stalk(self, ctx, *args):
         """
-        Top 10 recent AC problems
+        Top 10 bài vừa làm gần nhất.
         e.g. ;voj stalk CKQ d<16022020 d>=05062019
         """
         filt = DayFilter()
@@ -164,7 +164,7 @@ class Graph(commands.Cog):
         problem_list = list(filter(lambda x: x[1] == 'AC' or (float(x[1]) >= 100 - 0.1), problem_list))
         problem_list = list(filter(lambda x: filt.filter(datetime.strptime(x[2], '%Y/%m/%d')), problem_list))
         if len(problem_list) == 0:
-            await ctx.send('There are no submissions of user `{0}` within the specified parameters.'.format(handle))
+            await ctx.send('Không tìm thấy submission của `{0}` với các tham số hiện tại.'.format(handle))
             return
         problem_list = sorted(problem_list, key=lambda x: x[2], reverse=True)[:10]
         problem_list = list(map(lambda x: (RankingDb.RankingDb.get_problem_info(x[0]), x[1], x[2]), problem_list))
@@ -172,7 +172,7 @@ class Graph(commands.Cog):
         msg = ''
         for p in problem_list:
             msg += to_message(p) + '\n'
-        title = "Recently solved problems by " + handle
+        title = "Các bài vừa được giải bởi " + handle
 
         embed = discord.Embed(title=title, description=msg)
         await ctx.send(embed=embed)
@@ -190,11 +190,12 @@ class Graph(commands.Cog):
                 rating_changes.append((0, date))
             if result == 'AC':
                 result = 100
-            rating += problem_points[int(problem_id)] * float(result) / 100
+            # rating += problem_points[int(problem_id)] * float(result) / 100
+            rating += 2 * float(result) / 100
             rating_changes[-1] = (rating, date)
         return rating_changes[1:]
 
-    @commands.command(brief="Show VOJ problem's point distribution.")
+    @commands.command(brief="Hiện phân phối điểm")
     async def distrib(self, ctx):
         bin_size = 0.2
         bins = 10
@@ -220,14 +221,14 @@ class Graph(commands.Cog):
         plt.bar(x, height, bin_size*0.9, color=colors, tick_label=label)
         discord_file = gc.get_current_figure_as_file()
         embed = discord_common.cf_color_embed(
-            title="Point distribution of VOJ problems.")
+            title="Phân phối điểm của bài tập VOJ")
         discord_common.attach_image(embed, discord_file)
         # discord_common.set_author_footer(embed, ctx.author)
         await ctx.send(embed=embed, file=discord_file)
-    @commands.command(brief="Show histogram of solved problems on CF.",
+    @commands.command(brief="Hiện historgram về thời gian làm bài",
                       usage='[handle] [d>=[[dd]mm]yyyy] [d<[[dd]mm]yyyy]')
     async def hist(self, ctx, *args):
-        """Shows the histogram of problems solved over time on Codeforces for the handles provided.
+        """Hiện histogram về thời gian làm bài của handle cho trước.
         e.g. ;voj hist CKQ d<16022020 d>=05062019
         """
         filt = DayFilter()
@@ -239,7 +240,7 @@ class Graph(commands.Cog):
         raw_subs = list(filter(lambda x: filt.filter(
             datetime.strptime(x[2], '%Y/%m/%d')), raw_subs))
         if len(raw_subs) == 0:
-            await ctx.send('There are no submissions of user `{0}` within the specified parameters.'.format(handle))
+            await ctx.send('Không tìm thấy submission của `{0}` với các tham số hiện tại.'.format(handle))
             return
         subs = []
         types = ['AC', 'IC', 'PC']
@@ -268,15 +269,15 @@ class Graph(commands.Cog):
         plt.gcf().autofmt_xdate()
         discord_file = gc.get_current_figure_as_file()
         embed = discord_common.cf_color_embed(
-            title='Histogram of number of submissions over time')
+            title='Số bài làm theo thời gian.')
         discord_common.attach_image(embed, discord_file)
         discord_common.set_author_footer(embed, ctx.author)
         await ctx.send(embed=embed, file=discord_file)
 
-    @commands.command(brief="Show histogram of group's submissions.",
+    @commands.command(brief="Hiện histogram của toàn group.",
                       usage='[d>=[[dd]mm]yyyy] [d<[[dd]mm]yyyy]')
     async def group_hist(self, ctx, *args):
-        """Shows the histogram of group's submissions.
+        """Hiện histogram của toàn group.
         e.g. ;voj group_hist  d<16022020 d>=05062019
         """
         filt = DayFilter()
@@ -290,7 +291,7 @@ class Graph(commands.Cog):
 
         raw_subs = list(filter(lambda x: filt.filter(datetime.strptime(x[2], '%Y/%m/%d')), raw_subs))
         if len(raw_subs) == 0:
-            await ctx.send('There are no submissions within the specified parameters.')
+            await ctx.send('Không tìm thấy submission với các tham số hiện tại.')
             return
         subs = []
         types = ['AC', 'IC', 'PC']
@@ -319,16 +320,16 @@ class Graph(commands.Cog):
         plt.gcf().autofmt_xdate()
         discord_file = gc.get_current_figure_as_file()
         embed = discord_common.cf_color_embed(
-            title='Histogram of number of submissions over time')
+            title='Số bài làm theo thời gian.)
         discord_common.attach_image(embed, discord_file)
         discord_common.set_author_footer(embed, ctx.author)
         await ctx.send(embed=embed, file=discord_file)
 
-    @commands.command(brief="Plot VOJ experience graph.",
+    @commands.command(brief="Hiện biểu đồ kinh nghiệm",
                       usage='[handle] [d>=[[dd]mm]yyyy] [d<[[dd]mm]yyyy]')
     async def exp(self, ctx, *args):
         """
-        Plots VOJ experience graph for the handle provided.
+        Hiện biểu đồ kinh nghiệm của handle cho trước.
         e.g. ;voj exp CKQ d<16022020 d>=05062019
         """
         filt = DayFilter()
@@ -337,13 +338,13 @@ class Graph(commands.Cog):
         if handle is None:
             return
         if badge.MAX_SCORE == None:
-            await ctx.send('Ranking has not been calculated yet.')
+            await ctx.send('Ranking chưa được tính, ping Cá Nóc.')
             return
         resp = self.get_rating_change(handle)
         resp = list(filter(lambda x: filt.filter(
             datetime.strptime(x[1], '%Y/%m/%d')), resp))
         if len(resp) == 0:
-            await ctx.send('There are no submissions of user `{0}` within the specified parameters.'.format(handle))
+            await ctx.send('Không tìm thấy submission của `{0}` với các tham số hiện tại.'.format(handle))
             return
         plt.clf()
         _plot_rating([resp], MAX_SCORE=badge.MAX_SCORE)
@@ -364,7 +365,7 @@ class Graph(commands.Cog):
 
         discord_file = gc.get_current_figure_as_file()
         embed = discord_common.cf_color_embed(
-            title='Experience graph in VNOI group')
+            title='Biểu đồ kinh nghiệm trong group VNOI.')
         discord_common.attach_image(embed, discord_file)
         discord_common.set_author_footer(embed, ctx.author)
         await ctx.send(embed=embed, file=discord_file)

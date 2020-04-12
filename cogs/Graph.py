@@ -320,7 +320,7 @@ class Graph(commands.Cog):
         plt.gcf().autofmt_xdate()
         discord_file = gc.get_current_figure_as_file()
         embed = discord_common.cf_color_embed(
-            title='Số bài làm theo thời gian.)
+            title='Số bài làm theo thời gian.')
         discord_common.attach_image(embed, discord_file)
         discord_common.set_author_footer(embed, ctx.author)
         await ctx.send(embed=embed, file=discord_file)

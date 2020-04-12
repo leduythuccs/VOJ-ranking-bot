@@ -139,7 +139,7 @@ class Graph(commands.Cog):
                 plt.text(index - 0.25, cnt[value], str(cnt[value]))
         
         total = len(problem_list)
-        plt.legend(title=f"{handle}: {total} ({cnt['No tag']} no tag problems)",
+        plt.legend(title=f"{handle}: {total} ({cnt['No tag']} no tag)",
                    title_fontsize=plt.rcParams['legend.fontsize'])
         plt.gcf().autofmt_xdate()
         discord_file = gc.get_current_figure_as_file()

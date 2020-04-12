@@ -89,8 +89,9 @@ class Training(commands.Cog):
                       usage="[tag] [lower_point] [upper_point]")
     async def gimme(self, ctx, *args):
         """
-        Đề xuất một số bài tập theo dạng.
-        Ví dụ ;voj gimme DP 0.2 0.5 
+        Đề xuất một số bài tập theo dạng. 
+        Có một số tag sau đây: [DP, DS, geometry, graph, math, string, ad-hoc, other]
+        Ví dụ ;voj gimme DP 0.2 0.5 là list các bài DP có độ khó từ 0.2 tới 0.5
         """
         low = 0 - 0.1
         hi = 2 + 0.1

@@ -13,8 +13,15 @@ class Handle(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(brief="Set nick codeforces để dùng bot")
+    @commands.command(brief="Set nick codeforces để dùng bot.",
+    usage="nick codeforces của bạn.")
     async def identify(self, ctx, handle): 
+        """
+        Dùng command này để set nick codeforces.
+        Bot sẽ yêu cầu bạn nộp một code bị dịch lỗi tới bài nào đó trong vòng 60s.
+        Nếu nick codeforces mình là `leduykhongngu` thì mình dùng:
+        ;voj identify leduykhongngu
+        """
         discord_id = ctx.author.id
         problem = random.choice(codeforces_api.problems)
         await ctx.send(f'`{str(ctx.author)}`, Hãy nộp một submission bị dịch lỗi tới bài <https://codeforces.com/problemset/problem/{problem[0]}/{problem[1]}> trong 60 giây')

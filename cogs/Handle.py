@@ -47,11 +47,11 @@ class Handle(commands.Cog):
     @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))
     async def set(self, ctx, member: discord.Member, handle):
         message = (
-            "Vẫn đang được dev ...\n"
-            "Vì lý do đặc biệt nên xem xét dùng các command sau:\n"
+            "Vẫn đang được dev, xin quay lại sau ...\n"
+            "~~Vì lý do đặc biệt nên xem xét dùng các command sau:\n"
             "- Nếu user chưa identify bao giờ -> ;voj set_new @member handle\n"
             "- Nếu user muốn đổi acc codeforces -> ;voj change @member new_handle\n"
-            "- Nếu user dùng acc discord mới -> ;voj "
+            "- Nếu user dùng acc discord mới -> ;voj ~~"
         )
         await ctx.send(message)
         return
@@ -71,7 +71,7 @@ class Handle(commands.Cog):
         """
         handle = RankingDb.RankingDb.get_handle(member.id)
         if handle is None:
-            await ctx.send(f'Không tìm thấy nick của {member.mention} trong dữ liệu.')
+            await ctx.send(f'Không tìm thấy nick của {member.mention} trong dữ liệu. Xin hãy dùng command ;voj identify nick_cf')
             return
         await ctx.send(SET_HANDLE_SUCCESS.format(member.id, handle))
 

@@ -58,9 +58,6 @@ class Training(commands.Cog):
             if name not in self.link:
                 self.link[name] = ""
             self.link[name] += link + ','
-        data = json.load(open('database/vietcodes_solution.json'))
-        for x in data:
-            self.solution_links[x['problem'].upper()] = x['link']
         self.tag = json.load(open('database/full_tag.json'))
         self.category = json.load(open('database/category.json'))
 
@@ -147,12 +144,13 @@ class Training(commands.Cog):
         Lưu ý là có rất ít bài có giải.
         """
         name = name.upper()
-        if name not in self.solution_links:
-            await ctx.send('Tự mà nghĩ đi chứ tôi lấy đâu ra giải cho ông.')
-            return
-        embed=discord.Embed(description='[{0}]({1})'.format(name, self.solution_links[name]), color=discord_common._SUCCESS_BLUE_)
+        # if name not in self.solution_links:
+        #     await ctx.send('Tự mà nghĩ đi chứ tôi lấy đâu ra giải cho ông.')
+        #     return
+        link = 'https://vnoi.info/problems/list_solutions/{}/'.format(name)
+        embed=discord.Embed(description='[{0}]({1})'.format(name, link), color=discord_common._SUCCESS_BLUE_)
         if ctx.author.id != 554842563170009089:
-            await ctx.send('Đọc giải ít thôi.', embed=embed)
+            await ctx.send('Đọc giải ít thôi. Lưu ý là có thể link vnoi info không tồn tại :<.', embed=embed)
         else:
             await ctx.send(embed=embed)
     @commands.command(brief="Lấy tag của một bài tập")

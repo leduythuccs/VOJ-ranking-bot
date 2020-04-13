@@ -352,8 +352,8 @@ class Graph(commands.Cog):
         plt.clf()
         _plot_rating([resp], MAX_SCORE=badge.MAX_SCORE)
         current_rating = resp[-1][0]
-        rank_title = badge.point2rank(
-            current_rating, badge.MAX_SCORE).title + " {:.3f}".format(current_rating)
+        current_badge = badge.point2rank(current_rating, badge.MAX_SCORE)
+        rank_title = current_badge.title + " {:.3f}".format(current_rating)
         labels = [f'\N{ZERO WIDTH SPACE}{handle} ({rank_title})']
         plt.legend(labels, loc='upper left')
         min_rating = current_rating
@@ -361,17 +361,26 @@ class Graph(commands.Cog):
         for rating, date in resp:
             min_rating = min(min_rating, rating)
             max_rating = max(max_rating, rating)
+        max_rating = max(max_rating, min(100, current_badge.high) * badge.MAX_SCORE)
+
         min_rating -= 5 * badge.MAX_SCORE / 100
         max_rating += 5 * badge.MAX_SCORE / 100
         if min_rating < 0:
             min_rating = 0
-
+        msg = ""
+        if current_badge.high < 100:
+            upper_bound = current_badge.high * badge.MAX_SCORE
+            nxt_badge = badge.point2rank(upper_bound + 1)
+            msg = "{} cố lên, chỉ cần khoảng {:.2f} exp nữa là lên {} rồi {}.".format(
+                ctx.author.mention, upper_bound, nxt_badge.title
+                '<:megu_hi:699156503705288754>'
+            )
         discord_file = gc.get_current_figure_as_file()
         embed = discord_common.cf_color_embed(
             title='Biểu đồ kinh nghiệm trong group VNOI.')
         discord_common.attach_image(embed, discord_file)
         discord_common.set_author_footer(embed, ctx.author)
-        await ctx.send(embed=embed, file=discord_file)
+        await ctx.send(msg, embed=embed, file=discord_file)
 
 def setup(bot):
     bot.add_cog(Graph(bot))

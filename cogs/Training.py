@@ -161,7 +161,7 @@ class Training(commands.Cog):
         """
         name = name.upper()
         if name not in self.tag:
-            await ctx.send('Hong tìm thấy tag của bài {0} :<'.format(name))
+            await ctx.send('Hong tìm thấy tag của bài {0} <:nezuko:666940893953130496>'.format(name))
             return
         msg = '\n'.join(self.tag[name])
         embed = discord.Embed(description=msg, color=discord_common._SUCCESS_BLUE_)

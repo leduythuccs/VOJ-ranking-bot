@@ -150,7 +150,7 @@ class Training(commands.Cog):
         link = 'https://vnoi.info/problems/list_solutions/{}/'.format(name)
         embed=discord.Embed(description='[{0}]({1})'.format(name, link), color=discord_common._SUCCESS_BLUE_)
         if ctx.author.id != 554842563170009089:
-            await ctx.send('Đọc giải ít thôi. Lưu ý là có thể link vnoi info không tồn tại :<.', embed=embed)
+            await ctx.send('Đọc giải ít thôi. Lưu ý là có thể link vnoi info không tồn tại <:sadness:699167922106400799>.', embed=embed)
         else:
             await ctx.send(embed=embed)
     @commands.command(brief="Lấy tag của một bài tập")

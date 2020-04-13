@@ -371,7 +371,7 @@ class Graph(commands.Cog):
             upper_bound = current_badge.high * badge.MAX_SCORE / 100
             nxt_badge = badge.point2rank(upper_bound + 1, MAX_SCORE=badge.MAX_SCORE)
             msg = "`{}` cần khoảng {:.2f} exp nữa để có badge {} <:orz:661153248186597386>".format(
-                handle, upper_bound, nxt_badge.title
+                handle, upper_bound - current_rating, nxt_badge.title
             )
         discord_file = gc.get_current_figure_as_file()
         embed = discord_common.cf_color_embed(

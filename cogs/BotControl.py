@@ -82,7 +82,7 @@ class BotControl(commands.Cog):
     @commands.command(brief="Update bot & restart")
     @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))
     async def update_restart(self, ctx):
-        await self.git_pull(ctx)
+        await self.update(ctx)
         await self.restart(ctx)
 
     @commands.command(brief='Get git information')

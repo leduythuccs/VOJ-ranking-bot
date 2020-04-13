@@ -93,7 +93,7 @@ class BotControl(commands.Cog):
 
     @commands.command(brief='Incorporates changes from the remote repository')
     @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))
-    async def git_pull(self, ctx):
+    async def update(self, ctx):
         mess = await ctx.send('Getting changes from the remote repository...')
         result = subprocess.run(
             ['git', 'pull', 'origin', 'dev'], stdout=subprocess.PIPE).stdout.decode('utf-8').strip()

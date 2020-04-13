@@ -361,18 +361,17 @@ class Graph(commands.Cog):
         for rating, date in resp:
             min_rating = min(min_rating, rating)
             max_rating = max(max_rating, rating)
-        max_rating = max(max_rating, min(100, current_badge.high) * badge.MAX_SCORE)
-
-        min_rating -= 5 * badge.MAX_SCORE / 100
-        max_rating += 5 * badge.MAX_SCORE / 100
+        max_rating = max(max_rating + 0.5 * badge.MAX_SCORE / 100, min(100, current_badge.high + 0.1) * badge.MAX_SCORE / 100)
+        min_rating -= 0.5 * badge.MAX_SCORE / 100
         if min_rating < 0:
             min_rating = 0
+        plt.ylim(min_rating, max_rating)
         msg = ""
         if current_badge.high < 100:
-            upper_bound = current_badge.high * badge.MAX_SCORE
-            nxt_badge = badge.point2rank(upper_bound + 1)
-            msg = "{} cố lên, chỉ cần khoảng {:.2f} exp nữa là lên {} rồi {}.".format(
-                ctx.author.mention, upper_bound, nxt_badge.title
+            upper_bound = current_badge.high * badge.MAX_SCORE / 100
+            nxt_badge = badge.point2rank(upper_bound + 1, MAX_SCORE=badge.MAX_SCORE)
+            msg = "{} cần khoảng {:.2f} exp nữa để có badge {} {}.".format(
+                handle, upper_bound, nxt_badge.title,
                 '<:megu_hi:699156503705288754>'
             )
         discord_file = gc.get_current_figure_as_file()

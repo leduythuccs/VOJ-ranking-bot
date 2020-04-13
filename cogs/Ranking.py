@@ -29,7 +29,7 @@ class RankingCommand(commands.Cog):
         self.index += 1
         print("looping " + str(self.index))
         try:
-            await self.crawl(None, 1, 100)
+            await self.crawl(None, 1, 162)
             await self.calculate_rank(None)
         except Exception as e:
             print(e)

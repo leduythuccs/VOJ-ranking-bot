@@ -370,7 +370,7 @@ class Graph(commands.Cog):
         if current_badge.high < 100:
             upper_bound = current_badge.high * badge.MAX_SCORE / 100
             nxt_badge = badge.point2rank(upper_bound + 1, MAX_SCORE=badge.MAX_SCORE)
-            msg = "`{}` cần khoảng {:.2f} exp nữa để có badge {} <:pingreee:665243570655199246>".format(
+            msg = "`{}` cần khoảng {:.2f} exp nữa để có badge {} <:aquanice:699164960613335121> <:pingreee:665243570655199246> <:megu_hi:699164797614293053>".format(
                 handle, upper_bound, nxt_badge.title
             )
         discord_file = gc.get_current_figure_as_file()

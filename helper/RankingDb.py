@@ -239,7 +239,7 @@ class RankingDbConn:
             self.conn.execute(query, (new_handle, ))
         # self.conn.commit()
         
-    def set_handle(self, discord_id, handle, force = False):
+    def set_handle(self, discord_id, handle):
         handle = handle.lower()
         discord_id = str(discord_id)
         query = (
@@ -248,27 +248,31 @@ class RankingDbConn:
             'WHERE handle = ?'
         )
         r = self.conn.execute(query, (handle, )).fetchone()
-        if r is not None and r[0] is not None and r[0] != discord_id and not force:
+        # if handle is in database, and already set to discord user
+        if r is not None and r[0] is not None:
             return r[0]
+        # if handle is in database, and is not set to discord user
         if r is not None:
             query = (
                 'UPDATE user_data '
                 'SET discord_id = ? '
                 'WHERE handle = ? '
             )
-        else:
+        else: #if handle not in database
             query = (
                 'SELECT handle '
                 'FROM user_data '
                 'WHERE discord_id = ?'
             )
             r = self.conn.execute(query, (discord_id, )).fetchone()
+            # if this discord user is not set to any handle
             if r is None:
                 query = (
                     'INSERT INTO user_data (discord_id, handle) '
                     'VALUES (?, ?)'
                 )
             else:
+                #
                 query = (
                     'UPDATE user_data '
                     'SET handle = ? '

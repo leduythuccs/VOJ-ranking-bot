@@ -114,7 +114,8 @@ class Training(commands.Cog):
         category = tag.upper()
         if category != "" and category not in self.category:
             await ctx.send('không tìm thấy category `{0}`. '.format(tag) +
-                           'Chỉ dùng các tag sau đây `[DP, DS, geometry, graph, math, string, ad-hoc, other]`')
+                           'Chỉ dùng các tag sau đây `[DP, DS, geometry, graph, math, string, ad-hoc, other]`. '
+                           'Tham khảo trang <http://vnoi.info/problems/list/> để có danh sách tag chi tiết hơn.')
             return
         handle = await common.get_handle(ctx, None)
         if handle is None:

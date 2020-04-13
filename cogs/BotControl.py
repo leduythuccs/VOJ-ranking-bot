@@ -96,7 +96,7 @@ class BotControl(commands.Cog):
     async def git_pull(self, ctx):
         mess = await ctx.send('Getting changes from the remote repository...')
         result = subprocess.run(
-            ['git', 'pull'], stdout=subprocess.PIPE).stdout.decode('utf-8').strip()
+            ['git', 'pull', 'origin', 'dev'], stdout=subprocess.PIPE).stdout.decode('utf-8').strip()
         await mess.edit(content='```\n' + result + '\n```')
 
 

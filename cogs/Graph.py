@@ -369,7 +369,7 @@ class Graph(commands.Cog):
         msg = ""
         if current_badge.high < 100:
             upper_bound = current_badge.high * badge.MAX_SCORE / 100
-            nxt_badge = badge.point2rank(upper_bound + 1, MAX_SCORE=badge.MAX_SCORE)
+            nxt_badge = badge.point2rank(upper_bound + 0.0001, MAX_SCORE=badge.MAX_SCORE)
             msg = "`{}` cần khoảng {:.2f} exp nữa để có badge {} <:orz:661153248186597386>".format(
                 handle, upper_bound - current_rating, nxt_badge.title
             )

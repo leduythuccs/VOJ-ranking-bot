@@ -190,8 +190,8 @@ class Graph(commands.Cog):
                 rating_changes.append((0, date))
             if result == 'AC':
                 result = 100
-            # rating += problem_points[int(problem_id)] * float(result) / 100
-            rating += 2 * float(result) / 100
+            rating += problem_points[int(problem_id)] * float(result) / 100
+            # rating += 2 * float(result) / 100
             rating_changes[-1] = (rating, date)
         return rating_changes[1:]
 
@@ -352,8 +352,8 @@ class Graph(commands.Cog):
         plt.clf()
         _plot_rating([resp], MAX_SCORE=badge.MAX_SCORE)
         current_rating = resp[-1][0]
-        rank_title = badge.point2rank(
-            current_rating, badge.MAX_SCORE).title + " {:.3f}".format(current_rating)
+        current_badge = badge.point2rank(current_rating, badge.MAX_SCORE)
+        rank_title = current_badge.title + " {:.3f}".format(current_rating)
         labels = [f'\N{ZERO WIDTH SPACE}{handle} ({rank_title})']
         plt.legend(labels, loc='upper left')
         min_rating = current_rating
@@ -361,17 +361,24 @@ class Graph(commands.Cog):
         for rating, date in resp:
             min_rating = min(min_rating, rating)
             max_rating = max(max_rating, rating)
-        min_rating -= 5 * badge.MAX_SCORE / 100
-        max_rating += 5 * badge.MAX_SCORE / 100
+        max_rating = max(max_rating + 0.5 * badge.MAX_SCORE / 100, min(100, current_badge.high + 0.1) * badge.MAX_SCORE / 100)
+        min_rating -= 0.5 * badge.MAX_SCORE / 100
         if min_rating < 0:
             min_rating = 0
-
+        plt.ylim(min_rating, max_rating)
+        msg = ""
+        if current_badge.high < 100:
+            upper_bound = current_badge.high * badge.MAX_SCORE / 100
+            nxt_badge = badge.point2rank(upper_bound + 0.0001, MAX_SCORE=badge.MAX_SCORE)
+            msg = "`{}` cần khoảng {:.2f} exp nữa để có badge {} <:orz:661153248186597386>".format(
+                handle, upper_bound - current_rating, nxt_badge.title
+            )
         discord_file = gc.get_current_figure_as_file()
         embed = discord_common.cf_color_embed(
             title='Biểu đồ kinh nghiệm trong group VNOI.')
         discord_common.attach_image(embed, discord_file)
         discord_common.set_author_footer(embed, ctx.author)
-        await ctx.send(embed=embed, file=discord_file)
+        await ctx.send(msg, embed=embed, file=discord_file)
 
 def setup(bot):
     bot.add_cog(Graph(bot))

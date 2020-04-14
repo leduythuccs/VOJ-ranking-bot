@@ -82,7 +82,7 @@ class BotControl(commands.Cog):
     @commands.command(brief="Update bot & restart")
     @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))
     async def update_restart(self, ctx):
-        await self.git_pull(ctx)
+        await self.update(ctx)
         await self.restart(ctx)
 
     @commands.command(brief='Get git information')
@@ -93,10 +93,10 @@ class BotControl(commands.Cog):
 
     @commands.command(brief='Incorporates changes from the remote repository')
     @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))
-    async def git_pull(self, ctx):
+    async def update(self, ctx):
         mess = await ctx.send('Getting changes from the remote repository...')
         result = subprocess.run(
-            ['git', 'pull'], stdout=subprocess.PIPE).stdout.decode('utf-8').strip()
+            ['git', 'pull', 'origin', 'dev'], stdout=subprocess.PIPE).stdout.decode('utf-8').strip()
         await mess.edit(content='```\n' + result + '\n```')
 
 

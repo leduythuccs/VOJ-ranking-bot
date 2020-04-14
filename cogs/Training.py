@@ -58,9 +58,6 @@ class Training(commands.Cog):
             if name not in self.link:
                 self.link[name] = ""
             self.link[name] += link + ','
-        data = json.load(open('database/vietcodes_solution.json'))
-        for x in data:
-            self.solution_links[x['problem'].upper()] = x['link']
         self.tag = json.load(open('database/full_tag.json'))
         self.category = json.load(open('database/category.json'))
 
@@ -114,7 +111,8 @@ class Training(commands.Cog):
         category = tag.upper()
         if category != "" and category not in self.category:
             await ctx.send('không tìm thấy category `{0}`. '.format(tag) +
-                           'Chỉ dùng các tag sau đây `[DP, DS, geometry, graph, math, string, ad-hoc, other]`')
+                           'Chỉ dùng các tag sau đây `[DP, DS, geometry, graph, math, string, ad-hoc, other]`. '
+                           'Tham khảo trang <http://vnoi.info/problems/list/> để có danh sách tag chi tiết hơn.')
             return
         handle = await common.get_handle(ctx, None)
         if handle is None:
@@ -146,12 +144,13 @@ class Training(commands.Cog):
         Lưu ý là có rất ít bài có giải.
         """
         name = name.upper()
-        if name not in self.solution_links:
-            await ctx.send('Tự mà nghĩ đi chứ tôi lấy đâu ra giải cho ông.')
-            return
-        embed=discord.Embed(description='[{0}]({1})'.format(name, self.solution_links[name]), color=discord_common._SUCCESS_BLUE_)
+        # if name not in self.solution_links:
+        #     await ctx.send('Tự mà nghĩ đi chứ tôi lấy đâu ra giải cho ông.')
+        #     return
+        link = 'https://vnoi.info/problems/list_solutions/{}/'.format(name)
+        embed=discord.Embed(description='[{0}]({1})'.format(name, link), color=discord_common._SUCCESS_BLUE_)
         if ctx.author.id != 554842563170009089:
-            await ctx.send('Đọc giải ít thôi.', embed=embed)
+            await ctx.send('Đọc giải ít thôi. Lưu ý là có thể link vnoi info không tồn tại <:sadness:662197924918329365>.', embed=embed)
         else:
             await ctx.send(embed=embed)
     @commands.command(brief="Lấy tag của một bài tập")
@@ -162,7 +161,7 @@ class Training(commands.Cog):
         """
         name = name.upper()
         if name not in self.tag:
-            await ctx.send('Hong tìm thấy tag của bài {0} :<'.format(name))
+            await ctx.send('Hong tìm thấy tag của bài {0} <:testing:665243100028862514>'.format(name))
             return
         msg = '\n'.join(self.tag[name])
         embed = discord.Embed(description=msg, color=discord_common._SUCCESS_BLUE_)

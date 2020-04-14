@@ -13,7 +13,7 @@ RATED_RANKS = [
     Rank(30, 45, 'Grandmaster', 'GM', '#FF7777', 0xff3030),
     Rank(45, 60, 'International Grandmaster', 'IGM', '#FF3333', 0xff0000),
     Rank(60, 90, 'Legendary Grandmaster', 'LGM', '#AA0000', 0xcc0000),
-    Rank(90, 10 ** 9, 'Cá nóc', 'CNCC', '#854442', 0xcc0000)
+    Rank(90, 10 ** 9, 'Ngfarm', 'FARM', '#854442', 0xcc0000)
 ]
 UNRATED_RANK = Rank(None, None, 'Unrated', None, None, None)
 

@@ -190,8 +190,8 @@ class Graph(commands.Cog):
                 rating_changes.append((0, date))
             if result == 'AC':
                 result = 100
-            # rating += problem_points[int(problem_id)] * float(result) / 100
-            rating += 2 * float(result) / 100
+            rating += problem_points[int(problem_id)] * float(result) / 100
+            # rating += 2 * float(result) / 100
             rating_changes[-1] = (rating, date)
         return rating_changes[1:]
 

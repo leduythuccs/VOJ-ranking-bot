@@ -133,8 +133,8 @@ class RankingCommand(commands.Cog):
                 result = 100
             result = float(result)
             #remove scale
-            # user_points[handle] += result * problem_points[int(problem_id)] / 100
-            user_points[handle] += result * 2 / 100
+            user_points[handle] += result * problem_points[int(problem_id)] / 100
+            # user_points[handle] += result * 2 / 100
         self.rank_cache = []
         for handle, point in user_points.items():
             self.rank_cache.append((point, handle))

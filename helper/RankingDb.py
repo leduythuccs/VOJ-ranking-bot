@@ -215,8 +215,8 @@ class RankingDbConn:
         # clear cache
         global un_solved_problem_cache
         if result == 'AC':
-            if handle in un_solved_problem_cache:
-                un_solved_problem_cache.pop(handle)
+            if author_handle in un_solved_problem_cache:
+                un_solved_problem_cache.pop(author_handle)
         #
         self.add_user(author_id, author_handle)
     

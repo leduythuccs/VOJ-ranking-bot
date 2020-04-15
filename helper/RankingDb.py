@@ -1,6 +1,6 @@
 import sqlite3
 import csv
-
+un_solved_problem_cache = {}
 class RankingDbConn:
     def __init__(self, db_file):
         self.conn = sqlite3.connect(db_file)
@@ -212,6 +212,11 @@ class RankingDbConn:
         problem_id = self.add_problem(problem_name, problem_links)
         # 
         self.add_solved_info(author_id, problem_id, result, submission_date)
+        # clear cache
+        global un_solved_problem_cache
+        if result == 'AC':
+            if handle in un_solved_problem_cache:
+                un_solved_problem_cache.pop(handle)
         #
         self.add_user(author_id, author_handle)
     

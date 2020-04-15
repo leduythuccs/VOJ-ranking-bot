@@ -43,7 +43,6 @@ class Training(commands.Cog):
         self.link = {}
         self.solution_links = {}
         self.tag = {}
-        self.un_solved_problem_cache = {}
         self.category = {}
     @commands.Cog.listener()
     async def on_ready(self):
@@ -62,15 +61,15 @@ class Training(commands.Cog):
         self.category = json.load(open('database/category.json'))
 
     def get_un_solved_problem(self, handle):
-        if handle not in self.un_solved_problem_cache:
+        if handle not in RankingDb.un_solved_problem_cache:
             problem_list = RankingDb.RankingDb.get_info_solved_problem(handle)
             problem_list = list(filter(lambda x: (x[1] == 'AC' or (float(x[1]) > 100 - 0.1)), problem_list))
             #id, result, data
             problem_list = set(map(lambda x: int(x[0]), problem_list))
             #id, name, link, cnt_AC
             un_solved_problem = list(filter(lambda x: int(x[0]) not in problem_list, self.problems_cache))
-            self.un_solved_problem_cache[handle] = un_solved_problem
-        return self.un_solved_problem_cache[handle]
+            RankingDb.un_solved_problem_cache[handle] = un_solved_problem
+        return RankingDb.un_solved_problem_cache[handle]
 
     @commands.command(brief="Lấy link bài tập trên codeforces.")
     async def getlink(self, ctx, name):

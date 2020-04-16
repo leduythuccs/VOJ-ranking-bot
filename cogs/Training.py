@@ -119,14 +119,14 @@ class Training(commands.Cog):
             await ctx.send('\n'.join(links))
             return
         if len(args) != 2:
-            embed = discord_common.embed_alert('Quá nhiều tham số') 
+            embed = discord_common.embed_alert('Quá nhiều tham số, nếu muốn lấy link contest thì ghi tắt tên (VM, VOI, VO) thôi.') 
             await ctx.send(embed=embed)
             return
         contest = args[0].upper()
         try:
             year = int(args[1])
         except Exception as e:
-            embed = discord_common.embed_alert(f"`{year}` không phải là một số") 
+            embed = discord_common.embed_alert(f"`{args[1]}` không phải là một số") 
             await ctx.send(embed=embed)
             return
         if contest not in CONTEST_YEAR_BOUND:

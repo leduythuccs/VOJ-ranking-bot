@@ -146,6 +146,8 @@ class Training(commands.Cog):
         if contest == 'VM' and year == 2008:
             await self.send_contest_info(ctx, contest_name + ' - div 1')
             await self.send_contest_info(ctx, contest_name + ' - div 2')
+        elif contest=='VOI' and year == 2019:
+            await ctx.send('Chưa xin được test của VOI 2019.')
         else:
             await self.send_contest_info(ctx, contest_name)
         

@@ -1,0 +1,340 @@
+{
+    "VNOI Marathon 2015": [
+        "VMDAOBIT - Đảo bit https://codeforces.com/group/FLVn1Sc504/contest/272945/problem/A",
+        "VMSALARY - Cây tiền lương https://codeforces.com/group/FLVn1Sc504/contest/272945/problem/B",
+        "VMCUT - Cắt đồ thị https://codeforces.com/group/FLVn1Sc504/contest/272945/problem/C",
+        "VMPIZZA - Pizza https://codeforces.com/group/FLVn1Sc504/contest/272945/problem/D",
+        "VM15SWAP - Đổi chỗ https://codeforces.com/group/FLVn1Sc504/contest/272945/problem/E",
+        "VMSUM2 - Tính tổng https://codeforces.com/group/FLVn1Sc504/contest/272945/problem/F",
+        "VMRESTO - Bé và bảng số https://codeforces.com/group/FLVn1Sc504/contest/272945/problem/G",
+        "VMSQUARE - Bé và hình vuông https://codeforces.com/group/FLVn1Sc504/contest/272945/problem/H",
+        "VMTOWN - Thành phố cổ https://codeforces.com/group/FLVn1Sc504/contest/272945/problem/I",
+        "VMELLIP - Các hình Ellipse https://codeforces.com/group/FLVn1Sc504/contest/272945/problem/J",
+        "VMGROUP2 - Phân nhóm đồ thị https://codeforces.com/group/FLVn1Sc504/contest/272945/problem/K",
+        "VMCIRCLE - Vòng tròn https://codeforces.com/group/FLVn1Sc504/contest/272945/problem/L",
+        "VMPACKAGE - Ngồi khóc trên cây https://codeforces.com/group/FLVn1Sc504/contest/272945/problem/M",
+        "VMCUT2 - Cắt cây https://codeforces.com/group/FLVn1Sc504/contest/272945/problem/N",
+        "VMROPES - Các sợi dây https://codeforces.com/group/FLVn1Sc504/contest/272945/problem/O",
+        "VMSHAPE - Xác định hình https://codeforces.com/group/FLVn1Sc504/contest/272945/problem/P"
+    ],
+    "VNOI Marathon 2014": [
+        "VQUERY - Query https://codeforces.com/group/FLVn1Sc504/contest/272944/problem/A",
+        "VMGCDSUM - Tổng ước chung lớn nhất 2 https://codeforces.com/group/FLVn1Sc504/contest/272944/problem/B",
+        "VMCANDLE - Aladdin và cây đèn cầy https://codeforces.com/group/FLVn1Sc504/contest/272944/problem/C",
+        "VMHCN - Đếm hình chữ nhật https://codeforces.com/group/FLVn1Sc504/contest/272944/problem/D",
+        "VMQUABEO - Quá béo https://codeforces.com/group/FLVn1Sc504/contest/272944/problem/E",
+        "VMCOFFEE - Tom and Jerry https://codeforces.com/group/FLVn1Sc504/contest/272944/problem/F",
+        "VMSPEED - SPEED https://codeforces.com/group/FLVn1Sc504/contest/272944/problem/G",
+        "VMLSEQ - Dãy số may mắn https://codeforces.com/group/FLVn1Sc504/contest/272944/problem/H",
+        "VMATRIX - Nhân ma trận https://codeforces.com/group/FLVn1Sc504/contest/272944/problem/I",
+        "VMPRINCE - Giải cứu công chúa https://codeforces.com/group/FLVn1Sc504/contest/272944/problem/J",
+        "VMREL6 - Bảng quan hệ https://codeforces.com/group/FLVn1Sc504/contest/272944/problem/K",
+        "VMGOLD - Mỏ vàng https://codeforces.com/group/FLVn1Sc504/contest/272944/problem/L",
+        "VMMARBLE - Phân loại bi https://codeforces.com/group/FLVn1Sc504/contest/272944/problem/M",
+        "VMWTREE - Lại là cây khung https://codeforces.com/group/FLVn1Sc504/contest/272944/problem/N",
+        "VMAZE - Mê cung https://codeforces.com/group/FLVn1Sc504/contest/272944/problem/O",
+        "VMST - Cây khung https://codeforces.com/group/FLVn1Sc504/contest/272944/problem/P",
+        "VMSUDOKU - Sudoku https://codeforces.com/group/FLVn1Sc504/contest/272944/problem/Q",
+        "VMPHQUA - Phát Quà https://codeforces.com/group/FLVn1Sc504/contest/272944/problem/R",
+        "VMCROSS - Crossword https://codeforces.com/group/FLVn1Sc504/contest/272944/problem/S"
+    ],
+    "VNOI Marathon 2013": [
+        "VMEMPIRE - Trò chơi Empire https://codeforces.com/group/FLVn1Sc504/contest/272727/problem/A",
+        "VMRR - RR https://codeforces.com/group/FLVn1Sc504/contest/272727/problem/B",
+        "VMAOCE - Thời đại của các đế chế dừa https://codeforces.com/group/FLVn1Sc504/contest/272727/problem/C",
+        "VMCOMP - Công việc tuyển dụng https://codeforces.com/group/FLVn1Sc504/contest/272727/problem/D",
+        "VMECLIP - Nhật thực sao Kim https://codeforces.com/group/FLVn1Sc504/contest/272727/problem/E",
+        "VMYT - Hành trình đến đảo dừa https://codeforces.com/group/FLVn1Sc504/contest/272727/problem/F",
+        "VMSINCOS - Sin Cos Query https://codeforces.com/group/FLVn1Sc504/contest/272727/problem/G",
+        "VMFLOW - Nối điểm https://codeforces.com/group/FLVn1Sc504/contest/272727/problem/H",
+        "VMFOUR - Secret Garden https://codeforces.com/group/FLVn1Sc504/contest/272727/problem/I",
+        "VMKEY - Thế giới năm 1000003 https://codeforces.com/group/FLVn1Sc504/contest/272727/problem/J",
+        "VMSEQ - Dãy số https://codeforces.com/group/FLVn1Sc504/contest/272727/problem/K",
+        "VMROOK - Xe https://codeforces.com/group/FLVn1Sc504/contest/272727/problem/L",
+        "VMMIRROR - Đuổi bắt trong thế giới gương huyền thoại https://codeforces.com/group/FLVn1Sc504/contest/272727/problem/M",
+        "VMSCALE - Chiếc cân kỳ diệu https://codeforces.com/group/FLVn1Sc504/contest/272727/problem/N",
+        "VMCOINS - Trò chơi với những đồng xu https://codeforces.com/group/FLVn1Sc504/contest/272727/problem/O",
+        "VMDOM2 - Bé và Domino https://codeforces.com/group/FLVn1Sc504/contest/272727/problem/P",
+        "VMTRIP - Dời Đô xứ Dừa https://codeforces.com/group/FLVn1Sc504/contest/272727/problem/Q",
+        "VMCXG - Cối xay gió https://codeforces.com/group/FLVn1Sc504/contest/272727/problem/R",
+        "VMSUBSTR - Vườn cây của ba https://codeforces.com/group/FLVn1Sc504/contest/272727/problem/S",
+        "VMCODE - Bảo mật ngân hàng https://codeforces.com/group/FLVn1Sc504/contest/272727/problem/T",
+        "VMBW - Dãy đèn năm xưa https://codeforces.com/group/FLVn1Sc504/contest/272727/problem/U",
+        "VMCOUNT - Pirate đi thực tập https://codeforces.com/group/FLVn1Sc504/contest/272727/problem/V"
+    ],
+    "VNOI Marathon 2012": [
+        "EUROCARD - Raldono và những tấm thẻ https://codeforces.com/group/FLVn1Sc504/contest/272940/problem/A",
+        "VMTEST - Thử máy https://codeforces.com/group/FLVn1Sc504/contest/272940/problem/B",
+        "BUBBA1 - Truyền thuyết Bubba https://codeforces.com/group/FLVn1Sc504/contest/272940/problem/C",
+        "EUROBET - Raldono và trò chơi cá cược https://codeforces.com/group/FLVn1Sc504/contest/272940/problem/D",
+        "VMQPOFI - Đừng bỏ cuộc https://codeforces.com/group/FLVn1Sc504/contest/272940/problem/E",
+        "BUBBA2 - Truyền thuyết Bubba 2 https://codeforces.com/group/FLVn1Sc504/contest/272940/problem/F",
+        "VM12CIR - MADAGASCAR 4 https://codeforces.com/group/FLVn1Sc504/contest/272940/problem/G",
+        "VMMUMMY - Mummy Maze https://codeforces.com/group/FLVn1Sc504/contest/272940/problem/H",
+        "VMINTERN - Raldono và công việc thực tập https://codeforces.com/group/FLVn1Sc504/contest/272940/problem/I",
+        "VMRELATE - Làm mai mối https://codeforces.com/group/FLVn1Sc504/contest/272940/problem/J",
+        "VMSCRMBL - Scramble https://codeforces.com/group/FLVn1Sc504/contest/272940/problem/K",
+        "VMXGAME - X-game https://codeforces.com/group/FLVn1Sc504/contest/272940/problem/L",
+        "VM3SETS - Người yêu hòa bình https://codeforces.com/group/FLVn1Sc504/contest/272940/problem/M",
+        "VMQTREE - Mua nhà https://codeforces.com/group/FLVn1Sc504/contest/272940/problem/N",
+        "VMSORT - Sắp xếp https://codeforces.com/group/FLVn1Sc504/contest/272940/problem/O",
+        "VMDOTA - Defense of the Awesome https://codeforces.com/group/FLVn1Sc504/contest/272940/problem/P",
+        "VMSWAP - Đổi chỗ https://codeforces.com/group/FLVn1Sc504/contest/272940/problem/Q",
+        "VMTILE - Lát gạch 5 https://codeforces.com/group/FLVn1Sc504/contest/272940/problem/R",
+        "VMTREE - Cây https://codeforces.com/group/FLVn1Sc504/contest/272940/problem/S",
+        "VMGROUP - Chia nhóm https://codeforces.com/group/FLVn1Sc504/contest/272940/problem/T",
+        "VMGAME - Trò chơi với bảng số https://codeforces.com/group/FLVn1Sc504/contest/272940/problem/U",
+        "VMVSOS - Very Simple OCR System https://codeforces.com/group/FLVn1Sc504/contest/272940/problem/V",
+        "VMLP - Đường đi dài nhất https://codeforces.com/group/FLVn1Sc504/contest/272940/problem/W"
+    ],
+    "VNOI Marathon 2011": [
+        "VMDEGREE - Pirate đãng trí https://codeforces.com/group/FLVn1Sc504/contest/272672/problem/A",
+        "VMLINES - Nối điểm https://codeforces.com/group/FLVn1Sc504/contest/272672/problem/B",
+        "WELL - Cái giếng https://codeforces.com/group/FLVn1Sc504/contest/272672/problem/C",
+        "STRATEGY - Sắp xếp đội hình https://codeforces.com/group/FLVn1Sc504/contest/272672/problem/D",
+        "MAKHOA2 - Mã khóa bí mật 2 https://codeforces.com/group/FLVn1Sc504/contest/272672/problem/E",
+        "MAKHOA3 - Mã khóa bí mật 3 https://codeforces.com/group/FLVn1Sc504/contest/272672/problem/F",
+        "SMARTDOG - Tham ăn https://codeforces.com/group/FLVn1Sc504/contest/272672/problem/G",
+        "VMMTFIVE - Tổng trên ma trận! https://codeforces.com/group/FLVn1Sc504/contest/272672/problem/H",
+        "VM3PHIA - Đồ thị 3 phía https://codeforces.com/group/FLVn1Sc504/contest/272672/problem/I",
+        "VMDOMINO - Kỷ lục đổ DOMINO https://codeforces.com/group/FLVn1Sc504/contest/272672/problem/J",
+        "KNMANO - Di chuyển mã https://codeforces.com/group/FLVn1Sc504/contest/272672/problem/K",
+        "SMURFS - Xì trum https://codeforces.com/group/FLVn1Sc504/contest/272672/problem/L"
+    ],
+    "VNOI Marathon 2010": [
+        "WEATHER - Điều kiện thời tiết https://codeforces.com/group/FLVn1Sc504/contest/272622/problem/A",
+        "NKBAS - Trung tâm bảo hành https://codeforces.com/group/FLVn1Sc504/contest/272622/problem/B",
+        "ZOOTOUR - Tham quan vườn bách thú https://codeforces.com/group/FLVn1Sc504/contest/272622/problem/C",
+        "SUMTREE - Tổng trên cây https://codeforces.com/group/FLVn1Sc504/contest/272622/problem/D",
+        "TCHESS - Bàn cờ tam giác https://codeforces.com/group/FLVn1Sc504/contest/272622/problem/E",
+        "PRODUCT - Tích https://codeforces.com/group/FLVn1Sc504/contest/272622/problem/F",
+        "OLDMAPS - Bộ bản đồ cũ kỹ https://codeforces.com/group/FLVn1Sc504/contest/272622/problem/G",
+        "COMPUTER - Máy tính https://codeforces.com/group/FLVn1Sc504/contest/272622/problem/H",
+        "NETACCEL - Tăng tốc mạng máy tính https://codeforces.com/group/FLVn1Sc504/contest/272622/problem/I",
+        "INKPRINT - Mực in https://codeforces.com/group/FLVn1Sc504/contest/272622/problem/J",
+        "KINGDOMS - KINGDOMS https://codeforces.com/group/FLVn1Sc504/contest/272622/problem/K",
+        "KIDSMATH - Bé làm toán https://codeforces.com/group/FLVn1Sc504/contest/272622/problem/L",
+        "CFLAG - Quốc kỳ rực rỡ https://codeforces.com/group/FLVn1Sc504/contest/272622/problem/M",
+        "VM10HNTW - Xây tháp Hà Nội https://codeforces.com/group/FLVn1Sc504/contest/272622/problem/N",
+        "CMOUSE - Bắt chuột https://codeforces.com/group/FLVn1Sc504/contest/272622/problem/O"
+    ],
+    "VNOI Marathon 2009": [
+        "TOPALIN - Palindrome String https://codeforces.com/group/FLVn1Sc504/contest/272561/problem/A",
+        "TOINCSEQ - Non-decreasing sequence https://codeforces.com/group/FLVn1Sc504/contest/272561/problem/B",
+        "TAMCAM - Tam Cam https://codeforces.com/group/FLVn1Sc504/contest/272561/problem/C",
+        "SELFDIV - Self-divisible Number https://codeforces.com/group/FLVn1Sc504/contest/272561/problem/D",
+        "NSC - Nuga chia kẹo https://codeforces.com/group/FLVn1Sc504/contest/272561/problem/E",
+        "CLEAR - SỐ RÕ RÀNG https://codeforces.com/group/FLVn1Sc504/contest/272561/problem/F",
+        "MARBLE - Bắn bi https://codeforces.com/group/FLVn1Sc504/contest/272561/problem/G",
+        "BLAND - Giá trị chiếc quạt mo https://codeforces.com/group/FLVn1Sc504/contest/272561/problem/H",
+        "WINNER - Ai thắng cuộc? https://codeforces.com/group/FLVn1Sc504/contest/272561/problem/I",
+        "BINPAL - Binary palindrome https://codeforces.com/group/FLVn1Sc504/contest/272561/problem/J",
+        "SMAX - Maximum area https://codeforces.com/group/FLVn1Sc504/contest/272561/problem/K",
+        "FARMING - Nuga làm ruộng https://codeforces.com/group/FLVn1Sc504/contest/272561/problem/L",
+        "BPAINT - Tô màu https://codeforces.com/group/FLVn1Sc504/contest/272561/problem/M"
+    ],
+    "VNOI Online 2014": [
+        "VOBOARD2 - Truyền thuyết ở vương quốc xa rất xa https://codeforces.com/group/FLVn1Sc504/contest/272403/problem/A",
+        "VOPLANE - Chia mặt phẳng https://codeforces.com/group/FLVn1Sc504/contest/272403/problem/B",
+        "VOTELPH - Bà Nà https://codeforces.com/group/FLVn1Sc504/contest/272403/problem/C",
+        "VOGCDSUM - Tổng ước chung lớn nhất https://codeforces.com/group/FLVn1Sc504/contest/272403/problem/D",
+        "VOBOARD3 - Trò chơi trên bảng https://codeforces.com/group/FLVn1Sc504/contest/272403/problem/E",
+        "VOBRACK - Dãy ngoặc https://codeforces.com/group/FLVn1Sc504/contest/272403/problem/F"
+    ],
+    "VOI 2016": [
+        "SEQ198 - VOI 2016 - SEQ198 https://codeforces.com/group/FLVn1Sc504/contest/272401/problem/A",
+        "VOHAUCAN - VOI 2016 - Hậu cần https://codeforces.com/group/FLVn1Sc504/contest/272401/problem/B",
+        "IDCODE - VOI 2016 - Mã thẻ công dân https://codeforces.com/group/FLVn1Sc504/contest/272401/problem/C",
+        "RBULL - VOI 2016 - Trại bò tót https://codeforces.com/group/FLVn1Sc504/contest/272401/problem/D",
+        "VOIEXAM - VOI 2016 - Tạo đề thi https://codeforces.com/group/FLVn1Sc504/contest/272401/problem/E",
+        "VODONCAY - VOI 2016 - Đốn Cây https://codeforces.com/group/FLVn1Sc504/contest/272401/problem/F"
+    ],
+    "VOI 2015": [
+        "TFIELD - VOI 2015 Day 1 - Ruộng bậc thang https://codeforces.com/group/FLVn1Sc504/contest/272400/problem/A",
+        "CRYPTKEY - VOI 2015 Day 1 - Chìa khóa mã số https://codeforces.com/group/FLVn1Sc504/contest/272400/problem/B",
+        "REFORM - VOI 2015 Day 1 - Kế hoạch cải tổ https://codeforces.com/group/FLVn1Sc504/contest/272400/problem/C",
+        "MINCUT - VOI 2015 Day 2 - Cắt hình https://codeforces.com/group/FLVn1Sc504/contest/272400/problem/D",
+        "VODIVIDE - VOI 2015 Day 2 - Chia phần https://codeforces.com/group/FLVn1Sc504/contest/272400/problem/E",
+        "VOITSORT - VOI 2015 Day 2 - Cây hoán vị https://codeforces.com/group/FLVn1Sc504/contest/272400/problem/F"
+    ],
+    "VOI 2014": [
+        "MINROAD - VOI 2014 - Con đường Tùng Trúc https://codeforces.com/group/FLVn1Sc504/contest/272397/problem/A",
+        "LCS2X - VOI 2014 - Dãy con chung bội hai dài nhất https://codeforces.com/group/FLVn1Sc504/contest/272397/problem/B",
+        "AZNET - VOI 2014 - Mạng truyền thông https://codeforces.com/group/FLVn1Sc504/contest/272397/problem/C",
+        "BALLGMVN - VOI 2014 - Trò Chơi Với Những Viên Bi https://codeforces.com/group/FLVn1Sc504/contest/272397/problem/D",
+        "QOS - VOI 2014 - Chất Lượng Dịch Vụ https://codeforces.com/group/FLVn1Sc504/contest/272397/problem/E",
+        "JOBSET - VOI 2014 - Chọn Công Việc https://codeforces.com/group/FLVn1Sc504/contest/272397/problem/F"
+    ],
+    "VOI 2013": [
+        "BONUS13 - VOI 2013 - Phần thưởng https://codeforces.com/group/FLVn1Sc504/contest/272391/problem/A",
+        "MESSAGE1 - VOI 2013 - Trao đổi thông tin https://codeforces.com/group/FLVn1Sc504/contest/272391/problem/B",
+        "COMNET - VOI 2013 - Mạng truyền thông https://codeforces.com/group/FLVn1Sc504/contest/272391/problem/C",
+        "STMERGE - VOI 2013 - Trộn xâu https://codeforces.com/group/FLVn1Sc504/contest/272391/problem/D",
+        "TOURS13 - VOI 2013 - Hành trình du lịch https://codeforces.com/group/FLVn1Sc504/contest/272391/problem/E",
+        "ORGAN - VOI 2013 - Sản xuất đồ chơi https://codeforces.com/group/FLVn1Sc504/contest/272391/problem/F"
+    ],
+    "VNOI Online 2017": [
+        "VO17BACH - Ngài đáng kính https://codeforces.com/group/FLVn1Sc504/contest/271727/problem/A",
+        "VO17LAN - Hoa Ngọc Lan https://codeforces.com/group/FLVn1Sc504/contest/271727/problem/B",
+        "VO17PHD - Du lịch Bắc Ninh https://codeforces.com/group/FLVn1Sc504/contest/271727/problem/C",
+        "VO17SORT - Exploding kittens https://codeforces.com/group/FLVn1Sc504/contest/271727/problem/D",
+        "VO17TV - Tin nhắn kỳ diệu https://codeforces.com/group/FLVn1Sc504/contest/271727/problem/E",
+        "VO17XXX - Ngày xưa có một bài toán https://codeforces.com/group/FLVn1Sc504/contest/271727/problem/F"
+    ],
+    "VNOI Online 2016": [
+        "VOMOVREC - Di chuyển hình chữ nhật https://codeforces.com/group/FLVn1Sc504/contest/271722/problem/A",
+        "VOXOR - XOR dãy số https://codeforces.com/group/FLVn1Sc504/contest/271722/problem/B",
+        "VOROOM - Xếp phòng https://codeforces.com/group/FLVn1Sc504/contest/271722/problem/C",
+        "VOGAME - Trò chơi với những viên bi https://codeforces.com/group/FLVn1Sc504/contest/271722/problem/D",
+        "VOLAND - Chia đất https://codeforces.com/group/FLVn1Sc504/contest/271722/problem/E",
+        "VOMARIO - Mario ở vương quốc những cây nấm https://codeforces.com/group/FLVn1Sc504/contest/271722/problem/F"
+    ],
+    "VNOI Online 2015": [
+        "VOMARBLE - Những viên bi ma thuật https://codeforces.com/group/FLVn1Sc504/contest/271721/problem/A",
+        "VOEASY - Dãy biến đổi https://codeforces.com/group/FLVn1Sc504/contest/271721/problem/B",
+        "VOTREE - Cây https://codeforces.com/group/FLVn1Sc504/contest/271721/problem/C",
+        "VORAIN - Chuyện mưa https://codeforces.com/group/FLVn1Sc504/contest/271721/problem/D",
+        "VOPIG - Chăn Lợn https://codeforces.com/group/FLVn1Sc504/contest/271721/problem/E",
+        "VOBIGNUM - Tính toán số lớn https://codeforces.com/group/FLVn1Sc504/contest/271721/problem/F"
+    ],
+    "VNOI Online 2013": [
+        "VOCARD - Trò chơi chọn bài https://codeforces.com/group/FLVn1Sc504/contest/271720/problem/A",
+        "VOCACTUS - Xương rồng https://codeforces.com/group/FLVn1Sc504/contest/271720/problem/B",
+        "VOBOARD - Truyền thuyết ở vương quốc Đồng Dư K https://codeforces.com/group/FLVn1Sc504/contest/271720/problem/C",
+        "VOSTR - Xử lý xâu https://codeforces.com/group/FLVn1Sc504/contest/271720/problem/D",
+        "VOLIGHTS - Hệ thống đèn https://codeforces.com/group/FLVn1Sc504/contest/271720/problem/E",
+        "VODEFEND - Bảo vệ thành phố https://codeforces.com/group/FLVn1Sc504/contest/271720/problem/F"
+    ],
+    "VNOI Online 2012": [
+        "NINJUMP - Ninja học nhảy https://codeforces.com/group/FLVn1Sc504/contest/271717/problem/A",
+        "LKNIGHT - Mã đi tuần https://codeforces.com/group/FLVn1Sc504/contest/271717/problem/B",
+        "KCOIN - Trò chơi với đồng xu https://codeforces.com/group/FLVn1Sc504/contest/271717/problem/C",
+        "VOLIS - Dãy con không giảm dài nhất https://codeforces.com/group/FLVn1Sc504/contest/271717/problem/D",
+        "MARS - Chỉnh sửa ảnh https://codeforces.com/group/FLVn1Sc504/contest/271717/problem/E",
+        "VOEXC - Trao đổi https://codeforces.com/group/FLVn1Sc504/contest/271717/problem/F"
+    ],
+    "VOI 2012": [
+        "TRAVEL12 - VOI 2012 Hành trình du lịch https://codeforces.com/group/FLVn1Sc504/contest/271715/problem/A",
+        "MOVE12 - VOI 2012 Điều động https://codeforces.com/group/FLVn1Sc504/contest/271715/problem/B",
+        "HAM12 - VOI 2012 Khoảng cách Hamming https://codeforces.com/group/FLVn1Sc504/contest/271715/problem/C",
+        "ROBOCON - VOI 2012 Robocon https://codeforces.com/group/FLVn1Sc504/contest/271715/problem/D",
+        "CROSS12 - VOI 2012 Qua cầu https://codeforces.com/group/FLVn1Sc504/contest/271715/problem/E",
+        "FIBVAL - VOI 2012 Bản vanxơ Fibonacci https://codeforces.com/group/FLVn1Sc504/contest/271715/problem/F"
+    ],
+    "VOI 2011": [
+        "TREELINE - VOI 2011 Hàng cây https://codeforces.com/group/FLVn1Sc504/contest/271520/problem/A",
+        "BONUS - VOI 2011 Phần thưởng https://codeforces.com/group/FLVn1Sc504/contest/271520/problem/B",
+        "COLOREC - VOI 2011 Hình chữ nhật bốn màu https://codeforces.com/group/FLVn1Sc504/contest/271520/problem/C",
+        "BWPOINTS - VOI 2011 Nối điểm đen trắng https://codeforces.com/group/FLVn1Sc504/contest/271520/problem/D",
+        "PARIGAME - VOI 2011 Trò chơi chẵn lẻ https://codeforces.com/group/FLVn1Sc504/contest/271520/problem/E",
+        "UPGRANET - VOI 2011 Nâng cấp mạng https://codeforces.com/group/FLVn1Sc504/contest/271520/problem/F"
+    ],
+    "VOI 2010": [
+        "LNACS - VOI10 - Dãy con chung không liền kề dài nhất https://codeforces.com/group/FLVn1Sc504/contest/271485/problem/A",
+        "STABLE - VOI10 - Ổn định https://codeforces.com/group/FLVn1Sc504/contest/271485/problem/B",
+        "TAXID - VOI10 - Mã số thuế https://codeforces.com/group/FLVn1Sc504/contest/271485/problem/C"
+    ],
+    "VOI 2009": [
+        "STNODE - VOI09 Nút st - xung yếu https://codeforces.com/group/FLVn1Sc504/contest/268760/problem/A",
+        "PAGODA - VOI09 Đường lên Bái Đính https://codeforces.com/group/FLVn1Sc504/contest/268760/problem/B",
+        "LINEGAME - VOI09 Trò chơi với băng số https://codeforces.com/group/FLVn1Sc504/contest/268760/problem/C"
+    ],
+    "VOI 2008": [
+        "NKSGAME - VOI08 Trò chơi với dãy số https://codeforces.com/group/FLVn1Sc504/contest/268756/problem/A",
+        "NKJUMP - VOI08 Lò cò https://codeforces.com/group/FLVn1Sc504/contest/268756/problem/B",
+        "NKGIFTS - VOI08 Quà tết https://codeforces.com/group/FLVn1Sc504/contest/268756/problem/C"
+    ],
+    "VOI 2020": [
+        "Bài 1: Phần thưởng (70 điểm) https://codeforces.com/group/FLVn1Sc504/contest/266446/problem/A",
+        "Bài 2: Đi xe buýt (70 điểm) https://codeforces.com/group/FLVn1Sc504/contest/266446/problem/B",
+        "Bài 3: Các chòm sao (60 điểm) https://codeforces.com/group/FLVn1Sc504/contest/266446/problem/C",
+        "Bài 4: Giàn đèn (70 điểm) https://codeforces.com/group/FLVn1Sc504/contest/266446/problem/D",
+        "Bài 5: Tòa nhà (70 điểm) https://codeforces.com/group/FLVn1Sc504/contest/266446/problem/E"
+    ],
+    "VOI 2007": [
+        "QBROBOT - VOI07 Robot cứu hỏa https://codeforces.com/group/FLVn1Sc504/contest/266262/problem/A",
+        "QBMARKET - VOI07 Siêu thị may mắn https://codeforces.com/group/FLVn1Sc504/contest/266262/problem/B",
+        "QBMSEQ - VOI07 Dãy con không giảm dài nhất https://codeforces.com/group/FLVn1Sc504/contest/266262/problem/C",
+        "QBROBOT - VOI07 Robot cứu hỏa https://codeforces.com/group/FLVn1Sc504/contest/266262/problem/D"
+    ],
+    "VOI 2006": [
+        "QBSELECT - VOI06 Chọn ô https://codeforces.com/group/FLVn1Sc504/contest/266261/problem/A",
+        "QBCHANGE - VOI06 Biến đổi bảng https://codeforces.com/group/FLVn1Sc504/contest/266261/problem/B",
+        "QBCIRARC - VOI06 Kênh xung yếu https://codeforces.com/group/FLVn1Sc504/contest/266261/problem/C",
+        "QBBISHOP - VOI06 Quân tượng https://codeforces.com/group/FLVn1Sc504/contest/266261/problem/D",
+        "NKONEARC - Mạng máy tính https://codeforces.com/group/FLVn1Sc504/contest/266261/problem/E",
+        "NKPATH - Đường đi trên lưới https://codeforces.com/group/FLVn1Sc504/contest/266261/problem/F",
+        "NKMAXSEQ - Dãy con dài nhất https://codeforces.com/group/FLVn1Sc504/contest/266261/problem/G"
+    ],
+    "VOI 2005": [
+        "QBSEGPAR - VOI05 Phân đoạn https://codeforces.com/group/FLVn1Sc504/contest/266242/problem/A",
+        "QBFIREWK - VOI05 Pháo hoa https://codeforces.com/group/FLVn1Sc504/contest/266242/problem/B",
+        "COLLECT - VOI05 Bộ sưu tập https://codeforces.com/group/FLVn1Sc504/contest/266242/problem/C",
+        "STEEL - Khuôn thép https://codeforces.com/group/FLVn1Sc504/contest/266242/problem/D"
+    ],
+    "VNOI Online 2020": [
+        "Bài 1: MofK rating cao nhất Vinoy (70 điểm) https://codeforces.com/group/FLVn1Sc504/contest/265214/problem/A",
+        "Bài 2: Trồng cây (70 điểm) https://codeforces.com/group/FLVn1Sc504/contest/265214/problem/B",
+        "Bài 3: Văn tự cổ (60 điểm) https://codeforces.com/group/FLVn1Sc504/contest/265214/problem/C",
+        "Bài 4: Đám cưới tại Bắc Ninh (70 điểm) https://codeforces.com/group/FLVn1Sc504/contest/265214/problem/D",
+        "Bài 5: Choco Jerry (70 điểm) https://codeforces.com/group/FLVn1Sc504/contest/265214/problem/E"
+    ],
+    "VNOI Online 2019": [
+        "SỮA TƯƠI TRÂN CHÂU ĐƯỜNG HỔ (ngày 1 - 70 điểm) https://codeforces.com/group/FLVn1Sc504/contest/236528/problem/A",
+        "CHUYẾN ĐI ĐÀ NẴNG (ngày 1 - 70 điểm) https://codeforces.com/group/FLVn1Sc504/contest/236528/problem/B",
+        "BÁNH PHU THÊ (ngày 1 - 60 điểm) https://codeforces.com/group/FLVn1Sc504/contest/236528/problem/C",
+        "CÁ CƯỢC UỐNG BIA (ngày 2 - 70 điểm) https://codeforces.com/group/FLVn1Sc504/contest/236528/problem/D",
+        "CA SỸ LỆ QUYÊN (ngày 2 - 70 điểm) https://codeforces.com/group/FLVn1Sc504/contest/236528/problem/E"
+    ],
+    "VOI 2018": [
+        "Ngày 1 - bài 1: Robot (70 điểm) https://codeforces.com/group/FLVn1Sc504/contest/234046/problem/A",
+        "Ngày 1 - bài 2: Dòng xe vào bến (70 điểm) https://codeforces.com/group/FLVn1Sc504/contest/234046/problem/B",
+        "Ngày 1 - bài 3: Trò chơi khối hộp (60 điểm) https://codeforces.com/group/FLVn1Sc504/contest/234046/problem/C",
+        "Ngày 2 - bài 1: Phần thưởng (70 điểm) https://codeforces.com/group/FLVn1Sc504/contest/234046/problem/D",
+        "Ngày 2 - bài 2: Người đặc biệt (70 điểm) https://codeforces.com/group/FLVn1Sc504/contest/234046/problem/E"
+    ],
+    "VNOI Online 2018": [
+        "Dãy con tăng nguyên tố cùng nhau (Ngày 1 - 70 điểm) https://codeforces.com/group/FLVn1Sc504/contest/219935/problem/A",
+        "Dãy ngoặc kì diệu (Ngày 1 - 70 điểm) https://codeforces.com/group/FLVn1Sc504/contest/219935/problem/B",
+        "Kinh doanh trà sữa (Ngày 1 - 60 điểm) https://codeforces.com/group/FLVn1Sc504/contest/219935/problem/C",
+        "Phép AND trên đồ thị (Ngày 2 - 70 điểm) https://codeforces.com/group/FLVn1Sc504/contest/219935/problem/D",
+        "Biến đổi đồ thị (Ngày 2 - 70 điểm) https://codeforces.com/group/FLVn1Sc504/contest/219935/problem/E"
+    ],
+    "VOI 2017": [
+        "Bài 1: Virus (70 điểm) https://codeforces.com/group/FLVn1Sc504/contest/217241/problem/A",
+        "Bài 2: Dãy Fibonacci (70 điểm) https://codeforces.com/group/FLVn1Sc504/contest/217241/problem/B",
+        "Bài 3: Trò chơi (60 điểm) https://codeforces.com/group/FLVn1Sc504/contest/217241/problem/C",
+        "Bài 4: Tàu điện ngầm (70 điểm) https://codeforces.com/group/FLVn1Sc504/contest/217241/problem/D",
+        "Bài 5: Xâu đối xứng (70 điểm) https://codeforces.com/group/FLVn1Sc504/contest/217241/problem/E"
+    ],
+    "VNOI Marathon 2008 - div 1": [
+        "VTRI - Đếm tam giác https://codeforces.com/group/FLVn1Sc504/contest/212952/problem/A",
+        "QTREE3 - Truy vấn trên cây https://codeforces.com/group/FLVn1Sc504/contest/212952/problem/B",
+        "VBLOCKS - Xếp hình https://codeforces.com/group/FLVn1Sc504/contest/212952/problem/C",
+        "MAKHOA - Mã khóa bí mật https://codeforces.com/group/FLVn1Sc504/contest/212952/problem/D",
+        "NDIGIT - Dãy chữ số kỳ diệu https://codeforces.com/group/FLVn1Sc504/contest/212952/problem/E",
+        "FACUP - Cúp FA https://codeforces.com/group/FLVn1Sc504/contest/212952/problem/F",
+        "PCYCLE - Mê cung https://codeforces.com/group/FLVn1Sc504/contest/212952/problem/G",
+        "TWOOPERS - Xử lý xâu https://codeforces.com/group/FLVn1Sc504/contest/212952/problem/H",
+        "NHP - Harry Potter và mê cung tử thần https://codeforces.com/group/FLVn1Sc504/contest/212952/problem/I",
+        "RECT3 - Khối tam chữ nhật https://codeforces.com/group/FLVn1Sc504/contest/212952/problem/J",
+        "HINHTHOI - Hình thoi https://codeforces.com/group/FLVn1Sc504/contest/212952/problem/K",
+        "FLOWER - Bông hoa kỳ diệu https://codeforces.com/group/FLVn1Sc504/contest/212952/problem/L",
+        "KINGDOM - Đế chế hùng mạnh nhất https://codeforces.com/group/FLVn1Sc504/contest/212952/problem/M",
+        "WIFI - Phòng máy kỳ diệu https://codeforces.com/group/FLVn1Sc504/contest/212952/problem/N"
+    ],
+    "VNOI Marathon 2008 - div 2": [
+        "VSTEPS - Bậc thang https://codeforces.com/group/FLVn1Sc504/contest/212939/problem/A",
+        "VBOARD - Bàn cờ https://codeforces.com/group/FLVn1Sc504/contest/212939/problem/B",
+        "CWAY - Đếm đường đi trên đồ thị đầy đủ https://codeforces.com/group/FLVn1Sc504/contest/212939/problem/C",
+        "KDEL - Xóa số https://codeforces.com/group/FLVn1Sc504/contest/212939/problem/D",
+        "INTEGER7 - Số nguyên https://codeforces.com/group/FLVn1Sc504/contest/212939/problem/E",
+        "NUMBERS - Những con số https://codeforces.com/group/FLVn1Sc504/contest/212939/problem/F",
+        "HELPPM - Hình chữ nhật https://codeforces.com/group/FLVn1Sc504/contest/212939/problem/G",
+        "ANT - Kiến https://codeforces.com/group/FLVn1Sc504/contest/212939/problem/H",
+        "DANCING - Những hình nhân nhảy múa https://codeforces.com/group/FLVn1Sc504/contest/212939/problem/I",
+        "TRIBE - Bộ lạc https://codeforces.com/group/FLVn1Sc504/contest/212939/problem/J",
+        "LSFIGHT - Quyết đấu https://codeforces.com/group/FLVn1Sc504/contest/212939/problem/K",
+        "DIGIT0 - Số 0 tận cùng https://codeforces.com/group/FLVn1Sc504/contest/212939/problem/L"
+    ]
+}

@@ -94,7 +94,7 @@ class RankingCommand(commands.Cog):
                 point_str = '{:.3f}'.format(point)
                 t += table.Data(_PER_PAGE * page_num + index, handle, point_str)
 
-            table_str = f'```\n{t}\n```'
+            table_str = f'```yml\n{t}\n```'
             embed = discord.Embed(description=table_str)
             return 'Bảng xếp hạng VOJ', embed
 

@@ -11,9 +11,20 @@ from helper import discord_common
 from helper import common
 import random
 import json
+import re
 # Adapted from TLE sources.
 # https://github.com/cheran-senthil/TLE/blob/master/tle/cogs/meta.py#L15
-
+CONTEST_YEAR_BOUND = {
+    'VO': (2014, 2020),
+    'VM': (2008, 2015),
+    'VOI': (2005, 2020)
+}
+CONTEST_NAMES = {
+    'VO': 'VNOI Online',
+    'VM': 'VNOI Marathon',
+    'VOI': 'VOI'
+}
+contest_link = json.load(open('database/contest_link.json', encoding='utf-8'))
 def to_message(p, problem_point):
     # p[0] -> id
     # p[1] -> name
@@ -43,7 +54,6 @@ class Training(commands.Cog):
         self.link = {}
         self.solution_links = {}
         self.tag = {}
-        self.un_solved_problem_cache = {}
         self.category = {}
     @commands.Cog.listener()
     async def on_ready(self):
@@ -62,30 +72,85 @@ class Training(commands.Cog):
         self.category = json.load(open('database/category.json'))
 
     def get_un_solved_problem(self, handle):
-        if handle not in self.un_solved_problem_cache:
+        if handle not in RankingDb.un_solved_problem_cache:
             problem_list = RankingDb.RankingDb.get_info_solved_problem(handle)
             problem_list = list(filter(lambda x: (x[1] == 'AC' or (float(x[1]) > 100 - 0.1)), problem_list))
             #id, result, data
             problem_list = set(map(lambda x: int(x[0]), problem_list))
             #id, name, link, cnt_AC
             un_solved_problem = list(filter(lambda x: int(x[0]) not in problem_list, self.problems_cache))
-            self.un_solved_problem_cache[handle] = un_solved_problem
-        return self.un_solved_problem_cache[handle]
+            RankingDb.un_solved_problem_cache[handle] = un_solved_problem
+        return RankingDb.un_solved_problem_cache[handle]
 
-    @commands.command(brief="Lấy link bài tập trên codeforces.")
-    async def getlink(self, ctx, name):
+    async def send_contest_info(self, ctx, contest_name):
+        assert contest_name in contest_link, f"Bug rồi, không tìm thấy `{contest_name}`, tag Cá nóc fix bug"
+        info = contest_link[contest_name]
+        info = list(map(lambda x: (x[:x.rfind(' ')], x[x.rfind(' ') + 1:]), info))
+        msg = ""
+        for name, link in info:
+            msg += f"[{name}]({link})\n"
+        pattern = r".+\d{6,6}"
+        link = re.findall(pattern, info[0][1])[0]
+        title=f"Contest {contest_name}, {link}"
+        embed=discord.Embed(description=msg.strip(), color=discord_common._SUCCESS_BLUE_)
+        await ctx.send(title, embed=embed)
+    @commands.command(brief="Lấy link bài tập/contest trên codeforces.",
+    usage="[tên bài tập] hoặc [tên contest + năm]")
+    async def getlink(self, ctx, *args):
         """
         Lấy link của bài tập trên codeforces, ví dụ nếu mình muốn lấy link bài AZNET thì dùng:
         ;voj getlink AZNET
+        Hiện tại có thể lấy link của 3 contest VOI, VNOI Online và Vnoi maration, cách dùng:
+        ;voj getlink [contest] [năm]
+        Trong đó contest thuộc 1 trong 3 tên: [VOI, VO, VM]. Ví dụ:
+        ;voj getlink VOI 2020
         """
-        name = name.upper()
-        if name not in self.link:
-            await ctx.send('Không tìm thấy bài {0}.'.format(name))
+        if len(args) == 0:
+            embed = discord_common.embed_alert('Thiếu tên bài/tên contest')
+            await ctx.send(embed=embed)
             return
-        links = self.link[name].strip(',').split(',')
-        links = list(map(lambda x: '<' + x + '>', links))
-        await ctx.send('\n'.join(links))
-
+        if len(args) == 1:
+            name = args[0].upper()
+            if name not in self.link:
+                await ctx.send('Không tìm thấy bài {0}.'.format(name))
+                return
+            links = self.link[name].strip(',').split(',')
+            links = list(map(lambda x: '<' + x + '>', links))
+            await ctx.send('\n'.join(links))
+            return
+        if len(args) != 2:
+            embed = discord_common.embed_alert('Quá nhiều tham số, nếu muốn lấy link contest thì ghi tắt tên (VM, VOI, VO) thôi.') 
+            await ctx.send(embed=embed)
+            return
+        contest = args[0].upper()
+        try:
+            year = int(args[1])
+        except Exception as e:
+            embed = discord_common.embed_alert(f"`{args[1]}` không phải là một số") 
+            await ctx.send(embed=embed)
+            return
+        if contest not in CONTEST_YEAR_BOUND:
+            embed = discord_common.embed_alert("Tên của contest phải thuộc 1 trong 3 [VOI, VO, VM]")
+            await ctx.send(embed=embed)
+            return
+        
+        contest_name = CONTEST_NAMES[contest]
+        if year > CONTEST_YEAR_BOUND[contest][1] or year < CONTEST_YEAR_BOUND[contest][0]:
+            embed = discord_common.embed_alert(
+                f"Trong dữ liệu hiện tại, contest {contest_name} chỉ có từ năm {CONTEST_YEAR_BOUND[contest][0]} "
+                f"tới {CONTEST_YEAR_BOUND[contest][1]}")
+            await ctx.send(embed=embed)
+            return
+        contest_name = contest_name + ' ' + str(year)
+        # vnoi marathon 2008 had 2 divs
+        if contest == 'VM' and year == 2008:
+            await self.send_contest_info(ctx, contest_name + ' - div 1')
+            await self.send_contest_info(ctx, contest_name + ' - div 2')
+        elif contest=='VOI' and year == 2019:
+            await ctx.send('Chưa xin được test của VOI 2019.')
+        else:
+            await self.send_contest_info(ctx, contest_name)
+        
     @commands.command(brief="Đề xuất bài tập.",
                       usage="[tag] [lower_point] [upper_point]")
     async def gimme(self, ctx, *args):

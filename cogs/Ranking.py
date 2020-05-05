@@ -77,7 +77,7 @@ class RankingCommand(commands.Cog):
     # from TLE bot: https://github.com/cheran-senthil/TLE/blob/97c9bff9800b3bbaefb72ec00faa57a4911d3a4b/tle/cogs/duel.py#L410
 
     @commands.command(brief="Hiện bảng xếp hạng")
-    async def ranklist(self, ctx):
+    async def rank(self, ctx):
         """
         Hiện bảng xếp hạng.
         """

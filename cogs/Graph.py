@@ -296,10 +296,9 @@ class Graph(commands.Cog):
                 t = 'IC'
             elif point < 100 - 0.01:
                 t = 'PC'
-            solved_by_type[t].append(date)
+            solved_by_type[t].append(datetime.fromtimestamp(timestamp))
 
-        all_times = [[datetime.strptime(date, '%Y/%m/%d')
-                      for date in solved_by_type[t]] for t in types]
+        all_times = [[date for date in solved_by_type[t]] for t in types]
         labels = ['Accepted', 'Incorrect', 'Partial Result']
         colors = ['g', 'r', 'y']
         plt.hist(all_times, stacked=True, label=labels, bins=34, color=colors)

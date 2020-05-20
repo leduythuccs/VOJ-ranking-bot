@@ -29,7 +29,7 @@ class RankingCommand(commands.Cog):
         self.index += 1
         print("looping " + str(self.index))
         try:
-            await self.crawl(None, 1, 162)
+            await self.crawl(None, 1, 277)
             await self.calculate_rank(None)
         except Exception as e:
             print(e)
@@ -116,24 +116,18 @@ class RankingCommand(commands.Cog):
         #     #remove scale
         #     badge.MAX_SCORE += point
         #     # badge.MAX_SCORE += 2
-        user_data = RankingDb.RankingDb.get_data('user_data', limit=None)
-        user_handles = {}
-        for cf_id, handle, discord_id in user_data:
-            if cf_id is None:
-                continue
-            user_handles[int(cf_id)] = handle
 
         user_points = {}
-        solved_info = RankingDb.RankingDb.get_data('solved_info', limit=None)
-        for user_id, problem_id, result, date in solved_info:
-            handle = user_handles[int(user_id)]
+        solved_info = RankingDb.RankingDb.get_table(RankingDb.SUBMISSION_TABLE)
+        solved_info = list(map(lambda x: (x['handle'], x['problemName'], x['point'], x['timestamp']), solved_info))
+        for handle, problem_name, result, date in solved_info:
             if handle not in user_points:
                 user_points[handle] = 0
             if result == 'AC':
                 result = 100
             result = float(result)
             #remove scale
-            user_points[handle] += result * problem_points[int(problem_id)] / 100
+            user_points[handle] += result * problem_points[problem_name] / 100
             # user_points[handle] += result * 2 / 100
         self.rank_cache = []
         badge.MAX_SCORE = 0
@@ -146,11 +140,11 @@ class RankingCommand(commands.Cog):
         if ctx != None:
             await message.edit(content=f'Done. Calculation time: {int(duration)}ms.')
 
-    @commands.command(brief="Test crawler")
-    @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))
-    async def exclude(self, ctx, contest_id):
-        open('database/contest_id_whitelist.txt', 'a').write(str(contest_id) + '\n')
-        await ctx.send('ok')
+    # @commands.command(brief="Test crawler")
+    # @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))
+    # async def exclude(self, ctx, contest_id):
+    #     open('database/contest_id_whitelist.txt', 'a').write(str(contest_id) + '\n')
+    #     await ctx.send('ok')
     @commands.command(brief="Test crawler")
     @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))
     async def crawl(self, ctx, l, r):
@@ -168,14 +162,19 @@ class RankingCommand(commands.Cog):
         else:
             print('Found {0} submissions.'.format(len(problems)))
         cnt = 0
+        start = time.perf_counter()
         for p_info in problems:
             cnt += 1
             if cnt % 10 == 0:
                 print(cnt)
-            id, problem_name, short_link, handle, user_id, verdict, date = p_info
-            RankingDb.RankingDb.handle_new_submission(
-                problem_name, short_link, verdict, user_id, handle, date)
-        RankingDb.RankingDb.conn.commit()
+            handle, codeforces_id, submission_link, point, problem_name, contest_id, problem_index, timestamp = p_info
+            RankingDb.RankingDb.handle_new_submission(handle, codeforces_id,
+                                                      submission_link, point,
+                                                      problem_name, contest_id,
+                                                      problem_index, timestamp)
+        end = time.perf_counter()
+        duration = (end - start)
+        print(f'Done. Calculation time: {int(duration)} seconds.')
 
 
 def setup(bot):

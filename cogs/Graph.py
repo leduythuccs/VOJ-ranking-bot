@@ -279,7 +279,7 @@ class Graph(commands.Cog):
         solved_info = RankingDb.RankingDb.get_table(RankingDb.SUBMISSION_TABLE)
         raw_subs = list(map(lambda x: (x['problemName'], x['point'], x['timestamp']), solved_info))
 
-        raw_subs = list(filter(lambda x: filt.filter(x[2]), raw_subs))
+        raw_subs = list(filter(lambda x: filt.filter(datetime.fromtimestamp(x[2])), raw_subs))
         if len(raw_subs) == 0:
             await ctx.send('Không tìm thấy submission với các tham số hiện tại.')
             return

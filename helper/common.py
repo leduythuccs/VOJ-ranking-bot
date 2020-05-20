@@ -90,7 +90,7 @@ def get_problem_points(force=False):
     if problem_points != None and not force:
         return problem_points
     problem_info = RankingDb.RankingDb.get_table(RankingDb.PROBLEM_TABLE)
-    problem_info = list(map(lambda x: (x['name'], str(x['contestId']) + x['index'], x['cntAC']), problem_info))
+    problem_info = list(map(lambda x: (x['name'], str(x['contestId']) + '/' + x['index'], x['cntAC']), problem_info))
     problem_points = {}
     for problem_name, links, cnt_AC in problem_info:
         name = problem_name[:problem_name.find('-')].strip()

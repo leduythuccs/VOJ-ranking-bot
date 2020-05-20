@@ -73,16 +73,18 @@ class RankingDbConn:
     def add_AC(self, problem_name: str, current_AC: int):
         self.update(PROBLEM_TABLE, {'name': problem_name}, {'cntAC': current_AC + 1})
 
-    def add_solved_info(self, problem_name: str, point: float, link: str, handle: str, timestamp: int, current_AC: int) -> None:
+    def add_solved_info(self, problem_name: str, point: float, submission_contest: int, submission_id: int, codeforces_id: int, timestamp: int, current_AC: int) -> None:
         doc = {
             'problemName': problem_name,
             'point': point,
-            'link': link,
-            'handle': handle,
+            'contest': submission_contest,
+            'id': submission_id,
+            'accepted': (point >= 100),
+            'codeforcesId': codeforces_id,
             'timestamp': timestamp
         }
 
-        pre_result = self.find(SUBMISSION_TABLE, {'problemName': problem_name, 'handle': handle})
+        pre_result = self.find(SUBMISSION_TABLE, {'problemName': problem_name, 'codeforcesId': codeforces_id})
         if pre_result is not None:
             pre_point = pre_result['point']
             if (pre_point >= point):
@@ -99,15 +101,24 @@ class RankingDbConn:
             self.insert(USER_TABLE, {'handle': handle, 'codeforcesId': CF_id})
         elif doc['codeforcesId'] != CF_id:
             old_handle = doc['codeforcesId']
-            cnt = self.update_many(SUBMISSION_TABLE, {'handle': old_handle}, {'handle': handle}).modified_count()
             self.update(USER_TABLE, {'handle': old_handle}, {'handle': handle})
-            msg = f"user id: {CF_id} change handle from {old_handle} to {handle}. Changed {cnt} documents"
+            msg = f"User id: {CF_id} change handle from {old_handle} to {handle}."
             self.insert(LOG_TABLE, msg)
-            
+    
+    def get_handle_by_cf_id(self, CF_id: int):
+        doc = self.find(USER_TABLE, {'codeforcesId': CF_id})
+        return doc['handle'] if doc is not None else None
+
+    def get_cf_id_by_handle(self, handle: str):
+        doc = self.find(USER_TABLE, {'handle': handle})
+        return doc['codeforcesId'] if doc is not None else None
 
     def get_info_solved_problem(self, handle):
+        cf_id = self.get_cf_id_by_handle(handle)
+        if cf_id is None:
+            return []
         #problem_name, point, date
-        problems = self.find_all(SUBMISSION_TABLE, {'handle': handle})
+        problems = self.find_all(SUBMISSION_TABLE, {'codeforcesId': cf_id})
         return list(map(lambda x: (x['problemName'], x['point'], datetime.fromtimestamp(x['timestamp']).strftime('%Y/%m/%d')), problems))
 
     def get_problem_info(self, problem_name: str):
@@ -117,22 +128,23 @@ class RankingDbConn:
         return (problem['name'], str(problem['contestId']) + '/' + problem['index'], problem['cntAC'])
 
 
-    def handle_new_submission(self, handle: str, codeforces_id: int, submission_link: str,
+    def handle_new_submission(self, handle: str, codeforces_id: int,
+                              submission_contest: int, submission_id: int,
                               point: float, problem_name: str, contest_id: int,
                               problem_index: str, timestamp: int) -> None:
         handle = handle.lower()
-        
+
         self.add_user(codeforces_id, handle)
         #
         current_AC = self.add_problem(problem_name, contest_id, problem_index)
         #
-        self.add_solved_info(problem_name, point, submission_link, handle, timestamp, current_AC)
+        self.add_solved_info(problem_name, point, submission_contest, submission_id, codeforces_id, timestamp, current_AC)
         # clear cache
         global un_solved_problem_cache
         if point >= 100:
             if handle in un_solved_problem_cache is True:
                 un_solved_problem_cache.pop(handle)
-        
+
 
 
     def set_handle(self, discord_id: int, handle: str) -> int:
@@ -152,7 +164,7 @@ class RankingDbConn:
         return doc['handle'] if doc is not None else None
 
     def get_all_problems(self):
-        return self.get_table(PROBLEM_TABLE) 
+        return self.get_table(PROBLEM_TABLE)
 
 link = os.getenv('MONGO_LINK')
 RankingDb = RankingDbConn(link, "crawlerDb")

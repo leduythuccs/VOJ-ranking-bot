@@ -23,13 +23,14 @@ class RankingCommand(commands.Cog):
         self.rank_cache = []
         self.looper.start()
         self.index = 0
+        self.problem_mapping = json.load(open('database/link_mapping.json', encoding='utf-8'))
 
     @tasks.loop(minutes=10.0)
     async def looper(self):
         self.index += 1
         print("looping " + str(self.index))
         try:
-            await self.crawl(None, 1, 277)
+            await self.crawl(None, 1, 280)
             await self.calculate_rank(None)
         except Exception as e:
             print(e)
@@ -118,8 +119,12 @@ class RankingCommand(commands.Cog):
         #     # badge.MAX_SCORE += 2
 
         user_points = {}
+        user_table = RankingDb.RankingDb.get_table(RankingDb.USER_TABLE)
+        user_handle = {}
+        for x in user_table:
+            user_handle[x['codeforcesId']] = x['handle']
         solved_info = RankingDb.RankingDb.get_table(RankingDb.SUBMISSION_TABLE)
-        solved_info = list(map(lambda x: (x['handle'], x['problemName'], x['point'], x['timestamp']), solved_info))
+        solved_info = list(map(lambda x: (user_handle[x['codeforcesId']], x['problemName'], x['point'], x['timestamp']), solved_info))
         for handle, problem_name, result, date in solved_info:
             if handle not in user_points:
                 user_points[handle] = 0
@@ -168,8 +173,14 @@ class RankingCommand(commands.Cog):
             if cnt % 10 == 0:
                 print(cnt)
             handle, codeforces_id, submission_link, point, problem_name, contest_id, problem_index, timestamp = p_info
+            submission_contest = contest_id
+            short_link = str(contest_id) + '/' + problem_index
+            if (short_link in self.problem_mapping):
+                contest_id, problem_index = self.problem_mapping[short_link].split('/')
+                contest_id = int(contest_id)
+            submission_id = int(submission_link.split('/')[-1])
             RankingDb.RankingDb.handle_new_submission(handle, codeforces_id,
-                                                      submission_link, point,
+                                                      submission_contest, submission_id, point,
                                                       problem_name, contest_id,
                                                       problem_index, timestamp)
         end = time.perf_counter()

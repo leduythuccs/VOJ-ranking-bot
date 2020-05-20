@@ -112,7 +112,7 @@ class Crawler:
         if verdict == 'AC':
             point = 100
         submission_link = SUBMISSION_BASE.format(self.group_id, contest_id, submission_id)
-        return (int(submission_id), handle, int(codeforces_id), submission_link, point, problem_name, int(contest_id), problem_index, timestamp)
+        return (int(submission_id), handle, int(codeforces_id), submission_link, point, problem_name, int(contest_id), problem_index, int(timestamp))
 
 
     def crawl_submissions(self, page):

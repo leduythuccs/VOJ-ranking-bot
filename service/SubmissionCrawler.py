@@ -76,7 +76,7 @@ class Crawler:
         submission_id = int(row['data-submission-id'])
         if submission_id <= self.last_submission and force == False:
             return -1
-        codeforces_id = int(row['partymemberids'].strip(';'))
+        codeforces_id = row['partymemberids'].strip(';')
         elems = row.find_all('td')
         assert(len(elems) == 8)
         # id   WHEN    WHO     PROBLEM     LANG    VERDICT     TIME    MEMORY
@@ -155,5 +155,3 @@ class Crawler:
             self.last_submission = self.first_un_crawl_submission - 1
         self.save_last_submission()
         return list(map(lambda x: x[1:], infos))
-    
-        

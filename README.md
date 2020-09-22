@@ -1,42 +1,51 @@
 # VOJ-ranking-bot
- A Discord bot which helps calculate ranking in a Codeforces group. It also plots various data like rating distributions, user submission statistics.
+ A discord bot which helps calculate ranking in a Codeforces group
 
 ## Features
 ### Ranking
 - Create group ranking 
 - Show plot about ranking
-### Graph
-- Get list of solved problems
-- Plot rating distributions of a group
-- Plot training history.
 ### Other
 - For VNOI: get codeforces link of a [VOJ](http://vn.spoj.com/) problem 
 - Some git commands to update the bot.
+- Some commands about nCoVi virus.
 
 ## Installation
 Clone this repository 
 - `python pip install -r requirements`
-- Base on file `.env-example`, create file `.env` and fill all the data: bot token, account codeforces (for crawling submission), codeforces group id, access link to Mongo db atlas.
+- Base on file `.env-example`, create file `.env` and fill all the data: bot token, account codeforces (for crawling submission), codeforces group id.
 
 ## How to use
 - Create a discord bot, add it to your discord server.
 - Then use `python main.py` to run the bot. Remember to edit data in `.env`.
 - Use `;voj help` to see list command
 
-## Crawler
-Because there is no APIs to get submissions data directly, I have to get it myself by crawling the Submission page of Codeforces group.
+## About database
+- I wrote a crawler to crawl all submission in a codeforces group, and then store all the data in file file [ranking.db](/database/ranking.db) by using SQLite3. 
 
-You can see the crawler in `/service/SubmissionCrawler.py`.
-
-### Issues
-This is some sort of issues and I'm not figure out how to solve it: 
-- What if a user change their handle? Since Codeforces allow users change their handle once time per year. 
-- What if we rejudge a problem? If we rejudge a problem, all the submission information about that problem have to delete and re-crawl but I don't know how to do since there is no APIs.
+- There is 3 table in that file:
+    - `problem_info`, 4 columns:
+        - `id`: id of a problem
+        - `problem_name`: name of problem
+        - `links` (TEXT): short codeforces links to problem, if a problem has more than 1 links, its links is separate with commas (i.e `274863/A`, `274863/F,272622/A`)
+        - `cnt_AC`: number of user that got Accepted this problem.
+    - `solved_info`. If a user submit to a problem then I will create a record has 4 columns: 
+        - `user_id`: id of user, I cannot use user's handle here since users can change their handles.
+        - `problem_id`: id of a problem (equal to `id` in `problem_info`)
+        - `result`: result of the submission. 'AC' is accepted, or a float number equal to partial score of that submission.
+        - `date`: submission time in format `YYYY/MM/DD`.
+    - `user_data`, 3 columns:
+        - `CF_id`: id of a user (equal to `user_id` in `problem_info`)
+        - `handle`: handle of a user.
+        - `discord_id`: discord id.
+    
+### Issues:
+- What if a user change their handle?
+- What if we rejudge a problem?
 - What if we rename a problem? 
 
-
 ## Q&A
-- Question: How rank is calculated? Answer: Each problem has a point, equal to `80 / (40 + x)` with `x` is number of users got accepted in that problem. If a user submit to a problem and receive a accepted verdict, they will earn all the problem's point. If they receive a partial score, they will earn `partial_score` * `problem_point` / 100 points.
+- Question: How rank is calculated? Answer: Each problem has a point, equal to `80 / (40 + x)` with `x` is number of users got accepted in that problem (`cnt_AC` in table `problem_info`). If a user submit to a problem and receive a accepted verdict, they will earn all the problem's point. If they receive a partial score, they will earn `partial_score` * `problem_point` / 100 points.
 
 ## Note
 - There is some commands required `Admin` role. If you're not bot's owner, you will need `Admin` role to use those commands.

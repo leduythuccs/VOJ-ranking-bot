@@ -89,14 +89,13 @@ def get_problem_points(force=False):
     global problem_points
     if problem_points != None and not force:
         return problem_points
-    problem_info = RankingDb.RankingDb.get_table(RankingDb.PROBLEM_TABLE)
-    problem_info = list(map(lambda x: (x['name'], str(x['contestId']) + '/' + x['index'], x['cntAC']), problem_info))
+    problem_info = RankingDb.RankingDb.get_data('problem_info', limit=None)
     problem_points = {}
-    for problem_name, links, cnt_AC in problem_info:
+    for id, problem_name, links, cnt_AC in problem_info:
         name = problem_name[:problem_name.find('-')].strip()
         spoj_cnt = 0
         if name in SPOJ_CNT_AC:
             spoj_cnt = SPOJ_CNT_AC[name]
         point = 200 / (100 + int(cnt_AC) + spoj_cnt)
-        problem_points[problem_name] = point
+        problem_points[int(id)] = point
     return problem_points

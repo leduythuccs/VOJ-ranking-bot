@@ -17,6 +17,7 @@ from helper import badge
 
 BASE_PROBLEM_URL = 'https://codeforces.com/group/FLVn1Sc504/contest/{0}/problem/{1}'
 
+WHILELIST_USER_IDs = ['328391']
 TAGS = ['Dynamic programming', 'Data structure', 'Geometry', 'Graph', 'Math', 'String', 'Ad-hoc', 'Other']
 
 
@@ -90,24 +91,33 @@ class Graph(commands.Cog):
         handle = await common.get_handle(ctx, handle)
         if handle is None:
             return
-        #name result date
+        #id result date
         problem_list = RankingDb.RankingDb.get_info_solved_problem(handle)
-        problem_list = list(filter(lambda x: x[1] >= 100 - 0.1, problem_list))
+        problem_list = list(filter(lambda x: x[1] == 'AC' or (float(x[1]) >= 100 - 0.1), problem_list))
         problem_list = list(filter(lambda x: filt.filter(datetime.strptime(x[2], '%Y/%m/%d')), problem_list))
         if len(problem_list) == 0:
             await ctx.send('Không tìm thấy submission của `{0}` với các tham số hiện tại.'.format(handle))
             return
-
+        problem_info = RankingDb.RankingDb.get_data('problem_info', limit=None)
+        id_to_name = {}
+        #id, name, link, cntAC
+        for id, name, link, cnt_AC in problem_info:
+            name = name[:name.find('-')].strip()
+            id_to_name[int(id)] = name
         cnt = {'No tag' : 0}
         for tag in TAGS:
             cnt[tag] = 0
-        for name, *junks in problem_list:
-            name = name[:name.find('-')].strip()
+        for id, *junks in problem_list:
+            id = int(id)
             tags = []
-            if name not in self.tag:
+            if id not in id_to_name:
                 tags = ['No tag']
             else:
-                tags = self.tag[name]
+                name = id_to_name[id]
+                if name not in self.tag:
+                    tags = ['No tag']
+                else:
+                    tags = self.tag[name]
             for tag in tags:
                 if tag not in cnt:
                     cnt[tag] = 0
@@ -175,12 +185,12 @@ class Graph(commands.Cog):
         problem_points = common.get_problem_points()
         rating_changes = [(-1, -1)]
         rating = 0
-        for problem_name, result, date in raw_subs:
+        for problem_id, result, date in raw_subs:
             if rating_changes[-1][1] != date:
                 rating_changes.append((0, date))
             if result == 'AC':
                 result = 100
-            rating += problem_points[problem_name] * float(result) / 100
+            rating += problem_points[int(problem_id)] * float(result) / 100
             # rating += 2 * float(result) / 100
             rating_changes[-1] = (rating, date)
         return rating_changes[1:]
@@ -242,11 +252,11 @@ class Graph(commands.Cog):
         plt.clf()
         plt.xlabel('Time')
         plt.ylabel('Number solved')
-        for problem_name, point, date in raw_subs:
-            t = 'AC'
-            if point <= 0 + 0.01:
+        for problem_id, result, date in raw_subs:
+            t = result
+            if t != 'AC' and float(t) <= 0 + 0.01:
                 t = 'IC'
-            elif point < 100 - 0.01:
+            elif t != 'AC':
                 t = 'PC'
             solved_by_type[t].append(date)
 
@@ -276,10 +286,13 @@ class Graph(commands.Cog):
         filt = DayFilter()
         handle = filt.parse(args)
 
-        solved_info = RankingDb.RankingDb.get_table(RankingDb.SUBMISSION_TABLE)
-        raw_subs = list(map(lambda x: (x['problemName'], x['point'], x['timestamp']), solved_info))
+        solved_info = RankingDb.RankingDb.get_data('solved_info', limit=None)
+        raw_subs = []
+        for user_id, problem_id, result, date in solved_info:
+            if str(user_id) not in WHILELIST_USER_IDs:
+                raw_subs.append((problem_id, result, date))
 
-        raw_subs = list(filter(lambda x: filt.filter(datetime.fromtimestamp(x[2])), raw_subs))
+        raw_subs = list(filter(lambda x: filt.filter(datetime.strptime(x[2], '%Y/%m/%d')), raw_subs))
         if len(raw_subs) == 0:
             await ctx.send('Không tìm thấy submission với các tham số hiện tại.')
             return
@@ -290,15 +303,16 @@ class Graph(commands.Cog):
         plt.clf()
         plt.xlabel('Time')
         plt.ylabel('Number solved')
-        for problem_name, point, timestamp in raw_subs:
-            t = 'AC'
-            if point <= 0 + 0.01:
+        for problem_id, result, date in raw_subs:
+            t = result
+            if t != 'AC' and float(t) <= 0 + 0.01:
                 t = 'IC'
-            elif point < 100 - 0.01:
+            elif t != 'AC':
                 t = 'PC'
-            solved_by_type[t].append(datetime.fromtimestamp(timestamp))
+            solved_by_type[t].append(date)
 
-        all_times = [[date for date in solved_by_type[t]] for t in types]
+        all_times = [[datetime.strptime(date, '%Y/%m/%d')
+                      for date in solved_by_type[t]] for t in types]
         labels = ['Accepted', 'Incorrect', 'Partial Result']
         colors = ['g', 'r', 'y']
         plt.hist(all_times, stacked=True, label=labels, bins=34, color=colors)

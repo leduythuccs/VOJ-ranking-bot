@@ -26,19 +26,20 @@ CONTEST_NAMES = {
 }
 contest_link = json.load(open('database/contest_link.json', encoding='utf-8'))
 def to_message(p, problem_point):
-    # p[0] -> name
-    # p[1] -> link
-    # p[2] -> cnt_AC
-    links = p[1].strip(',').split(',')
+    # p[0] -> id
+    # p[1] -> name
+    # p[2] -> link
+    # p[3] -> cnt_AC
+    links = p[2].strip(',').split(',')
     links = list(map(lambda x: "https://codeforces.com/group/FLVn1Sc504/contest/{0}/problem/{1}".format(x.split('/')[0], x.split('/')[1]), links))
     msg = ""
     if len(links) == 1:
-        msg = "[{0}]({1}) ".format(p[0], links[0])
+        msg = "[{0}]({1}) ".format(p[1], links[0])
     else:
-        msg = "[{0}]({1}) ".format(p[0], links[0])
+        msg = "[{0}]({1}) ".format(p[1], links[0])
         for i, link in enumerate(links[1:]):
             msg += "[link{0}]({1}) ".format(i + 2, link)
-    msg += "({:.2f} exp)".format(problem_point[p[0]])
+    msg += "({:.2f} exp)".format(problem_point[int(p[0])])
     return msg
 def is_float(value):
     try:
@@ -58,13 +59,7 @@ class Training(commands.Cog):
     async def on_ready(self):
         self.update_link()
         
-        self.problems_cache = RankingDb.RankingDb.get_all_problems()
-
-        self.problems_name = list(map(lambda x: x['name'], self.problems_cache))
-
-        self.problems_map = {}
-        for x in self.problems_cache:
-            self.problems_map[x['name']] = (x['name'], str(x['contestId']) + '/' + x['index'], 'cntAC')
+        self.problems_cache = RankingDb.RankingDb.get_data('problem_info', limit=None)
 
     def update_link(self):
         data = open('database/codeforces_link.txt').read().strip().split('\n')
@@ -79,11 +74,11 @@ class Training(commands.Cog):
     def get_un_solved_problem(self, handle):
         if handle not in RankingDb.un_solved_problem_cache:
             problem_list = RankingDb.RankingDb.get_info_solved_problem(handle)
-            #name, point, date
             problem_list = list(filter(lambda x: (x[1] == 'AC' or (float(x[1]) > 100 - 0.1)), problem_list))
-            problem_list = set(map(lambda x: x[0], problem_list))
+            #id, result, data
+            problem_list = set(map(lambda x: int(x[0]), problem_list))
             #id, name, link, cnt_AC
-            un_solved_problem = list(filter(lambda x: x not in problem_list, self.problems_name))
+            un_solved_problem = list(filter(lambda x: int(x[0]) not in problem_list, self.problems_cache))
             RankingDb.un_solved_problem_cache[handle] = un_solved_problem
         return RankingDb.un_solved_problem_cache[handle]
 
@@ -190,8 +185,8 @@ class Training(commands.Cog):
         problem_point = common.get_problem_points()
         un_solved_problem = self.get_un_solved_problem(handle)
         if category != "":
-            un_solved_problem = list(filter(lambda x: x[:x.find('-')].strip() in self.category[category], un_solved_problem))
-        un_solved_problem = list(filter(lambda x: low <= problem_point[x] and problem_point[x] <= hi, un_solved_problem))
+            un_solved_problem = list(filter(lambda x: x[1][:x[1].find('-')].strip() in self.category[category], un_solved_problem))
+        un_solved_problem = list(filter(lambda p: low <= problem_point[int(p[0])] and problem_point[int(p[0])] <= hi, un_solved_problem))
         if len(un_solved_problem) == 0:
             await ctx.send('Không tìm được bài tập nào với các tham số hiện tại.')
             return
@@ -201,9 +196,7 @@ class Training(commands.Cog):
         title = "{0} bài {1}".format(len(problems), tag)
         msg = ""
         for p in problems:
-            if p not in self.problems_map:
-                continue
-            msg += to_message(self.problems_map[p], problem_point) + "\n"
+            msg += to_message(p, problem_point) + "\n"
         embed=discord.Embed(title=title,description=msg.strip(), color=discord_common._SUCCESS_BLUE_)
         discord_common.set_author_footer(embed, ctx.author)
         await ctx.send(embed=embed)

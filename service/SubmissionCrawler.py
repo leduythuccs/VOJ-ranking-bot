@@ -1,17 +1,17 @@
 import re
 import requests
 import os
+import time
 from bs4 import BeautifulSoup as bs
 from datetime import datetime
 csrf_token_pattern = r'name=["\']csrf_token["\'] value=["\'](.*?)["\']'
 ftaa_pattern = r'window._ftaa = ["\'](.*?)["\']'
 bfaa_pattern = r'window._bfaa = ["\'](.*?)["\']'
-SUBMISSION_BASE = 'https://codeforces.com/group/{0}/status?pageIndex={1}&showUnofficial=true'
-
-def get_date(s):
-    t = s[:s.find(' ')].strip()
-    t = datetime.strptime(t, '%b/%d/%Y')
-    return datetime.strftime(t, '%Y/%m/%d')
+SUBMISSION_STATUS_BASE = 'https://codeforces.com/group/{0}/status?pageIndex={1}&showUnofficial=true'
+SUBMISSION_BASE = 'https://codeforces.com/group/{0}/contest/{1}/submission/{2}'
+def get_timestamp(s):
+    t = datetime.strptime(s.strip(), '%b/%d/%Y %H:%M')
+    return datetime.timestamp(t)
 
 class Crawler:
     def __init__(self, username, password, group_id):
@@ -65,7 +65,9 @@ class Crawler:
     def get_info_submission(self, row, force = False):
         '''
             Get infomation about submission, return a tuple:
-                (id, problem_name, short link to problem, handle, user_id, verdict (AC/point), date)
+                (id, problem_name, short link to problem, handle, codeforces_id, verdict (AC/point), date)
+                (handle, codeforces_id, submission_link, point, problem_name, contest_id, contest_index, timestamp)
+
             - return None if the submission is judging or it's a team's submission
             - if the submission's id is less than last submission's id:
                 + if 'force' set to True, the submission will re-crawl
@@ -74,12 +76,12 @@ class Crawler:
         submission_id = int(row['data-submission-id'])
         if submission_id <= self.last_submission and force == False:
             return -1
-        user_id = row['partymemberids'].strip(';')
+        codeforces_id = row['partymemberids'].strip(';')
         elems = row.find_all('td')
         assert(len(elems) == 8)
         # id   WHEN    WHO     PROBLEM     LANG    VERDICT     TIME    MEMORY
 
-        date = get_date(elems[1].text.strip())
+        timestamp = get_timestamp(elems[1].text.strip())
         handle = elems[2].text.strip()
         #team
         if str(elems[2]).find('/team/') != -1:
@@ -89,7 +91,7 @@ class Crawler:
         problem_name = problem_name[problem_name.find('-')+1:].strip()
 
         short_link = '/'.join(re.findall('contest/(\d+)/problem/(\w+)', elems[3].a['href'])[0])
-        contest_id, junk = short_link.split('/')
+        contest_id, problem_index = short_link.split('/')
         if str(contest_id) in open('database/contest_id_whitelist.txt').read().strip().split('\n'):
             print("found white list submission")
             return None
@@ -99,18 +101,22 @@ class Crawler:
             return None
         
         verdict = elems[5].span['submissionverdict']
+        point = 0
         if verdict == 'OK':
             verdict = 'AC'
+            point = 100
         if verdict == 'PARTIAL':
-            verdict = elems[5].span.span.text.strip()
+            point = float(elems[5].span.span.text.strip())
         elif verdict != 'AC':
-            verdict = '0'
-        
-        return (submission_id, problem_name, short_link, handle, user_id, verdict, date)
+            point = 0
+        if verdict == 'AC':
+            point = 100
+        submission_link = SUBMISSION_BASE.format(self.group_id, contest_id, submission_id)
+        return (int(submission_id), handle, int(codeforces_id), submission_link, point, problem_name, int(contest_id), problem_index, int(timestamp))
 
 
     def crawl_submissions(self, page):
-        url = SUBMISSION_BASE.format(self.group_id, page)
+        url = SUBMISSION_STATUS_BASE.format(self.group_id, page)
         result = self.session.get(url, headers=self.headers)
         soup = bs(result.text, features="html.parser")
         rows = list(filter(lambda x: x.has_attr('data-submission-id'), soup.find_all('tr')))
@@ -132,6 +138,7 @@ class Crawler:
     def get_new_submissions(self, l, r):
         infos = []
         self.first_un_crawl_submission = 347598374985739845
+        start = time.perf_counter()
         for page in range(l, r + 1):
             print("crawling page " + str(page), end=' ')
             new_infos, stop = self.crawl_submissions(page)
@@ -139,11 +146,12 @@ class Crawler:
             infos += new_infos
             if stop:
                 break
-        for id, *junk in infos:
-            self.last_submission = max(self.last_submission, int(id))
+        end = time.perf_counter()
+        duration = (end - start)
+        print(f'Done. Calculation time: {int(duration)} seconds.')
+        for submission_id, *junk in infos:
+            self.last_submission = max(self.last_submission, int(submission_id))
         if self.last_submission > self.first_un_crawl_submission:
             self.last_submission = self.first_un_crawl_submission - 1
         self.save_last_submission()
-        return infos
-    
-        
+        return list(map(lambda x: x[1:], infos))

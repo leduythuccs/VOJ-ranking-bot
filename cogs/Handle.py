@@ -35,30 +35,28 @@ class Handle(commands.Cog):
             subs = await codeforces_api.get_user_status(handle)
             if any(sub == problem[2] for sub in subs):
                 x = RankingDb.RankingDb.set_handle(discord_id, handle)
-                if x != True:
+                if x != 0:
                     await ctx.send('Lỗi, nick {0} đã được set cho user <@{1}>. Gọi @Cá nóc cắn cáp nếu cần giúp đỡ'.format(handle, x))
                 else:
                     await ctx.send(SET_HANDLE_SUCCESS.format(discord_id, handle))
-                    RankingDb.RankingDb.conn.commit()
                 return
         await ctx.send(f'<@{str(ctx.author.id)}>, thử lại pls. Dùng `;voj help identify` nếu cần giúp đỡ.')
 
     @commands.command(brief='Set Codeforces handle of a user')
     @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))
     async def set(self, ctx, member: discord.Member, handle):
-        message = (
-            "Vẫn đang được dev, xin quay lại sau ...\n"
-            "~~Vì lý do đặc biệt nên xem xét dùng các command sau:\n"
-            "- Nếu user chưa identify bao giờ -> ;voj set_new @member handle\n"
-            "- Nếu user muốn đổi acc codeforces -> ;voj change @member new_handle\n"
-            "- Nếu user dùng acc discord mới -> ;voj ~~"
-        )
-        await ctx.send(message)
-        return
+        # message = (
+        #     "Vẫn đang được dev, xin quay lại sau ...\n"
+        #     "~~Vì lý do đặc biệt nên xem xét dùng các command sau:\n"
+        #     "- Nếu user chưa identify bao giờ -> ;voj set_new @member handle\n"
+        #     "- Nếu user muốn đổi acc codeforces -> ;voj change @member new_handle\n"
+        #     "- Nếu user dùng acc discord mới -> ;voj ~~"
+        # )
+        # await ctx.send(message)
+        # return
         # await ctx.send("Cẩn thận khi dùng cái này, nên hú Thức cho chắc.")
-        if RankingDb.RankingDb.set_handle(member.id, handle) == True:
+        if RankingDb.RankingDb.set_handle(member.id, handle) == 0:
             await ctx.send(SET_HANDLE_SUCCESS.format(member.id, handle))
-            RankingDb.RankingDb.conn.commit()
         else:
             await ctx.send("Failed ?? :D ??")
 

@@ -78,7 +78,7 @@ class BotControl(commands.Cog):
     @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))
     async def database(self, ctx):
         last_submission = open('database/last_submission.txt').read().strip()
-        await ctx.send('Last submissions: {0}'.format(last_submission), file=discord.File('database/ranking.db', filename='ranking.db'))
+        await ctx.send('Last submissions: {0}'.format(last_submission))
     @commands.command(brief="Update bot & restart")
     @commands.check_any(commands.is_owner(), commands.has_any_role('Admin', 'Mod VNOI'))
     async def update_restart(self, ctx):

@@ -27,6 +27,7 @@ class RankingCommand(commands.Cog):
 
     @tasks.loop(minutes=10.0)
     async def looper(self):
+        return
         self.index += 1
         print("looping " + str(self.index))
         try:

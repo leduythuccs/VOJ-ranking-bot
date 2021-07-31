@@ -50,6 +50,8 @@ Clone this repository
 - Create a discord bot, add it to your discord server.
 - Then use `python main.py` to run the bot. Remember to edit data in `.env`.
 - Use `;voj help` to see list command
+## Warning for large group
+[Codeforces stopped displaying the status for large groups](https://codeforces.com/blog/entry/89502?#comment-778457). So this bot will not working for large group.
 
 ## Crawler
 Because there is no APIs to get submissions data directly, I have to get it myself by crawling the Submission page of Codeforces group.

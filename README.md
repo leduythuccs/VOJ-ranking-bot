@@ -2,13 +2,41 @@
  A Discord bot which helps calculate ranking in a Codeforces group. It also plots various data like rating distributions, user submission statistics.
 
 ## Features
+### Get suitable problem for training
+
+![img](images/gimme.png)
+
+
 ### Ranking
-- Create group ranking 
-- Show plot about ranking
+- Create group ranking:
+
+![img](images/rank.png)
+
 ### Graph
-- Get list of solved problems
-- Plot rating distributions of a group
-- Plot training history.
+- Plot rating history:
+
+![img](images/exp.png)
+
+- Plot training history (number of submission per day):
+
+![img](images/hist.png)
+
+- Plot training history by number of submission:
+
+![img](images/hist.png)
+
+- Get list of solved problems:
+
+![img](images/stalk.png)
+
+- Plot training history by number of solved problem per problem category:
+
+![img](images/tagbar.png)
+
+- Plot rating distributions of a group:
+
+![img](images/group_hist.png)
+
 ### Other
 - For VNOI: get codeforces link of a [VOJ](http://vn.spoj.com/) problem 
 - Some git commands to update the bot.
